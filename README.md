@@ -6,7 +6,7 @@ This application was generated using JHipster 7.9.4, you can find documentation 
 
 - Alice W (alw783@student.bham.ac.uk)
 
-- (insert the list of team mates)
+- Ameer Firas Alhashemi (afa192@student.bham.ac.uk)
 
 ## changes for Teamproject
 
