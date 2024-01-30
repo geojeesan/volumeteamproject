@@ -14,6 +14,8 @@ This application was generated using JHipster 7.9.4, you can find documentation 
 
 - Hassan AlJuboori (hga101@student.bham.ac.uk)
 
+- Sajia Balkees Sayed (sbs255@student.bham.ac.uk)
+
 ## changes for Teamproject
 
 Modified by Madasar Shah for Team Project
