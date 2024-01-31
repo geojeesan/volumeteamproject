@@ -10,8 +10,6 @@ This application was generated using JHipster 7.9.4, you can find documentation 
 
 - Jovin Joseph (jxj243@student.bham.ac.uk)
 
-- Maha Fady Adwan (mfa147@student.bham.ac.uk)
-
 - Hassan AlJuboori (hga101@student.bham.ac.uk)
 
 - Sajia Balkees Sayed (sbs255@student.bham.ac.uk)
