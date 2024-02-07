@@ -53,7 +53,7 @@ deploy-dev:
   when: on_success
   resource_group: deployment
   script:
-    - sudo yum update -y && sudo yum install -y openssh-clients
+    - yum update -y && yum install -y openssh-clients
     - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $IP >> ~/.ssh/known_hosts
     - ssh $USER@$IP "mkdir -p ~/flask-app"
