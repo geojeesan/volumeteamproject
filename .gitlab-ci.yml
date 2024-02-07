@@ -23,6 +23,7 @@ before_script:
 lint:
   stage: check
   script:
+    - pip install pylint
     - pylint app/
 
 build:
