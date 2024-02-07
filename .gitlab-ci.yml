@@ -35,7 +35,7 @@ test:
   stage: test
   script:
     - pip install pytest
-    - pytest tests  # Run pytest to execute the tests
+    - pytest
 
 package:
   stage: package
