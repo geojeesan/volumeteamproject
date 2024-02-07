@@ -23,7 +23,7 @@ before_script:
 lint:
   stage: check
   script:
-    - /usr/local/bin/pylint app/
+    - pylint app/
 
 build:
   stage: build
