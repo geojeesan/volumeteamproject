@@ -54,6 +54,7 @@ deploy-dev:
   script:
     - pip install -U pip
     - pip install -r requirements.txt
+    - apt-get update && apt-get install -y docker-compose
     - docker-compose up -d
     - docker system prune --force --filter 'until=24h'
 
