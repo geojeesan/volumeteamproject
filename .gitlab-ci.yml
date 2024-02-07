@@ -34,8 +34,8 @@ build:
 test:
   stage: test
   script:
-    - echo "No tests as of right now"
-    # - pytest tests/
+    - pip install pytest
+    - pytest
 
 package:
   stage: package
@@ -51,31 +51,27 @@ deploy-dev:
   image: python:3.9
   stage: deploy
   when: on_success
-  resource_group: deployment
-  before_script:
-    - chmod og= $RSA
-    - apk update && apk add openssh-client sshpass
-    - mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-    - ssh-keyscan $IP >> ~/.ssh/known_hosts
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "mkdir -p ~/flask-app"
-    - scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-app
   script:
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose up -d && docker system prune --force --filter 'until=24h'"
+    - source .venv/bin/activate  # Activate the virtual environment
+    - pip install -U pip
+    - pip install -r requirements.txt
+    # - docker-compose up -d
+    # - docker system prune --force --filter 'until=24h'
 
 
-deploy-prod:
-  image: python:3.9
-  stage: deploy
-  when: on_success
-  only:
-    - tags
-  except:
-    - branches
-  dependencies:
-    - deploy-dev
-  resource_group: deployment
-  before_script:
-    - chmod og= $RSA
-    - apk update && apk add openssh-client sshpass
-  script:
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose -f docker-compose.prod.yml up -d && docker system prune --force --filter 'until=24h'"
+# deploy-prod:
+#   image: python:3.9
+#   stage: deploy
+#   when: on_success
+#   only:
+#     - tags
+#   except:
+#     - branches
+#   dependencies:
+#     - deploy-dev
+#   resource_group: deployment
+#   before_script:
+#     - chmod og= $RSA
+#     - apk update && apk add openssh-client sshpass
+#   script:
+#     - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose -f docker-compose.prod.yml up -d && docker system prune --force --filter 'until=24h'"
