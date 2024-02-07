@@ -24,7 +24,7 @@ lint:
   stage: check
   script:
     - pip install pylint
-    - pylint apps/
+    - pylint --fail-under=4.0 apps/
 
 build:
   stage: build
