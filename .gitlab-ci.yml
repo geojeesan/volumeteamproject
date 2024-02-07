@@ -52,27 +52,26 @@ deploy-dev:
   stage: deploy
   when: on_success
   script:
+    - source .venv/bin/activate  # Activate the virtual environment
     - pip install -U pip
     - pip install -r requirements.txt
-    - apt-get update && apt-get install -y docker-compose
-    - service docker start
     - docker-compose up -d
     - docker system prune --force --filter 'until=24h'
 
 
-deploy-prod:
-  image: python:3.9
-  stage: deploy
-  when: on_success
-  only:
-    - tags
-  except:
-    - branches
-  dependencies:
-    - deploy-dev
-  resource_group: deployment
-  before_script:
-    - chmod og= $RSA
-    - apk update && apk add openssh-client sshpass
-  script:
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose -f docker-compose.prod.yml up -d && docker system prune --force --filter 'until=24h'"
+# deploy-prod:
+#   image: python:3.9
+#   stage: deploy
+#   when: on_success
+#   only:
+#     - tags
+#   except:
+#     - branches
+#   dependencies:
+#     - deploy-dev
+#   resource_group: deployment
+#   before_script:
+#     - chmod og= $RSA
+#     - apk update && apk add openssh-client sshpass
+#   script:
+#     - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose -f docker-compose.prod.yml up -d && docker system prune --force --filter 'until=24h'"
