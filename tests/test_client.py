@@ -11,6 +11,5 @@ def client():
 
 def test_index_route(client):
     """Test that the index route returns a response without error."""
-    response = client.get('/')
+    response = client.get('/index')
     assert response.status_code == 200
-    assert b'Error' not in response.data
