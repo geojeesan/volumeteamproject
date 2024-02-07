@@ -52,15 +52,13 @@ deploy-dev:
   stage: deploy
   when: on_success
   resource_group: deployment
-  before_script:
-    - chmod og= $RSA
-    - apk update && apk add openssh-client sshpass
-    - mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-    - ssh-keyscan $IP >> ~/.ssh/known_hosts
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "mkdir -p ~/flask-app"
-    - scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-app
   script:
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose up -d && docker system prune --force --filter 'until=24h'"
+    - sudo yum update -y && sudo yum install -y openssh-clients
+    - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $IP >> ~/.ssh/known_hosts
+    - ssh $USER@$IP "mkdir -p ~/flask-app"
+    - rsync -r --delete --exclude='.git/' . $USER@$IP:~/flask-app
+    - ssh $USER@$IP "cd ~/flask-app && docker-compose up -d && docker system prune --force --filter 'until=24h'"
 
 
 deploy-prod:
