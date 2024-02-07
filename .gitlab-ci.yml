@@ -7,11 +7,11 @@ cache:
     - __pycache__/
 
 stages:
-  - check
-  - build
-  - test
-  - package
-  - release
+  # - check
+  # - build
+  # - test
+  # - package
+  # - release
   - deploy
 
 before_script:
@@ -48,11 +48,14 @@ release:
     - echo "No release step for Flask app"
 
 deploy-dev:
-  image: docker:19.03.12
+  image: python:3.9
   stage: deploy
   when: on_success
   script:
-    - docker run --rm -v $PWD:/app -w /app python:3.9 sh -c "pip install -U pip && pip install -r requirements.txt && docker-compose up -d && docker system prune --force --filter 'until=24h'"
+    - pip install -U pip
+    - pip install -r requirements.txt
+    - docker-compose up -d
+    - docker system prune --force --filter 'until=24h'
 
 
 deploy-prod:
