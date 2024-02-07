@@ -55,8 +55,8 @@ deploy-dev:
     - source .venv/bin/activate  # Activate the virtual environment
     - pip install -U pip
     - pip install -r requirements.txt
-    - docker-compose up -d
-    - docker system prune --force --filter 'until=24h'
+    # - docker-compose up -d
+    # - docker system prune --force --filter 'until=24h'
 
 
 # deploy-prod:
