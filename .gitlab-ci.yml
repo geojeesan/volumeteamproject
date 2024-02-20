@@ -47,27 +47,21 @@ release:
   script:
     - echo "No release step for Flask app"
 
-deploy-dev:
+deploy-prod:
   image: python:3.9
   stage: deploy
   when: on_success
   before_script:
-    # Install SSH client for connecting to the production server
-    - apk update && apk add openssh-client
+    # Install SSH client for connecting to the deployment server
+    - apk update && apk add openssh-client sshpass
+    # Ensure SSH key permissions are set correctly
+    - chmod og= $RSA
   script:
-    - echo $PROD_IP
-    # Activate the virtual environment
-    - source .venv/bin/activate
-    # Install or upgrade pip
-    - pip install -U pip
-    # Install Python dependencies
-    - pip install -r requirements.txt
-    # Transfer code to the production server
-    - scp -o StrictHostKeyChecking=no -i $RSA -r ./* $PROD_USER@$PROD_IP:server
-    # Connect to the production server and set up environment
-    - ssh -o StrictHostKeyChecking=no -i $RSA $PROD_USER@$PROD_IP "cd server && source .venv/bin/activate && pip install -U pip && pip install -r requirements.txt"
-    # Start the Flask application on the production server
-    - ssh -o StrictHostKeyChecking=no -i $RSA $PROD_USER@$PROD_IP "cd server && python app.py"
+    # Transfer files to the deployment server
+    - sshpass -Ppassphrase -p $PASSPHRASE scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-project
+    # Connect to the deployment server and execute commands
+    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-project && source .venv/bin/activate && python run.py"
+
 
 
 
