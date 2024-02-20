@@ -52,17 +52,13 @@ deploy-prod:
   stage: deploy
   when: on_success
   before_script:
-    # Install SSH client for connecting to the deployment server
-    - apk update && apk add openssh-client sshpass
     # Ensure SSH key permissions are set correctly
-    - chmod og= $RSA
+    - chmod 600 $RSA
   script:
     # Transfer files to the deployment server
-    - sshpass -Ppassphrase -p $PASSPHRASE scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-project
+    - scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-project
     # Connect to the deployment server and execute commands
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-project && source .venv/bin/activate && python run.py"
-
-
+    - ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-project && source .venv/bin/activate && python run.py"
 
 
 # deploy-prod:
