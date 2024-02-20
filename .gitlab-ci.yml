@@ -60,15 +60,14 @@ deploy-dev:
     # Ensure SSH key permissions are set correctly
     - chmod 600 $RSA
     # Activate the virtual environment and install Python dependencies
-    - cd ~/team-project  # Assuming the project is located in this directory
     - source .venv/bin/activate
     - pip install -U pip
     - pip install -r requirements.txt
-    # Run deployment script directly on the VM
-    - sh team-project/install-app.sh
+    # # Run deployment script directly on the VM
+    # - sh team-project/install-app.sh
   script:
-    # Change directory to your project directory
-    - cd ~/team-project
+    # # Change directory to your project directory
+    # - cd ~/team-project
     # Activate the virtual environment
     - source .venv/bin/activate
     # Run the Flask application
