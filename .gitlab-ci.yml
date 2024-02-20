@@ -1,4 +1,4 @@
-image: python:3.9
+# image: python:3.9
 
 cache:
   key: '$CI_COMMIT_REF_NAME'
@@ -53,34 +53,11 @@ deploy-dev:
   resource_group: deployment
   variables:
     URL: '${CI_PROJECT_NAME}.bham.team'
-    # ACME test SSL certificate retrieval - VM must be public, have ports 80, 443 open, and have the Caddy web server enabled
     ACME: 'https://acme-staging-v02.api.letsencrypt.org/directory'
   before_script:
-    # Ensure SSH key permissions are set correctly
     - chmod 600 $RSA
-    # Activate the virtual environment and install Python dependencies
     - source .venv/bin/activate
     - pip install -U pip
     - pip install -r requirements.txt
   script:
-    # Run the Flask application directly on the AWS server where the GitLab Runner is deployed
     - python run.py
-
-
-
-# deploy-prod:
-#   image: python:3.9
-#   stage: deploy
-#   when: on_success
-#   only:
-#     - tags
-#   except:
-#     - branches
-#   dependencies:
-#     - deploy-dev
-#   resource_group: deployment
-#   before_script:
-#     - chmod og= $RSA
-#     - apk update && apk add openssh-client sshpass
-#   script:
-#     - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-app && docker-compose -f docker-compose.prod.yml up -d && docker system prune --force --filter 'until=24h'"
