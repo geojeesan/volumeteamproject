@@ -48,7 +48,6 @@ release:
     - echo "No release step for Flask app"
 
 deploy-dev:
-  image: python:3.9
   stage: deploy
   when: on_success
   resource_group: deployment
@@ -63,15 +62,8 @@ deploy-dev:
     - source .venv/bin/activate
     - pip install -U pip
     - pip install -r requirements.txt
-    # # Run deployment script directly on the VM
-    # - sh team-project/install-app.sh
   script:
-    # # Change directory to your project directory
-    # - cd ~/team-project
-    # Activate the virtual environment
-    - source .venv/bin/activate
-    # Run the Flask application
-    # - nohup python run.py &
+    # Run the Flask application directly on the AWS server where the GitLab Runner is deployed
     - python run.py
 
 
