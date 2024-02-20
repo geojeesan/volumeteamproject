@@ -61,5 +61,5 @@ deploy-dev:
     - pip install -r requirements.txt
   script:
     - lsof -t -i :5000 | xargs kill -9 || true  # Kill processes listening on port 5000 if any, ignore errors
-    - nohup python3 run.py &
+    - nohup python3 run.py > /dev/null 2>&1 &
     - exit 0
