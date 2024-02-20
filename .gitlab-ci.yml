@@ -15,7 +15,7 @@ stages:
   - deploy
 
 before_script:
-  - python -m venv .venv
+  - python3 -m venv .venv
   - source .venv/bin/activate
   - pip install -U pip
   - pip install -r requirements.txt
@@ -60,4 +60,4 @@ deploy-dev:
     - pip install -U pip
     - pip install -r requirements.txt
   script:
-    - python run.py
+    - python3 run.py
