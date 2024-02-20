@@ -60,4 +60,9 @@ deploy-dev:
     - pip install -U pip
     - pip install -r requirements.txt
   script:
+        # Now let's add code to run Flask over HTTPS
+    - export FLASK_ENV=production
+    - export FLASK_RUN_CERT=adhoc  # Use an ad-hoc SSL certificate for testing purposes
+    - export FLASK_RUN_HOST=0.0.0.0
+    - export FLASK_RUN_PORT=443  # Set Flask to listen on port 443 for HTTPS
     - nohup python3 run.py &
