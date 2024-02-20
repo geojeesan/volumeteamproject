@@ -51,12 +51,23 @@ deploy-dev:
   image: python:3.9
   stage: deploy
   when: on_success
+  before_script:
+    # Install SSH client for connecting to the production server
+    - apk update && apk add openssh-client
   script:
-    - source .venv/bin/activate  # Activate the virtual environment
+    # Activate the virtual environment
+    - source .venv/bin/activate
+    # Install or upgrade pip
     - pip install -U pip
+    # Install Python dependencies
     - pip install -r requirements.txt
-    # - docker-compose up -d
-    # - docker system prune --force --filter 'until=24h'
+    # Transfer code to the production server
+    - scp -o StrictHostKeyChecking=no -i $RSA -r ./* $PROD_USER@$PROD_IP:server
+    # Connect to the production server and set up environment
+    - ssh -o StrictHostKeyChecking=no -i $RSA $PROD_USER@$PROD_IP "cd server && source .venv/bin/activate && pip install -U pip && pip install -r requirements.txt"
+    # Start the Flask application on the production server
+    - ssh -o StrictHostKeyChecking=no -i $RSA $PROD_USER@$PROD_IP "cd server && python app.py"
+
 
 
 # deploy-prod:
