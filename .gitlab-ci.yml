@@ -47,18 +47,33 @@ release:
   script:
     - echo "No release step for Flask app"
 
-deploy-prod:
+deploy-dev:
   image: python:3.9
   stage: deploy
   when: on_success
+  resource_group: deployment
+  variables:
+    URL: '${CI_PROJECT_NAME}.bham.team'
+    # ACME test SSL certificate retrieval - VM must be public, have ports 80, 443 open, and have the Caddy web server enabled
+    ACME: 'https://acme-staging-v02.api.letsencrypt.org/directory'
   before_script:
     # Ensure SSH key permissions are set correctly
     - chmod 600 $RSA
+    # Activate the virtual environment and install Python dependencies
+    - cd ~/team-project  # Assuming the project is located in this directory
+    - source .venv/bin/activate
+    - pip install -U pip
+    - pip install -r requirements.txt
+    # Run deployment script directly on the VM
+    - sh team-project/install-app.sh
   script:
-    # Transfer files to the deployment server
-    - scp -o StrictHostKeyChecking=no -i $RSA -r . $USER@$IP:~/flask-project
-    # Connect to the deployment server and execute commands
-    - ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "cd ~/flask-project && source .venv/bin/activate && python run.py"
+    # Change directory to your project directory
+    - cd ~/team-project
+    # Activate the virtual environment
+    - source .venv/bin/activate
+    # Run the Flask application
+    - python run.py
+
 
 
 # deploy-prod:
