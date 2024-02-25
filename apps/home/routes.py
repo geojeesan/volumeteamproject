@@ -18,6 +18,10 @@ def index():
 def index():
     return render_template('home/lessons.html', segment='lessons', API_GENERATOR=len(API_GENERATOR))
 
+ @blueprint.route('/prac')
+def index():
+    return render_template('home/prac.html', segment='prac', API_GENERATOR=len(API_GENERATOR))   
+
 @blueprint.route('/<template>')
 def route_template(template):
 
