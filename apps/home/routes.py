@@ -19,7 +19,7 @@ def index():
     return render_template('home/lessons.html', segment='lessons', API_GENERATOR=len(API_GENERATOR))
 
  @blueprint.route('/prac')
-def index():
+def unique():
     return render_template('home/prac.html', segment='prac', API_GENERATOR=len(API_GENERATOR))   
 
 @blueprint.route('/<template>')
