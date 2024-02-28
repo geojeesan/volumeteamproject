@@ -1,14 +1,86 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} Dashboard {% endblock title %}
+{% block title %} Lessons {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+
+{% block stylesheets %}
+<style>
+  .main-content {
+    flex: 1;
+  }
+  
+  .wave-graph-container {
+    height: 100%; /* Adjust height as needed */
+  }
+
+  .wave-graph {
+    width: 100%;
+    height: auto; /* Adjust as necessary to maintain aspect ratio */
+  }
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 
-    <div class="container-fluid py-4">
+<div class="container-fluid py-4">
 
+  <!-- Lessons Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="fw-bold">Lessons</h2>
+      <p>With Volume, tailoring your lessons was always part of the plan!</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Left Column for Lessons and Challenges -->
+    <div class="col-lg-8">
+      <!-- Lesson Resume Section -->
+      <div class="card mb-4 text-center">
+        <div class="card-body">
+          <h5 class="card-title">Pick up where you left off:</h5>
+          <h6>Pacing through!</h6>
+          <p>Lesson 2/12</p>
+          <div class="lesson-icon mb-3">Lesson Icon</div>
+          <button class="btn btn-primary">Continue</button>
+        </div>
+      </div>
+
+      <!-- New Challenges Section -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Or perhaps, start a new challenge:</h5>
+          <div class="challenge-item">
+            <h6>Pitch-Perfect</h6>
+            <p>Embrace the power of utilizing your pitch!</p>
+            <button class="btn btn-secondary">Start Challenge</button>
+          </div>
+          <!-- Repeat for other challenges -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column for Volume Wave -->
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5>Your Volume™ Wave:</h5>
+          <div id="wave-graph-placeholder">
+            <!-- Dynamic graph will be rendered here -->
+          </div>
+          <script>
+            // JavaScript code to fetch the user's progress and render the wave graph
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+       <!-- These are the widgets, im not sure if ill need them for later -->
+       <!--
       <div class="row">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
@@ -16,7 +88,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Money</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Pick up where you left off!</p>
                     <h5 class="font-weight-bolder mb-0">
                       $33,000
                       <span class="text-success text-sm font-weight-bolder">+55%</span>
@@ -98,24 +170,8 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>          -->
 
-      <div class="row mt-4">
-        <div class="col-lg-7 mb-lg-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="d-flex flex-column h-100">
-                    <p class="mb-1 pt-2 text-bold">Built by developers</p>
-                    <h5 class="font-weight-bolder">Soft UI Dashboard</h5>
-                    <p class="mb-5">From colors, cards, typography to complex elements, you will find the full documentation.</p>
-                    <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                      Read More
-                      <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                    </a>
-                  </div>
-                </div>
                 <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
                   <div class="bg-gradient-primary border-radius-lg h-100">
                     <img src="{{ config.ASSETS_ROOT }}/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
@@ -144,7 +200,7 @@
           </div>
         </div>
       </div>
-
+<!--
       <div class="row mt-4">
         <div class="col-lg-5 mb-lg-0 mb-4">
           <div class="card z-index-2">
@@ -629,7 +685,7 @@
       {% include "includes/footer.html" %}
 
     </div>
-
+  -->
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
