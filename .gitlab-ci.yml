@@ -50,6 +50,8 @@ release:
 deploy-dev:
   stage: deploy
   when: on_success
+  tags:
+    - dev
   resource_group: deployment
   variables:
     URL: '${CI_PROJECT_NAME}.bham.team'
@@ -68,6 +70,8 @@ deploy-dev:
 deploy-prod:
   stage: deploy
   when: on_success
+  tags:
+    - prod
   resource_group: deployment
   variables:
     URL: '${CI_PROJECT_NAME}.bham.team'

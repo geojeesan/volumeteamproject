@@ -1,0 +1,26 @@
+{% extends 'layouts/base.html' %} {% block title %} Dashboard {% endblock title
+%}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+
+<input type="number" id="score" />
+
+<button onclick="getResult()">Get result</button>
+
+<div id="result">No current result</div>
+
+<div class="container-fluid py-4">{% include "includes/footer.html" %}</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="{{ config.ASSETS_ROOT }}/js/practice/practice.js"></script>
+
+{% endblock javascripts %}
+
+
+
+
