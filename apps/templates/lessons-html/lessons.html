@@ -1,6 +1,8 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %}Lessons{% endblock %}
+{% block title %} Lessons {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
 
 {% block stylesheets %}
 <style>
@@ -17,10 +19,14 @@
     height: auto; /* Adjust as necessary to maintain aspect ratio */
   }
 </style>
-{% endblock %}
+
+{% endblock stylesheets %}
 
 {% block content %}
+
 <div class="container-fluid py-4">
+
+  <!-- Lessons Header -->
   <div class="row mb-4">
     <div class="col-12">
       <h2 class="fw-bold">Lessons</h2>
@@ -29,47 +35,57 @@
   </div>
 
   <div class="row">
+    <!-- Left Column for Lessons and Challenges -->
     <div class="col-lg-8">
+      <!-- Lesson Resume Section -->
       <div class="card mb-4 text-center">
         <div class="card-body">
           <h5 class="card-title">Pick up where you left off:</h5>
           <h6>Pacing through!</h6>
           <p>Lesson 2/12</p>
           <div class="lesson-icon mb-3">
-            <img src="{{ url_for('static', filename='images/shoe.jpg') }}" alt="Image of a shoe">
-          </div> <!-- image not displaying?-->
+            <img src="/media/Images/shoe.jpg" alt="Image of a shoe"> </div> <!-- image not displaying?-->
           <button class="btn btn-primary">Continue</button>
         </div>
       </div>
 
+      <!-- New Challenges Section -->
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Or perhaps, start a new challenge:</h5>
           <div class="challenge-item">
             <h6>Pitch-Perfect</h6>
             <p>Embrace the power of utilizing your pitch!</p>
-            <button class="btn btn-secondary">Start Challenge</button>
+            <button class="btn btn-secondary">Start Challenge</button> <!-- this will probably change-->
           </div>
+          <!-- Repeat for other challenges -->
         </div>
       </div>
     </div>
 
+    <!-- Right Column for Volume Wave -->
     <div class="col-lg-4">
       <div class="card mb-4">
         <div class="card-body">
           <h5>Your Volume™ Wave:</h5>
-          <div id="wave-graph-placeholder" class="wave-graph-container">
-            <!-- Dynamic graph will be rendered here, click of a button makes it do so, or do i change approach?-->
+          <div id="wave-graph-placeholder">
+            <!-- Dynamic graph will be rendered here -->
           </div>
-          <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
+          <script>
+            // JavaScript code to fetch the user's progress and render the wave graph
+          </script>
         </div>
       </div>
     </div>
   </div>
 
 </div>
-{% endblock %}
+{% endblock content %}
 
+<!-- Specific JS goes HERE --> 
 {% block javascripts %}
+
 <script src="{{ url_for('static', filename='js/lessons.js') }}"></script>
-{% endblock %}
+<!-- The src above should point to the JavaScript file -->
+
+{% endblock javascripts %}
