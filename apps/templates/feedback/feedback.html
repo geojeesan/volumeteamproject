@@ -1,0 +1,159 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Lessons{% endblock %}
+
+{% block stylesheets %}
+<style>
+  .main-content {
+    flex: 1;
+  }
+  
+  .wave-graph-container {
+  height: 200px; /* Adjust to the desired height */
+  background-color: #f7fafc; /* Adjust the color to match your brand color */
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center; /* Center content if the graph is not as wide as the container */
+}
+
+  .wave-graph {
+    width: 100%;
+    height: auto; /* Adjust as necessary to maintain aspect ratio */
+  }
+
+    /* General page styles */
+    .container-fluid {
+    max-width: 1200px;
+  }
+
+  /* Styles for the lessons and wave graph cards */
+  .card {
+    border: none;
+    border-radius: 15px;
+  }
+
+  .card .card-body {
+    padding: 3rem;
+  }
+
+  /* Styles for the title and content */
+  h2 {
+    color: #5e72e4; /* Adjust the color to match your brand color */
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #8898aa; /* Adjust the color to match your brand color */
+  }
+
+  /* Styles for the lesson icon */
+  .lesson-icon img {
+    width: 64px; /* Adjust as needed */
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  /* Styles for the buttons */
+  .btn-primary {
+    background-color: #5e72e4; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .btn-secondary {
+    background-color: #f4f5f7; /* Light grey background for secondary button */
+    color: #5e72e4; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  /* Styles for the Volume Wave graph container */
+  .wave-graph-container {
+    background-color: #f7fafc; /* Adjust the color to match your brand color */
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center; /* Center content if the graph is not as wide as the container */
+  }
+  
+  /* Make sure the 'Analyze Progress' button is centered below the graph */
+  #analyze-btn {
+    display: block;
+    margin: 1.5rem auto 0; /* Centers the button with top margin */
+  }
+
+  /* Additional styles for alignment and responsiveness */
+  @media (min-width: 992px) { /* Adjust based on your breakpoints */
+    .col-lg-8, .col-lg-4 {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .col-lg-4 {
+      justify-content: space-between; /* To push the Volume Wave card to the bottom */
+    }
+  }
+
+  .progress-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.progress {
+  height: 20px; /* Thinner bars as per the design */
+  margin-bottom: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  line-height: 20px; /* Match the height of the progress bar for vertical centering */
+  border-radius: 10px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="fw-bold">Feedback</h2>
+      <p>With Volume, tailoring your lessons was always part of the plan!</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4 text-center">
+        <div class="card-body">
+          <h5 class="card-title">Give us your feedback</h5>
+
+
+          <input id="feedback" type="text"/>
+
+          
+         <button class="btn btn-primary" onclick="sendFeedback()">Send feedback</button>
+
+
+          <div id="result">
+          
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+    
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/feedback/feedback.js') }}"></script>
+{% endblock %}
