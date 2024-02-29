@@ -9,13 +9,110 @@
   }
   
   .wave-graph-container {
-    height: 100%; /* Adjust height as needed */
-  }
+  height: 200px; /* Adjust to the desired height */
+  background-color: #f7fafc; /* Adjust the color to match your brand color */
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center; /* Center content if the graph is not as wide as the container */
+}
 
   .wave-graph {
     width: 100%;
     height: auto; /* Adjust as necessary to maintain aspect ratio */
   }
+
+    /* General page styles */
+    .container-fluid {
+    max-width: 1200px;
+  }
+
+  /* Styles for the lessons and wave graph cards */
+  .card {
+    border: none;
+    border-radius: 15px;
+  }
+
+  .card .card-body {
+    padding: 3rem;
+  }
+
+  /* Styles for the title and content */
+  h2 {
+    color: #5e72e4; /* Adjust the color to match your brand color */
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #8898aa; /* Adjust the color to match your brand color */
+  }
+
+  /* Styles for the lesson icon */
+  .lesson-icon img {
+    width: 64px; /* Adjust as needed */
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  /* Styles for the buttons */
+  .btn-primary {
+    background-color: #5e72e4; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .btn-secondary {
+    background-color: #f4f5f7; /* Light grey background for secondary button */
+    color: #5e72e4; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  /* Styles for the Volume Wave graph container */
+  .wave-graph-container {
+    background-color: #f7fafc; /* Adjust the color to match your brand color */
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center; /* Center content if the graph is not as wide as the container */
+  }
+  
+  /* Make sure the 'Analyze Progress' button is centered below the graph */
+  #analyze-btn {
+    display: block;
+    margin: 1.5rem auto 0; /* Centers the button with top margin */
+  }
+
+  /* Additional styles for alignment and responsiveness */
+  @media (min-width: 992px) { /* Adjust based on your breakpoints */
+    .col-lg-8, .col-lg-4 {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .col-lg-4 {
+      justify-content: space-between; /* To push the Volume Wave card to the bottom */
+    }
+  }
+
+  .progress-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.progress {
+  height: 20px; /* Thinner bars as per the design */
+  margin-bottom: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  line-height: 20px; /* Match the height of the progress bar for vertical centering */
+  border-radius: 10px;
+}
+
 </style>
 {% endblock %}
 
@@ -54,18 +151,54 @@
       </div>
     </div>
 
-    <div class="col-lg-4">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5>Your Volume™ Wave:</h5>
-          <div id="wave-graph-placeholder" class="wave-graph-container">
-            <!-- Dynamic graph will be rendered here, click of a button makes it do so, or do i change approach?-->
+   <!-- Right Column for Volume Wave and Skills Progress -->
+<div class="col-lg-4">
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5>Your Volume™ Wave:</h5>
+      <div id="wave-graph-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
+        <!-- Dynamic graph will be rendered here -->
+      </div>
+      <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
+
+      <!-- Skills Progress Section -->
+      <h5 class="mt-4">Your Progress</h5>
+      <!-- Dynamic progress bars will be rendered here -->
+      <div id="skills-progress-container">
+        <!-- Placeholder for Pitch progress bar -->
+        <div class="skill-progress">
+          <label for="pitch-progress">Pitch</label>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
           </div>
-          <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
+        </div>
+        <!-- Placeholder for Diction progress bar -->
+        <div class="skill-progress">
+          <label for="diction-progress">Diction</label>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="diction-progress"></div>
+          </div>
+        </div>
+        <!-- Placeholder for Pace progress bar -->
+        <div class="skill-progress">
+          <label for="pace-progress">Pace</label>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="pace-progress"></div>
+          </div>
+        </div>
+        <!-- Placeholder for Confidence progress bar -->
+        <div class="skill-progress">
+          <label for="confidence-progress">Confidence</label>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+    
 
 </div>
 {% endblock %}
