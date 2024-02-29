@@ -65,7 +65,7 @@ function stopRecording() {
 
 
 function saveRecording() {
-  const blob = new Blob(chunks, { type: 'audio/wav; codecs=pcm' });
+  const blob = new Blob(chunks, { type: 'audio/mp3' });
   const audioUrl = URL.createObjectURL(blob);
   // Do something with audioUrl, like play it or save it to a variable
   console.log('Recording saved:', audioUrl);
@@ -76,7 +76,7 @@ function saveRecording() {
 
 
 function sendRecording() {
-  const blob = new Blob(chunks, { type: 'audio/wav; codecs=pcm' });
+  const blob = new Blob(chunks, { type: 'audio/mp3' });
   const formData = new FormData();
   formData.append('audio', blob);
 
