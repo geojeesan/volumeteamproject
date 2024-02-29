@@ -23,7 +23,7 @@ def get_lessons():
     lessons_list = {'title': 'testTitle', 'description': 'testDescription', 'image_path': 'static/assets/img/shoe.jpg'}
     return jsonify(lessons_list)
 
-
+ 
 # Helper - Extract current page name from request
 def get_segment(request):
 
