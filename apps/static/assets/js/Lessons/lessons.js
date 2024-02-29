@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const analyzeProgressBtn = document.getElementById('analyze-progress-btn'); // Use the correct ID for the "Analyze Progress" button
+    const analyzeProgressBtn = document.getElementById('analyze-btn'); // Use the correct ID for the "Analyze Progress" button
     const wavePlaceholder = document.getElementById('wave-placeholder'); // Use the correct ID for the wave placeholder
   
     analyzeProgressBtn.addEventListener('click', function() {
@@ -28,17 +28,19 @@ document.addEventListener('DOMContentLoaded', function() {
       wavePlaceholder.textContent = JSON.stringify(data);
     }
   
-    const continueLessonBtn = document.getElementById('continue-lesson-btn'); // Use the correct ID for the "Continue" button
+    const continueLessonBtn = document.getElementById('continue-lesson'); // Use the correct ID for the "Continue" button
   
     continueLessonBtn.addEventListener('click', function() {
       fetchLessonData();
     });
   
     function fetchLessonData() {
-      fetch('/api/lessons/current')
+      fetch('/get-lessons')
         .then(response => response.json())
         .then(lessonData => {
+            console.log(lessonData)
           updateLessonUI(lessonData);
+          
         })
         .catch(error => console.error('Error fetching current lesson:', error));
     }

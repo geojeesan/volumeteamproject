@@ -130,12 +130,12 @@
       <div class="card mb-4 text-center">
         <div class="card-body">
           <h5 class="card-title">Pick up where you left off:</h5>
-          <h6>Pacing through!</h6>
+          <h6 id="lesson-title">Pacing through!</h6>
           <p>Lesson 2/12</p>
           <div class="lesson-icon mb-3">
-            <img src="{{ url_for('static', filename='images/shoe.jpg') }}" alt="Image of a shoe">
+            <img id="lesson-image" src="{{ url_for('static', filename='assets/images/shoe.jpg') }}" alt="Image of a shoe">
           </div> <!-- image not displaying?-->
-          <button class="btn btn-primary">Continue</button>
+          <button class="btn btn-primary" id="continue-lesson">Continue</button>
         </div>
       </div>
 
@@ -144,7 +144,7 @@
           <h5 class="card-title">Or perhaps, start a new challenge:</h5>
           <div class="challenge-item">
             <h6>Pitch-Perfect</h6>
-            <p>Embrace the power of utilizing your pitch!</p>
+            <p id="lesson-description">Embrace the power of utilizing your pitch!</p>
             <button class="btn btn-secondary">Start Challenge</button>
           </div>
         </div>
@@ -156,7 +156,7 @@
   <div class="card mb-4">
     <div class="card-body">
       <h5>Your Volume™ Wave:</h5>
-      <div id="wave-graph-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
+      <div id="wave-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
         <!-- Dynamic graph will be rendered here -->
       </div>
       <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
@@ -204,5 +204,5 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ url_for('static', filename='js/lessons.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
 {% endblock %}
