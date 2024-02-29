@@ -46,7 +46,7 @@ def analyze_speech():
             try:
                 ffmpeg.input(temp_audio_path).output(wav_audio_path).run()
             except ffmpeg.Error as e:
-                return f'Error converting audio file to WAV: {str(e)}', 400
+                return jsonify(f'Error converting audio file to WAV: {str(e)}')
             finally:
                 # Remove temporary audio file
                 os.remove(temp_audio_path)
@@ -57,20 +57,16 @@ def analyze_speech():
         # Initialize recognizer
         recognizer = sr.Recognizer()
         
-        try:
-            # Read the audio file
-            with sr.AudioFile(audio_file) as source:
-                audio_data = recognizer.record(source)
-            
-            # Use recognizer to transcribe audio to text
-            text = recognizer.recognize_google(audio_data)
-            return text
-        except sr.UnknownValueError:
-            return 'Speech recognition could not understand audio', 400
-        except sr.RequestError as e:
-            return f'Speech recognition service error: {str(e)}', 500
+        # Read the audio file
+        with sr.AudioFile(audio_file) as source:
+            audio_data = recognizer.record(source)
+        
+        # Use recognizer to transcribe audio to text
+        text = recognizer.recognize_google(audio_data)
+        return jsonify(text)
+
     except Exception as e:
-        return jsonify({'error': traceback.format_exc()})
+        return jsonify(str(traceback.format_exc()))
 
     
         
