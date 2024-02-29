@@ -20,10 +20,10 @@ def get_lessons():
     # lessons = Lesson.query.all()
     # lessons_list = [{'id': lesson.id, 'title': lesson.title, 'description': lesson.description, 'image_path': lesson.image_path} for lesson in lessons]
     # print(lessons_list, jsonify(lessons_list))
-    lessons_list = {'title': 'testTitle', 'description': 'testDescription', 'image_path': 'static/assets/img/shoe.jpg'}
+    lessons_list = {'title': 'testTitle', 'description': 'testDescription', 'image_path': 'static/assets//img/shoe.jpg'}
     return jsonify(lessons_list)
 
- 
+
 # Helper - Extract current page name from request
 def get_segment(request):
 
