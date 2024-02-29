@@ -21,8 +21,8 @@ PyJWT==2.4.0
 
 
 # New requirements
-speech_recognition
-ffmpeg
+SpeechRecognition
+ffmpeg-python
 
 
 
