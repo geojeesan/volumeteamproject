@@ -30,7 +30,6 @@ function updateLastAccessedLessonUI(lesson) {
     lessonTitle.textContent = lesson.title;
     lessonImage.src = lesson.image_path;
     lessonImage.alt = `Image for ${lesson.title}`;
-    lessonDescription.textContent = `Lesson ${lesson.progress}/12`; // Update the lesson progress text as needed
     continueLessonBtn.textContent = 'Continue';
 }
 

@@ -25,7 +25,7 @@ def get_lessons():
         'title': lesson.title,
         'description': lesson.description,
         'image_path': lesson.image_path,
-        'difficulty': lesson.difficulty  # Include difficulty here
+        'difficulty': lesson.difficulty.name  # Include difficulty here
     } for lesson in lessons]
     return jsonify(lessons_data)
 

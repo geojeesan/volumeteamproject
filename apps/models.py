@@ -3,8 +3,18 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+# Import Enum from SQLAlchemy for column definitions
+from sqlalchemy import Enum as SQLEnum
+# Import the enum module for creating enumerations in Python
+import enum
 from apps import db
 from datetime import datetime
+
+# Define an enumeration for difficulty levels using Python's built-in enum
+class DifficultyLevel(enum.Enum):
+    beginner = 'beginner'
+    intermediate = 'intermediate'
+    advanced = 'advanced'
 
 class Lesson(db.Model):
     __tablename__ = 'lessons'
@@ -16,16 +26,22 @@ class Lesson(db.Model):
     in_progress = db.Column(db.Boolean, default=False, nullable=False)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow)
     progress = db.Column(db.Integer, default=0)  # 0-100 to represent percentage completion
-    completed = db.Column(db.Boolean, default=False, nullable=False)  # True if the lesson is completed
-    difficulty = db.Column(db.String(50), nullable=False)  # New column for difficulty level
+    completed = db.Column(db.Boolean, default=False, nullable=False)
+    # Use SQLEnum (imported as Enum from sqlalchemy) for the column type, specifying the Python enum for allowed values
+    difficulty = db.Column(SQLEnum(DifficultyLevel), nullable=False)
 
-
-    def __init__(self, title, description, image_path, difficulty):
+    def __init__(self, title, description, image_path, difficulty, in_progress=False, last_accessed=None, progress=0, completed=False):
         self.title = title
         self.description = description
         self.image_path = image_path
-        self.difficulty = difficulty  # Include difficulty in constructor
-        
+        self.in_progress = in_progress
+        self.last_accessed = last_accessed if last_accessed else datetime.utcnow()
+        self.progress = progress
+        self.completed = completed
+        # Convert string difficulty to DifficultyLevel enum if necessary
+        if isinstance(difficulty, str):
+            difficulty = DifficultyLevel(difficulty)
+        self.difficulty = difficulty
 
     def to_dict(self):
         return {
@@ -37,11 +53,12 @@ class Lesson(db.Model):
             'last_accessed': self.last_accessed.isoformat() if self.last_accessed else None,
             'progress': self.progress,
             'completed': self.completed,
-            'difficulty': self.difficulty  # Include difficulty in to_dict output
+            'difficulty': self.difficulty.name  # Return the name of the Enum member
         }
 
     def __repr__(self):
-        return f'<Lesson {self.title} | Difficulty: {self.difficulty}>'
+        return f'<Lesson {self.title} | Difficulty: {self.difficulty.name}>'
+
 
 
 # Book Sample
