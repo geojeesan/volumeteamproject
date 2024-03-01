@@ -47,13 +47,31 @@
     /* Adjust the color to match your brand color */
   }
 
+  .lesson {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Adds space between each lesson card if needed */
+  }
+
   /* Styles for the lesson icon */
   .lesson-icon img {
-    width: 64px;
-    /* Adjust as needed */
-    height: auto;
-    margin-bottom: 1rem;
-  }
+  max-width: 100px; /* Adjust the value as needed */
+  max-height: 100px; /* Adjust the value as needed */
+  height: auto;
+  width: auto; /* This will maintain the aspect ratio */
+  display: block; /* To remove any extra space below the image */
+  margin: 0 auto; /* This will center the image in its container */
+}
+
+.lesson-card {
+  /* Add your existing styles here */
+  margin: auto; /* This centers the card in the flex container */
+  width: fit-content; /* Or a fixed width if you prefer */
+  text-align: center;
+
+}
+
+
 
   /* Styles for the buttons */
   .btn-primary {
@@ -169,14 +187,15 @@
         <div class="card-body">
           <!-- Static header to indicate the purpose of the section -->
           <h5 class="card-title">Pick up where you left off:</h5>
-          <!-- Dynamic lesson title updated by fetchLastLesson() -->
           <h6 id="lesson-title">Loading...</h6>
-          <!-- Dynamic lesson image updated by fetchLastLesson() -->
+          <p id="lesson-description">Loading description...</p> <!-- Add this line -->
+          <div id="lesson-difficulty" class="badge">Loading difficulty...</div> <!-- Add this line -->
+          <p id="lesson-progress">Loading progress...</p> <!-- Add this line -->
           <div class="lesson-icon mb-3">
-            <img id="lesson-image" src="" alt="Loading lesson image...">
-          </div>
-          <!-- Button to continue the last accessed lesson -->
-          <button class="btn btn-primary" id="continue-lesson">Resume lesson</button>
+    <img id="lesson-image" src="" alt="Loading lesson image...">
+</div>
+<!-- Continue Lesson button -->
+<button class="btn btn-primary" id="continue-lesson">Continue Lesson</button>
         </div>
       </div>
       <div class="card">

@@ -46,8 +46,6 @@ def get_lessons_status():
         'noProgress': [lesson.to_dict() for lesson in no_progress_lessons]
     })
 
-
-
 # Helper - Extract current page name from request
 def get_segment(request):
 
