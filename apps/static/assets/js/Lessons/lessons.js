@@ -49,18 +49,18 @@ function fetchAllLessons() {
 }
 
 function displayLesson(lesson) {
-    const lessonContainer = document.getElementById('lessons-display'); // Ensure this is your container's ID in HTML
+    const lessonContainer = document.getElementById('lessons-display');
     const lessonElement = document.createElement('div');
-    lessonElement.className = 'lesson'; // Add a class for styling
+    lessonElement.className = 'lesson';
     lessonElement.innerHTML = `
         <div class="lesson-card">
             <h5>${lesson.title}</h5>
             <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100%; height: auto;">
             <p>${lesson.description}</p>
+            <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
             <p>Progress: ${lesson.progress}%</p>
             <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}">
                 ${lesson.in_progress ? 'Continue Lesson' : 'Start Lesson'}
-                <br>
             </button>
         </div>
     `;

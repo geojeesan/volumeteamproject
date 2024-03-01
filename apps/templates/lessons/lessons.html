@@ -126,6 +126,35 @@
     /* Match the height of the progress bar for vertical centering */
     border-radius: 10px;
   }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .badge-beginner {
+    color: #fff;
+    background-color: #28a745; /* Green for beginner */
+  }
+
+  .badge-intermediate {
+    color: #fff;
+    background-color: #ffc107; /* Yellow for intermediate */
+  }
+
+  .badge-advanced {
+    color: #fff;
+    background-color: #dc3545; /* Red for advanced */
+  }
+
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
