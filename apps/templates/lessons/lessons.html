@@ -1,28 +1,27 @@
-{% extends 'layouts/base.html' %}
-
-{% block title %}Lessons{% endblock %}
-
-{% block stylesheets %}
-<style>
+{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %} <style>
   .main-content {
     flex: 1;
   }
-  
+
   .wave-graph-container {
-  height: 200px; /* Adjust to the desired height */
-  background-color: #f7fafc; /* Adjust the color to match your brand color */
-  border-radius: 20px;
-  padding: 1rem;
-  text-align: center; /* Center content if the graph is not as wide as the container */
-}
+    height: 200px;
+    /* Adjust to the desired height */
+    background-color: #f7fafc;
+    /* Adjust the color to match your brand color */
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center;
+    /* Center content if the graph is not as wide as the container */
+  }
 
   .wave-graph {
     width: 100%;
-    height: auto; /* Adjust as necessary to maintain aspect ratio */
+    height: auto;
+    /* Adjust as necessary to maintain aspect ratio */
   }
 
-    /* General page styles */
-    .container-fluid {
+  /* General page styles */
+  .container-fluid {
     max-width: 1200px;
   }
 
@@ -38,32 +37,38 @@
 
   /* Styles for the title and content */
   h2 {
-    color: #5e72e4; /* Adjust the color to match your brand color */
+    color: #5e72e4;
+    /* Adjust the color to match your brand color */
     margin-bottom: 1rem;
   }
 
   p {
-    color: #8898aa; /* Adjust the color to match your brand color */
+    color: #8898aa;
+    /* Adjust the color to match your brand color */
   }
 
   /* Styles for the lesson icon */
   .lesson-icon img {
-    width: 64px; /* Adjust as needed */
+    width: 64px;
+    /* Adjust as needed */
     height: auto;
     margin-bottom: 1rem;
   }
 
   /* Styles for the buttons */
   .btn-primary {
-    background-color: #5e72e4; /* Adjust the color to match your brand color */
+    background-color: #5e72e4;
+    /* Adjust the color to match your brand color */
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1.5rem;
   }
 
   .btn-secondary {
-    background-color: #f4f5f7; /* Light grey background for secondary button */
-    color: #5e72e4; /* Adjust the color to match your brand color */
+    background-color: #f4f5f7;
+    /* Light grey background for secondary button */
+    color: #5e72e4;
+    /* Adjust the color to match your brand color */
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1.5rem;
@@ -71,96 +76,101 @@
 
   /* Styles for the Volume Wave graph container */
   .wave-graph-container {
-    background-color: #f7fafc; /* Adjust the color to match your brand color */
+    background-color: #f7fafc;
+    /* Adjust the color to match your brand color */
     border-radius: 20px;
     padding: 1rem;
-    text-align: center; /* Center content if the graph is not as wide as the container */
+    text-align: center;
+    /* Center content if the graph is not as wide as the container */
   }
-  
+
   /* Make sure the 'Analyze Progress' button is centered below the graph */
   #analyze-btn {
     display: block;
-    margin: 1.5rem auto 0; /* Centers the button with top margin */
+    margin: 1.5rem auto 0;
+    /* Centers the button with top margin */
   }
 
   /* Additional styles for alignment and responsiveness */
-  @media (min-width: 992px) { /* Adjust based on your breakpoints */
-    .col-lg-8, .col-lg-4 {
+  @media (min-width: 992px) {
+
+    /* Adjust based on your breakpoints */
+    .col-lg-8,
+    .col-lg-4 {
       display: flex;
       flex-direction: column;
     }
-    
+
     .col-lg-4 {
-      justify-content: space-between; /* To push the Volume Wave card to the bottom */
+      justify-content: space-between;
+      /* To push the Volume Wave card to the bottom */
     }
   }
 
   .progress-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-.progress {
-  height: 20px; /* Thinner bars as per the design */
-  margin-bottom: 20px;
-  background-color: #e9ecef;
-  border-radius: 10px;
-}
+  .progress {
+    height: 20px;
+    /* Thinner bars as per the design */
+    margin-bottom: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+  }
 
-.progress-bar {
-  line-height: 20px; /* Match the height of the progress bar for vertical centering */
-  border-radius: 10px;
-}
-
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid py-4">
+  .progress-bar {
+    line-height: 20px;
+    /* Match the height of the progress bar for vertical centering */
+    border-radius: 10px;
+  }
+</style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
       <h2 class="fw-bold">Lessons</h2>
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
   </div>
-
   <div class="row">
+    <!-- Left Column for Lessons -->
     <div class="col-lg-8">
       <div class="card mb-4 text-center">
         <div class="card-body">
+          <!-- Static header to indicate the purpose of the section -->
           <h5 class="card-title">Pick up where you left off:</h5>
-          <h6 id="lesson-title">Pacing through!</h6>
-          <p>Lesson 2/12</p>
+          <!-- Dynamic lesson title updated by fetchLastLesson() -->
+          <h6 id="lesson-title">Loading...</h6>
+          <!-- Dynamic lesson progress updated by fetchLastLesson() -->
+          <p id="lesson-progress">Lesson ?/?</p>
+          <!-- Dynamic lesson image updated by fetchLastLesson() -->
           <div class="lesson-icon mb-3">
-            <img id="lesson-image" src="{{ url_for('static', filename='assets/images/shoe.jpg') }}" alt="Image of a shoe">
+            <img id="lesson-image" src="" alt="Loading lesson image...">
           </div>
-          <button class="btn btn-primary" id="continue-lesson">Continue</button>
+          <!-- Button to continue the last accessed lesson -->
+          <button class="btn btn-primary" id="continue-lesson">Resume lesson</button>
         </div>
       </div>
-
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Or perhaps, start a new challenge:</h5>
+          <br>
           <div class="challenge-item">
-            <h6>Pitch-Perfect</h6>
-            <p id="lesson-description">Embrace the power of utilizing your pitch!</p>
-            <button class="btn btn-secondary">Start Challenge</button>
+            <div id="lessons-display"></div>
           </div>
         </div>
       </div>
     </div>
-
-   <!-- Right Column for Volume Wave and Skills Progress -->
-<div class="col-lg-4">
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5>Your Volume™ Wave:</h5>
-      <div id="wave-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
-        <!-- Dynamic graph will be rendered here -->
-      </div>
-      <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
-
+     <!-- Right Column for Volume Wave and Skills Progress -->
+     <div class="col-lg-4">
+        <div class="card mb-4">
+         <div class="card-body">
+           <h5>Your Volume™ Wave:</h5>
+           <div id="wave-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
+          <!-- Dynamic graph will be rendered here -->
+            </div>
+            <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
       <!-- Skills Progress Section -->
       <h5 class="mt-4">Your Progress</h5>
       <!-- Dynamic progress bars will be rendered here -->
@@ -196,13 +206,4 @@
       </div>
     </div>
   </div>
-</div>
-
-    
-
-</div>
-{% endblock %}
-
-{% block javascripts %}
-<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
-{% endblock %}
+</div> {% endblock %} {% block javascripts %} <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> {% endblock %}
