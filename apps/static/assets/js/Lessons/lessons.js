@@ -84,20 +84,26 @@ function displayLesson(lesson) {
     lessonContainer.appendChild(lessonElement);
 }
 
-
-function fetchWaveData() {
-    // Your existing logic to fetch wave data
-    console.log('Fetching wave data...');
-    // Simulate fetching wave data
-    setTimeout(() => {
-        console.log('Wave data fetched successfully');
-        // Update your wave graph based on fetched data
-        // updateWaveGraph(waveData); // You'll need to implement updateWaveGraph
-    }, 1000);
+function updateProgressBars(lessonDetails) {
+    // Your logic to update the progress bars goes here
+    console.log('Updating progress bars with data:', lessonDetails);
+    // Example: document.getElementById('confidence-progress').style.width = `${lessonDetails.confidenceScore}%`;
 }
 
-function updateWaveGraph(data) {
-    // Your logic to update the wave graph based on the data
-    console.log('Updating wave graph with data:', data);
-    // Example: document.getElementById('wave-graph').textContent = JSON.stringify(data);
-}
+
+// function fetchWaveData() {
+//     // Your existing logic to fetch wave data
+//     console.log('Fetching wave data...');
+//     // Simulate fetching wave data
+//     setTimeout(() => {
+//         console.log('Wave data fetched successfully');
+//         // Update your wave graph based on fetched data
+//         // updateWaveGraph(waveData); // You'll need to implement updateWaveGraph
+//     }, 1000);
+// }
+
+// function updateWaveGraph(data) {
+//     // Your logic to update the wave graph based on the data
+//     console.log('Updating wave graph with data:', data);
+//     // Example: document.getElementById('wave-graph').textContent = JSON.stringify(data);
+// }

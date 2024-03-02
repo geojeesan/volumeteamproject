@@ -15,7 +15,6 @@ from apps.models import Lesson
 def lessons():
     return render_template('lessons/lessons.html', segment='lessons', API_GENERATOR=len(API_GENERATOR))
 
-
 @blueprint.route('/api/lessons', methods=['GET'])
 def get_lessons():
     lessons = Lesson.query.all()
