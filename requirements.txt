@@ -24,7 +24,7 @@ PyJWT==2.4.0
 SpeechRecognition
 ffmpeg-python
 pydub
-tensorflow
+# tensorflow
 transformers
 
 #test
