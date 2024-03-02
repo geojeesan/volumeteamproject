@@ -15,10 +15,10 @@ stages:
   - deploy
 
 before_script:
-  # temporary uninstall, because tensorflow seems to be breaking server
-  - pip uninstall tensorflow
   - python3 -m venv .venv
   - source .venv/bin/activate
+    # temporary uninstall, because tensorflow seems to be breaking server
+  - pip uninstall tensorflow
   - pip install -U pip
   - pip install -r requirements.txt
 
