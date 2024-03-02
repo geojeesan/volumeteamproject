@@ -13,7 +13,7 @@ from apps.config import API_GENERATOR
 
 import speech_recognition as sr
 import traceback    
-from pydub import AudioSegment
+from transformers import pipeline
 
 
 @blueprint.route('/practice')
@@ -51,17 +51,29 @@ def analyze_speech():
             f.write(blob_content)
 
         new_path = "new_file.wav"
-        sound = AudioSegment.from_mp3(save_path)
+ 
+        sound = AudioSegment.from_file(save_path)
         sound.export(new_path, format="wav")
 
         # Initialize the recognizer
         recognizer = sr.Recognizer()
 
-        # Use the recognizer to transcribe the audio from the WAV file
         with sr.AudioFile(new_path) as source:
-            text = recognizer.recognize_google(source)
+            # Record the audio
+            audio_data = recognizer.record(source)
 
-        return jsonify(text)
+        # Use the recognizer to transcribe the audio from the WAV file
+        text = recognizer.recognize_google(audio_data=audio_data, language='en-US')
+
+        classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+
+        sentences = [text]
+
+        model_outputs = classifier(sentences)
+
+        return jsonify(text, model_outputs)
+    
+    
 
     except Exception as e:
         return jsonify(str(traceback.format_exc()))
