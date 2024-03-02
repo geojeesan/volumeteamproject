@@ -14,6 +14,7 @@ from apps.config import API_GENERATOR
 import speech_recognition as sr
 import traceback    
 from transformers import pipeline
+from pydub import AudioSegment
 
 
 @blueprint.route('/practice')
@@ -72,7 +73,6 @@ def analyze_speech():
         model_outputs = classifier(sentences)
 
         return jsonify(text, model_outputs)
-    
     
 
     except Exception as e:
