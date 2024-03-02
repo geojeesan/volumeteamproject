@@ -157,3 +157,8 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+
+######################
+# Python COmplied Files
+######################
+*.pyc
