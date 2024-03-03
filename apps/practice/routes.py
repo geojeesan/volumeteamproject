@@ -7,66 +7,147 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-from flask import jsonify
+from flask import jsonify, send_file
 
 from apps.config import API_GENERATOR
 
 import speech_recognition as sr
-import ffmpeg
+import traceback    
+from pydub import AudioSegment
+import requests
 import os
+import base64
 
+
+current_lesson = None
+user_sentiments = None
 
 @blueprint.route('/practice')
 def practice():
     return render_template('practice/practice.html', segment='practice', API_GENERATOR=len(API_GENERATOR))
 
 
-def get_speech_score(num):
-    return num - 10
+@blueprint.route('/get_lesson', methods=['POST'])
+def get_lesson():
+    global current_lesson
+
+    lesson_num = request.form.get('lesson_num')
+
+    scenario_details = "Your friend John Doe is currently grappling with significant academic pressure. Despite excelling in all\
+          other subjects, he's experiencing pessimism about the current academic year. Encourage him by highlighting that he still\
+              maintains control over the situation."
+
+    # User will send as a request the lesson number. 
+    # Then we will return something like the following:
+    lesson = {'lesson_name':'Instilling Confidence', 'lesson_num':'1', 'scenarios':{'1':{"scenario_name": 
+    'A Wake-up Call', "scenario_details": scenario_details, "expected_sentiments": {'optimism': 0.6, 'excitement': 0.4,  'caring': 0.4}}}}
+
+    current_lesson = lesson
+    
+    return lesson
+
+
+def calculate_score(scenario_num):
+    
+    global current_lesson, user_sentiments
+
+    score = 1
+
+    print(current_lesson)
+    expected_sentiments = current_lesson['scenarios'][str(scenario_num)]['expected_sentiments']
+
+
+    formatted_user_sentiments = {}
+    for sentiment in user_sentiments[0]:
+        formatted_user_sentiments[sentiment['label']] = sentiment['score']
+
+    
+    first_item = True
+    for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
+        user_sentiment_score = formatted_user_sentiments[exp_sentiment_label]
+        difference = abs(exp_sentiment_score - user_sentiment_score)
+        
+        # Penalize user for only the first expected sentiment, as it is the most important
+        if first_item:
+            score -= difference
+            first_item = False
+        else:
+            # Give bonus to user if they are within 5% of the rest of the sentiments
+            if abs(difference) <= 0.2:
+                score += difference
+        
+        
+
+    return score * 10
 
 
 @blueprint.route('/analyze_speech', methods=['POST'])
 def analyze_speech():
-    if 'audio' not in request.files:
-        return 'No audio file provided', 400
-    
-    audio_file = request.files['audio']
-    
-    # Check if the file is of type audio/wav
-    if audio_file.mimetype != 'audio/wav':
-        # Save the audio file temporarily
-        temp_audio_path = 'temp_audio' + os.path.splitext(audio_file.filename)[1]
-        audio_file.save(temp_audio_path)
-        
-        # Convert the audio file to WAV using ffmpeg-python
-        wav_audio_path = 'temp_audio.wav'
-        try:
-            ffmpeg.input(temp_audio_path).output(wav_audio_path).run()
-        except ffmpeg.Error as e:
-            return f'Error converting audio file to WAV: {str(e)}', 400
-        finally:
-            # Remove temporary audio file
-            os.remove(temp_audio_path)
-        
-        audio_file = wav_audio_path
-    
-    # Initialize recognizer
-    recognizer = sr.Recognizer()
-    
+    global user_sentiments
+
     try:
-        # Read the audio file
-        with sr.AudioFile(audio_file) as source:
+        print(1)
+        files = request.files
+
+        scenario_num = request.form['scenario_num']
+
+        file = files.get('file')
+
+        blob_content = file.read()
+
+        # Define the path where you want to save the .wav file
+        save_path = 'saved_file.mp3'
+
+        # Write the content into a .wav file
+        with open(save_path, 'wb') as f:
+            f.write(blob_content)
+
+        print(2)
+        new_path = "new_file.wav"
+ 
+        sound = AudioSegment.from_file(save_path)
+        sound.export(new_path, format="wav")
+
+        # Initialize the recognizer
+        recognizer = sr.Recognizer()
+
+        with sr.AudioFile(new_path) as source:
+            # Record the audio
             audio_data = recognizer.record(source)
+
+        print(3)
+        # Use the recognizer to transcribe the audio from the WAV file
+        text = recognizer.recognize_google(audio_data=audio_data, language='en-US')
+
+        print("sending", text)
+
+        API_URL = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
+        headers = {"Authorization": "Bearer REMOVED"}
+
+        def query(payload):
+            response = requests.post(API_URL, headers=headers, json=payload)
+            return response.json()
+            
+        output = query({
+            "inputs": text,
+        })
         
-        # Use recognizer to transcribe audio to text
-        text = recognizer.recognize_google(audio_data)
-        return text
-    except sr.UnknownValueError:
-        return 'Speech recognition could not understand audio', 400
-    except sr.RequestError as e:
-        return f'Speech recognition service error: {str(e)}', 500
-  
-        
+        user_sentiments = output
+
+        print("output:", output)
+
+        score = calculate_score(scenario_num=scenario_num)
+        # score = 10
+
+        return {'user_speech':text, 'user_sentiments': output, 'score':score}
+    
+
+    except Exception as e:
+        # Must return proper error to client
+        print(traceback.print_exc())
+        return jsonify("ERROR")
+
+
 
 
 
