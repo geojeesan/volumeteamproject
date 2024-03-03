@@ -33,14 +33,14 @@ def get_lesson():
 
     lesson_num = request.form.get('lesson_num')
 
-    scenario_details = "Your friend John Doe is dealing with a lot of academic stress. Despite\
-    having performed well in all other modules, he is now feeling pessimistic regarding this academic year.\
-          Convince him that everything is still under his control."
+    scenario_details = "Your friend John Doe is currently grappling with significant academic pressure. Despite excelling in all\
+          other subjects, he's experiencing pessimism about the current academic year. Encourage him by highlighting that he still\
+              maintains control over the situation."
 
     # User will send as a request the lesson number. 
     # Then we will return something like the following:
     lesson = {'lesson_name':'Instilling Confidence', 'lesson_num':'1', 'scenarios':{'1':{"scenario_name": 
-    'A Wake-up Call', "scenario_details": scenario_details, "expected_sentiments": {'caring': 0.8, 'excitement': 0.4,  'optimism': 0.4}}}}
+    'A Wake-up Call', "scenario_details": scenario_details, "expected_sentiments": {'optimism': 0.6, 'excitement': 0.4,  'caring': 0.4}}}}
 
     current_lesson = lesson
     
@@ -53,6 +53,7 @@ def calculate_score(scenario_num):
 
     score = 1
 
+    print(current_lesson)
     expected_sentiments = current_lesson['scenarios'][str(scenario_num)]['expected_sentiments']
 
 
@@ -72,7 +73,7 @@ def calculate_score(scenario_num):
             first_item = False
         else:
             # Give bonus to user if they are within 5% of the rest of the sentiments
-            if difference <= 0.05:
+            if abs(difference) <= 0.2:
                 score += difference
         
         
