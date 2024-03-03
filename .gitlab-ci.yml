@@ -17,8 +17,6 @@ stages:
 before_script:
   - python3 -m venv .venv
   - source .venv/bin/activate
-    # temporary uninstall, because tensorflow seems to be breaking server
-  - pip uninstall tensorflow
   - pip install -U pip
   - pip install -r requirements.txt
 
