@@ -23,8 +23,11 @@ PyJWT==2.4.0
 # New requirements
 SpeechRecognition
 ffmpeg-python
+pydub
+# tensorflow
+transformers
 
-
+#test
 
 # flask_mysqldb
 # psycopg2-binary
