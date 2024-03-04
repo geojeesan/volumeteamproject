@@ -1,0 +1,88 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Privacy Policy {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="container-fluid">
+
+      <div class="page-header min-height-300 border-radius-xl mt-4" style="background-image: url('{{ config.ASSETS_ROOT }}/img/privacy-policy-banner.jpg'); background-position-y: 50%;">
+        <span class="mask bg-gradient-primary opacity-6"></span>
+      </div>
+      <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+        <div class="row gx-4">
+          <div class="col-12">
+            <h1>Volume Privacy Policy</h1> <!--
+            <p>This Privacy Policy describes how we collect, use, and disclose your information when you use our website.</p>
+            <p>We collect information such as your name, email address, and IP address when you register for an account or interact with our website.</p>
+            <p>We use this information to improve our services and provide personalized content to our users.</p>
+            <p>We may share your information with third-party service providers, but we will never sell your personal information to third parties.</p>
+            <p>By using our website, you consent to the terms of this Privacy Policy.</p>
+            <p>If you have any questions or concerns about our Privacy Policy, please contact us.</p>
+            -->
+            <h2>Data Collection</h2>
+            <p>Volume is committed to protecting the privacy of its users. We collect various types of information for different
+                purposes to provide and improve our services.</p>
+            <p>Volume collects the following types of data:</p>
+            <ul>
+                <li>Personal identification information: Name, email address, phone number, etc.</li>
+                <li>Demographic information such as age, gender, location, and preferences.</li>
+                <li>Usage data including information about how users interact with our website and services.</li>
+                <li>Technical data such as IP address, browser type, device type, operating system, and internet service provider.
+                </li>
+            </ul>
+            
+            <h2>Data Collection Methods</h2>
+            <p>We collect data through various methods including:</p>
+            <ul>
+                <li>Information provided directly by users through forms, surveys, registrations, and other interactions with our
+                    website and services.</li>
+                <li>Data collected automatically through cookies, log files, and other tracking technologies when users access and
+                    use our website.</li>
+                <li>Data obtained from third-party sources such as social media platforms and business partners.</li>
+            </ul>
+            
+            <h2>Data Usage</h2>
+            <p>We use collected data for the following purposes:</p>
+            <ul>
+                <li>To provide, maintain, and improve our services.</li>
+                <li>To personalize user experience and customize content and advertising.</li>
+                <li>To communicate with users including sending newsletters, updates, and promotional offers.</li>
+                <li>To process transactions, fulfill orders, and provide customer support.</li>
+                <li>To analyze and understand user behavior, trends, and preferences.</li>
+                <li>To detect, prevent, and address technical issues, security breaches, and fraudulent activities.</li>
+            </ul>
+            
+            <!-- Add other sections similarly -->
+            
+            <h2>Contact Us</h2>
+            <p>If users have any questions about this privacy policy or wish to exercise their data protection rights, they can
+                contact us at:</p>
+            <ul>
+                <li>Email: gnj224@student.bham.ac.uk</li>
+                <li>Phone: +971 50 751-8714</li>
+                <li>Address: University of Birmingham Dubai, Academic City, Dubai, United Arab Emirates</li>
+            </ul>
+            
+            <h2>Contacting the Appropriate Authority</h2>
+            <p>Users who wish to report a complaint or seek further assistance regarding their privacy rights can contact the
+                relevant data protection authority.</p>
+            </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container-fluid py-4">
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
