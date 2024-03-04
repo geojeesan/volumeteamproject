@@ -1,14 +1,164 @@
 let lastAccessedLessonId = null;
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetchLastLesson().then(() => {
+//     fetchAllLessons();
+//     populatePaceChartInLessons();
+//     });
+//     // Initialize fetchWaveData if needed
+//     const analyzeProgressBtn = document.getElementById('analyze-btn');
+//     analyzeProgressBtn.addEventListener('click', function() {
+//         fetchWaveData();
+//     });
+// });
+
 document.addEventListener('DOMContentLoaded', function() {
-    fetchLastLesson().then(() => {
-    fetchAllLessons();
-    });
-    // Initialize fetchWaveData if needed
     const analyzeProgressBtn = document.getElementById('analyze-btn');
-    analyzeProgressBtn.addEventListener('click', function() {
-        fetchWaveData();
+
+    // Ensure all necessary preparations, like fetching lessons, are done before enabling the button
+    fetchLastLesson().then(() => {
+        fetchAllLessons();
+        // Enable the button only after the initial setup is done
+        analyzeProgressBtn.disabled = false;
+
+        // Event listener for the button click
+        analyzeProgressBtn.addEventListener('click', function() {
+            // Fetch pace data when the button is clicked
+            fetchPaceData().then(paceData => {
+                // Use the fetched pace data to populate the chart
+                populatePaceChartInLessons(paceData);
+            });
+        });
     });
+});
+
+
+function fetchPaceData() {
+    // Adjust to fetch from the new endpoint that serves the latest pace data
+    return fetch('/api/latest_pace_data', {
+        method: 'GET'
+    }) 
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        return data; // This is the pace data we will use to plot the graph
+    });
+}
+
+
+function populatePaceChartInLessons(paceData) {
+    var ctx2 = document.getElementById("wave-placeholder").getContext("2d");
+    if (window.paceChart) {
+        window.paceChart.destroy(); // Destroy existing chart instance if present
+    }
+
+    var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
+    gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); // Purple colors
+
+    var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
+    gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
+    gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); // Purple colors
+
+    paceChart = new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: ["0:00", "0:05", "0:10", "0:15", "0:20", "0:25", "0:30", "0:35", "0:40"],
+            datasets: [{
+                    label: "Pitch",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    borderColor: "#cb0c9f",
+                    borderWidth: 3,
+                    backgroundColor: gradientStroke1,
+                    fill: true,
+                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                    maxBarThickness: 6
+                },
+                {
+                    label: "Volume",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    borderColor: "#575f9a",
+                    borderWidth: 3,
+                    backgroundColor: gradientStroke2,
+                    fill: true,
+                    data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+                    maxBarThickness: 6
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#b2b9bf',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: '#b2b9bf',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+}
+
+// Example usage
+document.addEventListener('DOMContentLoaded', function() {
+    // Your existing code
+    // Initialize the pace chart for a lesson after fetching details or when needed
+    populatePaceChartInLessons(); // Call this function where it fits in your logic
 });
 
 function fetchLastLesson() {

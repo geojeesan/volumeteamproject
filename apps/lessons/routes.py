@@ -45,6 +45,15 @@ def get_lessons_status():
         'noProgress': [lesson.to_dict() for lesson in no_progress_lessons]
     })
 
+@blueprint.route('/api/latest_pace_data', methods=['GET'])
+def latest_pace_data():
+    # Assuming paceData is stored globally or retrieved from a database
+    global paceData
+    if paceData:
+        return jsonify(paceData)
+    else:
+        return jsonify({'error': 'No pace data available'}), 404
+    
 # Helper - Extract current page name from request
 def get_segment(request):
 
