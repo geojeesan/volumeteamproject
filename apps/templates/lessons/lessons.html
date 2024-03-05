@@ -1,69 +1,157 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %} 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 
-{% block title %}Lessons{% endblock %}
-
-{% block stylesheets %}
 <style>
   .main-content {
     flex: 1;
   }
-  
+
   .wave-graph-container {
-  height: 200px; /* Adjust to the desired height */
-  background-color: #f7fafc; /* Adjust the color to match your brand color */
-  border-radius: 20px;
-  padding: 1rem;
-  text-align: center; /* Center content if the graph is not as wide as the container */
-}
+    height: auto;
+    margin-bottom: 0;
+    /* Adjust to the desired height */
+    background-color: #f7fafc;
+    /* Adjust the color to match your brand color */
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center;
+    /* Center content if the graph is not as wide as the container */
+  }
 
   .wave-graph {
-    width: 100%;
-    height: auto; /* Adjust as necessary to maintain aspect ratio */
+    width: 100%; /* Responsive to container size */
+    max-width: 600px; /* Maximum width */
+    height: 400px; /* Fixed height */
+    margin: auto; /* Centering if needed */
+    /* Adjust as necessary to maintain aspect ratio */
   }
 
-    /* General page styles */
-    .container-fluid {
+  /* General page styles */
+  .container-fluid {
     max-width: 1200px;
   }
+
+  /*fonts*/
+.custom-font {
+  font-family: "Alegreya Sans SC", sans-serif;
+}
+
+.custom-text {
+  font-family: "Roboto", sans-serif;
+}
+
+.allerta-text {
+  font-family: 'Allerta', sans-serif;
+}
+
+/* Card styles from the home page */
+.custom-card-height {
+  min-height: 150px; /* Adjust the height as needed */
+}
+
+.card-color-blue {
+  background-color: #ACAACC; /* Your custom blue */
+}
+
+/* Card titles and numbers */
+.card-number {
+  margin-top: 20px;
+  font-size: 36px; /* Large font size for the number */
+  font-weight: bold;
+  line-height: 1; /* Ensures the number is closely followed by the title */
+  font-weight: 700
+}
+
+.card-title {
+  font-size: 18px; /* Smaller font size for the title */
+  color: #FFFFFF; /* White color for the title text */
+  font-weight: normal;
+  font-family: 'Allerta', sans-serif;
+}
+
+/* Apply custom fonts to relevant elements on the lessons page */
+#lesson-title, #lesson-description, #lesson-difficulty {
+  font-family: "Alegreya Sans SC", sans-serif; /* This is assuming you want to use Alegreya for these elements */
+}
+
+/* You may need to adjust card paddings to match the home page */
+.card-body {
+  padding: 2rem; /* Adjust based on home page padding */
+}
 
   /* Styles for the lessons and wave graph cards */
   .card {
     border: none;
     border-radius: 15px;
+    margin-bottom: 1rem; /* Reduce from larger values if necessary */
   }
 
-  .card .card-body {
-    padding: 3rem;
+  .card-body {
+    padding: 1rem;
+    padding-top: 0; /* Reduce or remove the top padding */
+    position: relative; /* If not already set, for positioning context */
+    overflow: hidden; /* Prevents content from spilling outside the card */
+
   }
+
+  #wave-placeholder {
+    width: 100%; /* Make canvas width responsive */
+    max-width: 400px; /* Max width to prevent excessive expansion */
+    height: 400px; /* Fixed height, adjust as needed */
+    margin: auto; /* Center the canvas element */
+}
+
 
   /* Styles for the title and content */
-  h2 {
-    color: #5e72e4; /* Adjust the color to match your brand color */
-    margin-bottom: 1rem;
+   h2 {
+    /* color: #5e72e4; */
+    /* Adjust the color to match your brand color */
+    /* margin-bottom: 1rem; */
   }
 
   p {
-    color: #8898aa; /* Adjust the color to match your brand color */
+    color: #8898aa;
+    /* Adjust the color to match your brand color */
+  }
+
+  .lesson {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Adds space between each lesson card if needed */
   }
 
   /* Styles for the lesson icon */
   .lesson-icon img {
-    width: 64px; /* Adjust as needed */
-    height: auto;
-    margin-bottom: 1rem;
-  }
+  max-width: 100px; /* Adjust the value as needed */
+  max-height: 100px; /* Adjust the value as needed */
+  height: auto;
+  width: auto; /* This will maintain the aspect ratio */
+  display: block; /* To remove any extra space below the image */
+  margin: 0 auto; /* This will center the image in its container */
+}
+
+.lesson-card {
+  /* Add your existing styles here */
+  margin: auto; /* This centers the card in the flex container */
+  width: fit-content; /* Or a fixed width if you prefer */
+  text-align: center;
+
+}
 
   /* Styles for the buttons */
   .btn-primary {
-    background-color: #5e72e4; /* Adjust the color to match your brand color */
+    background-color: #ACAACC;
+    /* Adjust the color to match your brand color */
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1.5rem;
   }
 
   .btn-secondary {
-    background-color: #f4f5f7; /* Light grey background for secondary button */
-    color: #5e72e4; /* Adjust the color to match your brand color */
+    background-color: #f4f5f7;
+    /* Light grey background for secondary button */
+    color: #306D9C;
+    /* Adjust the color to match your brand color */
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1.5rem;
@@ -71,138 +159,173 @@
 
   /* Styles for the Volume Wave graph container */
   .wave-graph-container {
-    background-color: #f7fafc; /* Adjust the color to match your brand color */
+    background-color: #f7fafc;
+    /* Adjust the color to match your brand color */
     border-radius: 20px;
     padding: 1rem;
-    text-align: center; /* Center content if the graph is not as wide as the container */
+    text-align: center;
+    width: 100%; /* Responsive to container size */
+    max-width: 600px; /* Maximum width */
+    height: 400px; /* Fixed height */
+    margin: auto; /* Centering if needed */
+    /* Center content if the graph is not as wide as the container */
   }
-  
+
   /* Make sure the 'Analyze Progress' button is centered below the graph */
   #analyze-btn {
     display: block;
-    margin: 1.5rem auto 0; /* Centers the button with top margin */
+    margin: 1.5rem auto 0;
+    /* Centers the button with top margin */
   }
 
   /* Additional styles for alignment and responsiveness */
-  @media (min-width: 992px) { /* Adjust based on your breakpoints */
-    .col-lg-8, .col-lg-4 {
+  @media (min-width: 992px) {
+
+    /* Adjust based on your breakpoints */
+    .col-lg-8,
+    .col-lg-4 {
       display: flex;
       flex-direction: column;
     }
-    
+
     .col-lg-4 {
-      justify-content: space-between; /* To push the Volume Wave card to the bottom */
+      justify-content: space-between;
+      /* To push the Volume Wave card to the bottom */
     }
   }
 
   .progress-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-.progress {
-  height: 20px; /* Thinner bars as per the design */
-  margin-bottom: 20px;
-  background-color: #e9ecef;
-  border-radius: 10px;
-}
+  #skills-progress-container {
+  margin-top: 0; /* Remove top margin if there's unnecessary space inside the card */
+  }
+  .progress {
+    height: 20px;
+    /* Thinner bars as per the design */
+    margin-bottom: 10px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+  }
 
-.progress-bar {
-  line-height: 20px; /* Match the height of the progress bar for vertical centering */
-  border-radius: 10px;
-}
+  .progress-bar {
+    line-height: 20px;
+    /* Match the height of the progress bar for vertical centering */
+    border-radius: 10px;
+  }
 
-</style>
-{% endblock %}
+  .badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+  }
 
-{% block content %}
-<div class="container-fluid py-4">
+  .badge-beginner {
+    color: #fff;
+    background-color: #28a745; /* Green for beginner */
+  }
+
+  .badge-intermediate {
+    color: #fff;
+    background-color: #ffc107; /* Yellow for intermediate */
+  }
+
+  .badge-advanced {
+    color: #fff;
+    background-color: #dc3545; /* Red for advanced */
+  }
+
+</style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
-      <h2 class="fw-bold">Lessons</h2>
+      <h1 class="fw-bold">Lessons</h1>
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
   </div>
-
   <div class="row">
+    <!-- Left Column for Lessons -->
     <div class="col-lg-8">
       <div class="card mb-4 text-center">
         <div class="card-body">
+          <!-- Static header to indicate the purpose of the section -->
           <h5 class="card-title">Pick up where you left off:</h5>
-          <h6 id="lesson-title">Pacing through!</h6>
-          <p>Lesson 2/12</p>
+          <h6 id="lesson-title">Loading...</h6>
+          <p id="lesson-description">Loading description...</p> <!-- Add this line -->
+          <div id="lesson-difficulty" class="badge">Loading difficulty...</div> <!-- Add this line -->
+          <p id="lesson-progress">Loading progress...</p> <!-- Add this line -->
           <div class="lesson-icon mb-3">
-            <img id="lesson-image" src="{{ url_for('static', filename='assets/images/shoe.jpg') }}" alt="Image of a shoe">
-          </div> <!-- image not displaying?-->
-          <button class="btn btn-primary" id="continue-lesson">Continue</button>
+    <img id="lesson-image" src="" alt="Loading lesson image...">
+</div>
+<!-- Continue Lesson button -->
+<button class="btn btn-primary" id="continue-lesson">Continue Lesson</button>
         </div>
       </div>
-
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Or perhaps, start a new challenge:</h5>
+          <br>
           <div class="challenge-item">
-            <h6>Pitch-Perfect</h6>
-            <p id="lesson-description">Embrace the power of utilizing your pitch!</p>
-            <button class="btn btn-secondary">Start Challenge</button>
+            <div id="lessons-display"></div>
+            <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
           </div>
         </div>
       </div>
     </div>
-
-   <!-- Right Column for Volume Wave and Skills Progress -->
-<div class="col-lg-4">
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5>Your Volume™ Wave:</h5>
-      <div id="wave-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
-        <!-- Dynamic graph will be rendered here -->
+    <div class="col-lg-4">
+      <div class="card mb-4">
+          <div class="card-body">
+            <div style="height: 400px;"> <!-- SET THE HEIGHT HERE TO NOT BREAK THE BOX-->
+              <h5>Your Volume™ Wave:</h5>
+              <!-- <h6>Take a look at your previous lesson's feedback!</h6> -->
+              <!-- Whenever i do this, x-axis goes down? -->
+              <canvas id="wave-placeholder"></canvas> <!-- Removed inline style -->
+              <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
+            </div>
+          </div>
       </div>
-      <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
 
-      <!-- Skills Progress Section -->
-      <h5 class="mt-4">Your Progress</h5>
-      <!-- Dynamic progress bars will be rendered here -->
-      <div id="skills-progress-container">
-        <!-- Placeholder for Pitch progress bar -->
-        <div class="skill-progress">
-          <label for="pitch-progress">Pitch</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div style="height: 20px;"></div>
+          <h5>Your Progress</h5> <!-- Why is there space? -->
+          <div id="skills-progress-container">
+            <div class="skill-progress">
+              <label for="pitch-progress">Pitch</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="diction-progress">Diction</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="diction-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="pace-progress">Pace</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="pace-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="confidence-progress">Confidence</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- Placeholder for Diction progress bar -->
-        <div class="skill-progress">
-          <label for="diction-progress">Diction</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="diction-progress"></div>
-          </div>
-        </div>
-        <!-- Placeholder for Pace progress bar -->
-        <div class="skill-progress">
-          <label for="pace-progress">Pace</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="pace-progress"></div>
-          </div>
-        </div>
-        <!-- Placeholder for Confidence progress bar -->
-        <div class="skill-progress">
-          <label for="confidence-progress">Confidence</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    
-
-</div>
-{% endblock %}
-
-{% block javascripts %}
-<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
-{% endblock %}
+      </div>      
+</div> {% endblock %} {% block javascripts %} 
+<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> 
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}

@@ -18,7 +18,6 @@ def index():
 def route_template(template):
 
     try:
-
         if not template.endswith('.html'):
             template += '.html'
 

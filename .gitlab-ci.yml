@@ -10,8 +10,8 @@ stages:
   - check
   - build
   - test
-  - package
-  - release
+  # - package
+  # - release
   - deploy
 
 before_script:
@@ -37,15 +37,15 @@ test:
     - pip install pytest
     - pytest
 
-package:
-  stage: package
-  script:
-    - echo "No packaging step for Flask app"
+# package:
+#   stage: package
+#   script:
+#     - echo "No packaging step for Flask app"
 
-release:
-  stage: release
-  script:
-    - echo "No release step for Flask app"
+# release:
+#   stage: release
+#   script:
+#     - echo "No release step for Flask app"
 
 deploy-dev:
   stage: deploy
