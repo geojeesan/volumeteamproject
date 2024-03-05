@@ -9,19 +9,22 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
-
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 
+# Initialize Flask-Migrate
+migrate = Migrate()
 
 def register_extensions(app):
     db.init_app(app)
+    migrate.init_app(app, db)
     login_manager.init_app(app)
 
 
 def register_blueprints(app):
-    for module_name in ('authentication', 'home', 'api', 'practice', 'lessons', 'feedback'):
+    for module_name in ('authentication', 'home', 'api', 'practice', 'lessons', 'feedback', 'resource', 'profilepage', 'privacypolicy'):
         module = import_module('apps.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint, name = module_name)
 

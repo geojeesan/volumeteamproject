@@ -123,11 +123,14 @@ h1, .h1 {
 @media (min-width: 1200px) {
   h1, .h1 {
     font-size: 3rem;
+    font-family: "Alegreya Sans SC", sans-serif;
+
   }
 }
 
 h2, .h2 {
   font-size: calc(1.35rem + 1.2vw);
+
 }
 @media (min-width: 1200px) {
   h2, .h2 {
@@ -164,6 +167,8 @@ h6, .h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  font-family: "Roboto", sans-serif;
+
 }
 
 abbr[title] {
@@ -3192,21 +3197,21 @@ textarea.form-control-lg {
 
 .btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #cb0c9f;
-  --bs-btn-border-color: #cb0c9f;
+  --bs-btn-bg: #3A416F;
+  --bs-btn-border-color: #3A416F;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #ad0a87;
-  --bs-btn-hover-border-color: #a20a7f;
+  --bs-btn-hover-bg: #141727;
+  --bs-btn-hover-border-color: #141727;
   --bs-btn-focus-shadow-rgb: 211, 48, 173;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #a20a7f;
-  --bs-btn-active-border-color: #980977;
+  --bs-btn-active-bg: #141727;
+  --bs-btn-active-border-color: #141727;
   --bs-btn-active-shadow: none;
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #cb0c9f;
-  --bs-btn-disabled-border-color: #cb0c9f;
+  --bs-btn-disabled-bg: #3A416F;
+  --bs-btn-disabled-border-color: #3A416F;
 }
-
+/* linear-gradient(310deg, #141727 0%,  100%); */
 .btn-secondary {
   --bs-btn-color: #000;
   --bs-btn-bg: #8392AB;
@@ -17340,8 +17345,8 @@ textarea.form-control-lg {
 
 .btn-primary:hover,
 .btn.bg-gradient-primary:hover {
-  background-color: #cb0c9f;
-  border-color: #cb0c9f;
+  background-color: #3A416F;
+  /* border-color: #cb0c9f; */
 }
 .btn-primary .btn.bg-outline-primary,
 .btn.bg-gradient-primary .btn.bg-outline-primary {
@@ -17351,8 +17356,8 @@ textarea.form-control-lg {
 .btn.bg-gradient-primary:not(:disabled):not(.disabled).active,
 .btn.bg-gradient-primary:not(:disabled):not(.disabled):active,
 .show > .btn.bg-gradient-primary.dropdown-toggle {
-  color: color-yiq(#cb0c9f);
-  background-color: #cb0c9f;
+  color: color-yiq(#3A416F);
+  background-color: #3A416F;
 }
 .btn-primary.focus, .btn-primary:focus,
 .btn.bg-gradient-primary.focus,
@@ -17367,7 +17372,7 @@ textarea.form-control-lg {
   background-color: transparent;
   opacity: 0.75;
   box-shadow: none;
-  color: #cb0c9f;
+  color: #3A416F;
 }
 
 .btn-secondary:hover,
@@ -18428,7 +18433,7 @@ label,
 }
 
 .bg-gradient-primary {
-  background-image: linear-gradient(310deg, #7928CA 0%, #FF0080 100%);
+  background-image: linear-gradient(310deg, #C0BEDA 0%, #7571AD 100%);
 }
 
 .bg-gradient-secondary {
@@ -19869,7 +19874,7 @@ hr.horizontal.gray-light {
   background-color: #fff;
 }
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon {
-  background-image: linear-gradient(310deg, #cb0c9f 0%, #cb0c9f 100%);
+  background-image: linear-gradient(310deg, #306D9C 0%, #306D9C 100%);
 }
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon svg .color-background,
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon svg .color-foreground {
@@ -22704,4 +22709,29 @@ pre[class*=language-] {
     overflow: auto !important;
   }
 }
+
+.streak-badge {
+  font-size: 0.75rem; /* Adjust the font size as needed */
+}
+
+.streak-number {
+  /* Remove the top and transform properties if you're positioning from the bottom */
+  color: white; /* Or any color that makes the number visible on the fire image */
+  bottom: -3px; /* Adjust this value to move the number down */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2; /* Ensure the number is above the image */
+  font-weight: bold;
+  
+}
+
+/* Ensure the image covers the badge area */
+.streak-badge img {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This will ensure the image covers the area without stretching */
+}
+
 /*# sourceMappingURL=soft-ui-dashboard.css.map */

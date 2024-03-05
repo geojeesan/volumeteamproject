@@ -1,34 +1,529 @@
+let resultElement
+let inputElement
+let recordButton
+let scenario_data
+let user_sentiments
+let user_speech
+let scenario_score = 10
+let scenario_num = 1
+let lesson_num
+let paceChart
+let attitudeChart
+
+
+document.addEventListener('DOMContentLoaded', function () {
 resultElement = document.getElementById("result");
 inputElement = document.getElementById("score");
+recordButton = document.getElementById("voiceBtn")
+lessonNumElement = document.getElementById("lesson-num")
+lessonNameElement = document.getElementById("lesson-name")
+scenarioNameElement = document.getElementById("scenario-name")
+scenarioDetailsElement = document.getElementById("scenario-details")
+scenarioViewElement = document.getElementById("scenario-view")
+scenarioResultsElement = document.getElementById("scenario-results")
+scenarioScoreElement = document.getElementById("scenario-score")
+detailsTextElement = document.getElementById("details")
+errorTextElement = document.getElementById("error")
+preRecordedElement = document.getElementById("pre-recorded")
+preRecordedButton = document.getElementById("pre-recorded-button")
+
+recordButton.addEventListener('click', handleRecording);
+toggleBlinking(recordButton)
+
+preRecordedButton.addEventListener('click', function(event) {
+  preRecordedElement.style.display = "flex"
+  preRecordedButton.style.display = "none"
+});
+
+preRecordedElement.addEventListener('mouseenter', function(event) {
+  // Change background color when mouse enters
+  event.target.style.opacity = "1";
+});
+preRecordedElement.addEventListener('mouseleave', function(event) {
+  // Change background color when mouse enters
+  event.target.style.opacity = "0.5";
+});
+
+// We will dynamically get the lesson num in the future using Flask's template system
+// Fetch the lesson number from the HTML
+lessonNumberElement = document.getElementById("lesson-number")
+lesson_num = parseInt(lessonNumberElement.innerText)
+
+getLesson(lesson_num)
+getPreRecorded()
+
+
+
+
+
+})
+
+function playAudio(elementId) {
+  const audioElement = document.getElementById(elementId);
+  if (audioElement) {
+      audioElement.play();
+  }
+}
+
+
+function toggleBlinking(element) {
+  let opacity = 0.5;
+  let intervalId;
+  let isBlinking = false;
+  let increment = 0.1;
+
+  function blink() {
+    intervalId = setInterval(function() {
+      opacity += increment;
+      if (opacity >= 1 || opacity <= 0.5) {
+        increment *= -1;
+      }
+      element.style.opacity = opacity;
+    }, 100);
+  }
+
+  function stopBlink() {
+    clearInterval(intervalId);
+    element.style.opacity = 1;
+  }
+
+  element.addEventListener('click', function() {
+    if (!isBlinking) {
+      blink();
+      isBlinking = true;
+    } else {
+      stopBlink();
+      isBlinking = false;
+    }
+  });
+}
+
+
+
+
+
+var isRecording = false
 
 var requestData = {
   num: 0,
 };
 
-function getResult() {
-  requestData.num = parseInt(inputElement.value);
+let mediaRecorder;
+let chunks = [];
 
-  fetch("/analyze_speech", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json", // Specify the content type as JSON
-    },
-    body: JSON.stringify(requestData), // Convert requestData to JSON string
+
+ 
+function handleRecording(){
+
+  console.log("Handling")
+  if (isRecording){
+    stopRecording()
+  }else{
+    startRecording()
+  }
+
+
+}
+
+function startRecording() {
+  isRecording = true;
+  console.log("Starting");
+  recordButton.style.opacity = 0.5;
+
+  navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(function (stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = function (event) {
+          chunks.push(event.data);
+      };
+      mediaRecorder.onstop = function() {
+          // Handle the stop event
+          sendRecording();
+      };
+      mediaRecorder.start();
+      // recordButton.disabled = true;
+      // Call a function to monitor volume level during recording
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json(); // Parse the JSON response
-    })
-    .then((data) => {
-      resultElement.textContent = data;
-    })
-    .catch((error) => {
-      // Handle any errors that occurred during the fetch
-      console.error("Error:", error);
-    });
+  .catch(function (err) {
+      console.error('Error: ', err);
+  });
 }
 
 
+function stopRecording() {
+  console.log("Recording stopped");
+  isRecording = false;
+  mediaRecorder.stop();
+  recordButton.disabled = false;
+}
+
+
+
+function sendRecording(blob) {
+
+  startLoading()
+
+
+  if(!blob){
+  blob = new Blob(chunks, { type: 'audio/mp3' });
+  }
+  const audioUrl = URL.createObjectURL(blob);
+
+  console.log('Recording saved:', audioUrl);
+  chunks = [];
+  recordButton.style.opacity = 1
+
+
+  const formData = new FormData();
+  formData.append('scenario_num', scenario_num)
+  formData.append('file', blob);
+
+  fetch('/analyze_speech', {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+
+    let error_num = data['code']
+
+    if(!error_num){
+      stopLoading()
+      processData(data)
+      endScenario()
+    }else{
+      stopLoading()
+
+       // Error 209 is a speech recognition error
+        if (error_num == 209){
+          setError("Error in recognizing your speech, please try again.")
+        }
+        // Error 309 is a sentiment API issue
+        else if (error_num == 309){
+
+          setError("Error in sentiment API, please try again.")
+        }
+    }
+      console.log('Response:', data);
+
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+
+// Processes data received from /analyze_speech
+function processData(data){
+  user_sentiments = data['user_sentiments'][0]
+  user_speech = data['user_speech']
+  scenario_score = data['score']
+}
+
+
+function startLoading(){
+  errorTextElement.style.display = "none"
+  detailsTextElement.style.visibility = "visible"
+  scenarioViewElement.style.opacity = 0.5
+  scenarioViewElement.style.pointerEvents = 'none'
+}
+
+function stopLoading(){
+  detailsTextElement.style.visibility = "hidden"
+  scenarioViewElement.style.opacity = 1
+  scenarioViewElement.style.pointerEvents = 'all'
+}
+
+function setError(error){
+  errorTextElement.innerText = error
+  errorTextElement.style.display = "block"
+}
+
+function destroyAllCharts(){
+paceChart.destroy()
+attitudeChart.destroy()
+}
+
+function getLesson(lessonNum){
+
+  const formData = new FormData();
+  formData.append('lesson_num', lessonNum);
+
+  fetch('/get_lesson', {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Handle the response data if needed
+      console.log('Response:', data);
+
+      if (data['error_num'] == 404){
+        setLessonNotFound()
+      }else{
+
+      lesson_num = data['lesson_num']
+      lesson_name = data['lesson_name']
+
+      scenario_data = data['scenarios']
+      
+      // Get the first scenario's name & details
+      scenario_name = scenario_data['1']['scenario_name']
+      scenario_details = scenario_data['1']['scenario_details']
+
+      populateLessonDetails(lesson_num, lesson_name)
+      populateScenarioDetails(scenario_name, scenario_details)
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+
+function setLessonNotFound(){
+  scenarioViewElement.style.opacity = "0"
+  detailsTextElement.style.visibility = "visible"
+  detailsTextElement.innerText = "Lesson not found"
+}
+
+function populateLessonDetails(lesson_num, lesson_name){
+  lessonNameElement.innerText = lesson_name
+  lessonNumElement.innerText = "Lesson " + lesson_num
+}
+
+function populateScenarioDetails(scenario_name, scenario_details){
+  scenarioNameElement.innerText = scenario_name
+  scenarioDetailsElement.innerText = scenario_details
+}
+
+function endScenario(){
+  // Here, we will send to the database that the user has finished this scenario
+
+  scenarioViewElement.style.display = "none"
+  scenarioResultsElement.style.display = "block"
+  scenarioScoreElement.innerText = "Score:" + scenario_score.toFixed(1).toString() + "/10"
+  populateAttitudeChart(user_sentiments)
+  populatePaceChart()
+}
+
+function nextScenario(){
+  destroyAllCharts()
+  scenario_num += 1
+}
+
+function retryScenario(){
+  scenarioViewElement.style.display = "block"
+  scenarioResultsElement.style.display = "none"
+  destroyAllCharts()
+}
+
+// Populates the attitude chart by the Top 3 sentiments that the user showed during their speech
+function populateAttitudeChart(sentiments){
+
+
+  // Get top 3 sentiments
+  sentiment_values = []
+  sentiment_words = []
+  for (let i = 0; i < 3; i++) {
+    sentiment_values.push(sentiments[i]['score'] * 100)
+
+    // Capitalize first letter
+    let word = sentiments[i]['label']
+    word = word.charAt(0).toUpperCase() + word.slice(1);
+
+    sentiment_words.push(word)
+  }
+
+
+
+  var ctx = document.getElementById('chart-bar').getContext('2d');
+  var data = {
+      labels: sentiment_words,
+      datasets: [{
+          label: 'Sentiment',
+          tension: 0.4,
+          borderWidth: 0,
+          borderRadius: 4,
+          borderSkipped: false,
+          backgroundColor: [
+            "#3A416F",
+            "#7571AD", 
+            "#C0BEDA"
+        ],
+          data: sentiment_values
+      }]
+  };
+  var config = {
+      type: 'bar',
+      data: data,
+      options: {
+        plugins:{
+        legend: {
+          display: false,
+      }
+    },
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  };
+  attitudeChart = new Chart(ctx, config);
+}
+
+
+function populatePaceChart(pace){
+  
+  var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+  var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke1.addColorStop(1, '#C0BEDA');
+  gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+  gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
+
+  var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
+
+  gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
+  gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+  gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
+
+  paceChart = new Chart(ctx2, {
+    type: "line",
+    data: {
+      labels: ["0:00", "0:05", "0:10", "0:15", "0:20", "0:25", "0:30", "0:35", "0:40"],
+      datasets: [{
+          label: "Pitch",
+          tension: 0.4,
+          borderWidth: 0,
+          pointRadius: 0,
+          borderColor: "#cb0c9f",
+          borderWidth: 3,
+          backgroundColor: gradientStroke1,
+          fill: true,
+          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+          maxBarThickness: 6
+
+        },
+        {
+          label: "Volume",
+          tension: 0.4,
+          borderWidth: 0,
+          pointRadius: 0,
+          borderColor: "#575f9a",
+          borderWidth: 3,
+          backgroundColor: gradientStroke2,
+          fill: true,
+          data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+          maxBarThickness: 6
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      scales: {
+        y: {
+          grid: {
+            drawBorder: false,
+            display: true,
+            drawOnChartArea: true,
+            drawTicks: false,
+            borderDash: [5, 5]
+          },
+          ticks: {
+            display: true,
+            padding: 10,
+            color: '#b2b9bf',
+            font: {
+              size: 11,
+              family: "Open Sans",
+              style: 'normal',
+              lineHeight: 2
+            },
+          }
+        },
+        x: {
+          grid: {
+            drawBorder: false,
+            display: false,
+            drawOnChartArea: false,
+            drawTicks: false,
+            borderDash: [5, 5]
+          },
+          ticks: {
+            display: true,
+            color: '#b2b9bf',
+            padding: 20,
+            font: {
+              size: 11,
+              family: "Open Sans",
+              style: 'normal',
+              lineHeight: 2
+            },
+          }
+        },
+      },
+    },
+  });
+
+}
+
+let audioElement
+
+function getPreRecorded() {
+
+  var audioFiles = [`/static/assets/audio_files/${lesson_num}/${scenario_num}/1.mp3`, `/static/assets/audio_files/${lesson_num}/${scenario_num}/2.mp3`, `/static/assets/audio_files/${lesson_num}/${scenario_num}/3.mp3`];
+
+  for (var i = 0; i < audioFiles.length; i++) {
+      // var audioElement = document.getElementById('pre-' + (i + 1) + '-audio');
+      var buttonElement = document.getElementById('pre-' + (i + 1));
+      if (buttonElement) {
+          buttonElement.srcsrc = audioFiles[i];
+      }
+    }
+
+
+var small_buttons = document.getElementsByClassName('small-button');
+
+// Loop through each button and attach the click event listener
+Array.from(small_buttons).forEach(function(button) {
+  var url = button.srcsrc;
+
+  var audio = new Audio();
+  audio.src = url;
+
+  console.log(url)
+
+    button.addEventListener('click', function() {
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                sendRecording(blob)
+            })
+            .catch(error => console.error('Error fetching image blob:', error));
+    });
+
+    button.addEventListener('mouseenter', function() {
+      audio.play();
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      audio.pause();
+    });
+
+
+});
+    
+}
 

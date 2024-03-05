@@ -1,0 +1,257 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Lessons{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #6661a8;
+        color: #12174c;
+        margin: 0;
+    }
+
+    .top-bar {
+        background-color: #6661a8;
+        border-bottom: 1px solid #12174c;
+    }
+
+    .resource-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: start;
+        font-size: 1em;
+    }
+
+    .menu-item {
+        padding: 30px;
+        cursor: pointer;
+        color: #f8f9fa; /* Static Text color */
+    }
+
+    .menu-item:hover, .menu-item.active {
+        font-weight: bold;
+        color: #12174c; /* Text color when hovered or clicked */
+    }
+
+    /* Additional styling for active menu item */
+    .menu-item.static {
+        cursor: default;
+        font-weight: bold;
+        color: #12174c; /* Static 'RESOURCES' text color */
+    }
+
+    .featured-section {
+        font-size: 1.5em; /* Smaller font size */
+        margin-top: 10px; /* Space above the featured text */
+        padding: 10px; 
+        text-align: justify; /* Center the text */
+    }
+
+    .featured-title {
+        color: #12174c; /* Adjust based on your theme */
+        text-align: left; /* Center the text */
+        font-weight: bold;
+    }
+
+    .featured-links {
+        display: flex;
+        justify-content: space-around; /* Center the items if they don't take up full width */
+        gap: 20px; /* Adds space between the items */
+        padding: 20px; /* Adds space around the items */
+        
+    }
+
+    .featured-link {
+        color: #6661a8; /* Static text color for featured section and links */
+        
+    }
+
+    .featured-link:hover {
+        color: #12174c; /* Text color when hovered */
+        text-decoration: underline; /* Removes underline from links */
+    }
+
+    hr {
+        border: 0; /* Removes the default border */
+        height: 2px; /* Sets the thickness of the line */
+        background-color: #12174c; /* Sets the color of the line */
+        margin: 20px 0; /* Adds some space above and below the line */
+    }
+
+    .articles-section {
+        color: #f8f9fa; /* Adjust based on your theme */
+        text-align: left;
+        margin-top: 20px;
+        padding: 10px;
+    }
+
+    .articles-header {
+        display: flex;
+        justify-content: left;
+        align-items: baseline;
+    }
+
+    .articles-title {
+        font-size: 1.5em; /* Larger font size for section title */
+        color: #12174c; /* Static text color */
+        font-weight: bold;
+    }
+
+    .category-buttons button {
+        background-color: #ffffff; /* Default button background color */
+        color: #000000; /* Default button text color */
+        border: 1px solid #6661a8; /* Button border */
+        border-radius: 5px; /* Rounded corners for buttons */
+        padding: 20px 30px;
+        margin: 10px;
+        cursor: pointer;
+        outline: none; /* Removes outline */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
+        font-weight: normal; /* Ensure non-active buttons are not bold */
+    }
+
+        /* Hover effect, placed before the .button-active class to ensure precedence */
+    .category-buttons button:hover {
+        background-color: #6661a8; /* Button hover background color */
+    }
+
+        /* Active button styles */
+    .button-active {
+        background-color: #6661a8; /* Active button background color */
+        color: #000000; /* Active button text color (black) */
+        font-weight: bold; /* Makes text bold */
+    }
+
+    #category-links {
+        margin-top: 20px; /* Adds some space above the container */
+        padding: 10px; /* Adds some padding inside the container */
+        background-color: #f0f0f0; /* Light background color for the links area */
+        border-radius: 5px; /* Adds rounded corners to the container */
+        color: #000000; /* Text color for the links */
+        text-align: left; /* Aligns text to the left, adjust as needed */
+        max-width: 80%; /* Limits the width of the container, adjust as needed */
+        margin-left: 0; /* Together with margin-right:auto, centers the container */
+       
+    }
+
+    #category-links a {
+        color: #6661a8; /* Color of the links to match your theme */
+        text-decoration: none; /* Removes underline from links */
+        display: block; /* Each link on its own line */
+        margin-bottom: 5px; /* Adds space between links */
+    }
+
+    #category-links a:hover {
+        text-decoration: underline; /* Adds underline on hover for better UX */
+    }
+
+    .videos-title, .favorites-title, .expert-insights-title {
+        font-size: 1.5em; /* Larger font size for section title */
+        color: #12174c; /* Static text color */
+        font-weight: bold;
+    }
+
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resource Page</title>
+<script src="resource.js"></script>
+</head>
+<body>
+
+<div class="top-bar">
+  <ul class="resource-menu">
+    <li class="menu-item static">RESOURCES</li>
+    <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
+    <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
+    <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
+    <li class="menu-item" onclick="setActive(this); scrollToFavorites()">Favorites</li>
+    <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
+  </ul>
+</div>
+
+<div id="featured-section" class="featured-section">
+    <div class="featured-title">
+        <span class="featured-title">Featured</span>
+    </div>
+    <div class="featured-links">
+        <!-- Link 1 -->
+        <a href="https://medium.com/sketchit/visual-tips-for-online-public-speaking-9a24203b3393" class="featured-link">
+            Visual Tips for Online Public Speaking
+        </a>
+        <!-- Link 2 -->
+        <a href="https://www.simplypsychology.org/overcoming-social-anxiety.html" class="featured-link">
+            Overcoming Social Anxiety
+        </a>
+    </div>
+</div>
+<hr>
+<div id="articles-section" class="articles-section">
+    <div class="articles-header">
+      <span class="articles-title">Articles</span>
+    </div>
+    <div class="category-buttons">
+        <button data-category="beginner">Beginner</button>
+        <button data-category="intermediate">Intermediate</button>
+        <button data-category="advanced">Advanced</button>
+    </div>
+    <div id="category-links"></div>
+</div>
+<hr>
+
+<!-- Videos Section -->
+<div id="videos-section" class="videos-section">
+    <div class="videos-header">
+      <span class="videos-title">Videos</span>
+    </div>
+    <div class="category-buttons">
+        <button data-category="beginner-videos">Beginner</button>
+        <button data-category="intermediate-videos">Intermediate</button>
+        <button data-category="advanced-videos">Advanced</button>
+    </div>
+    <div id="video-links"></div>
+</div>
+<hr>
+
+<!-- Favorites Section -->
+<div class="favorites-section">
+    <div class="favorites-header">
+        <span class="favorites-title">Favorites</span>
+    </div>
+</div>
+<hr>
+
+<!-- Expert Insights Section -->
+<div class="expert-insights-section">
+    <div class="expert-insights-header">
+        <span class="expert-insights-title">Expert Insights</span>
+    </div>
+</div>
+<hr>
+  
+  
+
+
+
+</body>
+</html>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
+{% endblock %}
