@@ -20947,7 +20947,6 @@ h1, .h1 {
 }
 
 h2, .h2 {
-  font-family: "Alegreya Sans SC", sans-serif;
   font-size: 2.25rem;
   line-height: 1.3;
   letter-spacing: 0.05rem;
@@ -22710,4 +22709,29 @@ pre[class*=language-] {
     overflow: auto !important;
   }
 }
+
+.streak-badge {
+  font-size: 0.75rem; /* Adjust the font size as needed */
+}
+
+.streak-number {
+  /* Remove the top and transform properties if you're positioning from the bottom */
+  color: white; /* Or any color that makes the number visible on the fire image */
+  bottom: -3px; /* Adjust this value to move the number down */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2; /* Ensure the number is above the image */
+  font-weight: bold;
+  
+}
+
+/* Ensure the image covers the badge area */
+.streak-badge img {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This will ensure the image covers the area without stretching */
+}
+
 /*# sourceMappingURL=soft-ui-dashboard.css.map */
