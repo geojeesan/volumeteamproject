@@ -22,11 +22,19 @@ scenarioDetailsElement = document.getElementById("scenario-details")
 scenarioViewElement = document.getElementById("scenario-view")
 scenarioResultsElement = document.getElementById("scenario-results")
 scenarioScoreElement = document.getElementById("scenario-score")
+detailsTextElement = document.getElementById("details")
+errorTextElement = document.getElementById("error")
+preRecordedElement = document.getElementById("pre-recorded")
+preRecordedButton = document.getElementById("pre-recorded-button")
 
 recordButton.addEventListener('click', handleRecording);
 toggleBlinking(recordButton)
 
-preRecordedElement = document.getElementById("pre-recorded")
+preRecordedButton.addEventListener('click', function(event) {
+  preRecordedElement.style.display = "flex"
+  preRecordedButton.style.display = "none"
+});
+
 preRecordedElement.addEventListener('mouseenter', function(event) {
   // Change background color when mouse enters
   event.target.style.opacity = "1";
@@ -37,9 +45,11 @@ preRecordedElement.addEventListener('mouseleave', function(event) {
 });
 
 // We will dynamically get the lesson num in the future using Flask's template system
-lesson_num = 1
-getLesson(lesson_num)
+// Fetch the lesson number from the HTML
+lessonNumberElement = document.getElementById("lesson-number")
+lesson_num = parseInt(lessonNumberElement.innerText)
 
+getLesson(lesson_num)
 getPreRecorded()
 
 
@@ -175,13 +185,23 @@ function sendRecording(blob) {
   .then(response => response.json())
   .then(data => {
 
-    if(data == "ERROR"){
-      // sendRecording(blob)
-      console.log("error")
-    }else{
+    let error_num = data['error']
+
+    if(!error_num){
       stopLoading()
       processData(data)
       endScenario()
+    }else{
+      stopLoading()
+       // Error 209 is a speech recognition error
+        if (error_num == 209){
+          setError("Error in recognizing your speech, please try again.")
+        }
+        // Error 309 is a sentiment API issue
+        else if (error_num == 309){
+
+          setError("Error in sentiment API, please try again.")
+        }
     }
       console.log('Response:', data);
 
@@ -200,13 +220,21 @@ function processData(data){
 
 
 function startLoading(){
+  errorTextElement.style.display = "none"
+  detailsTextElement.style.display = "flex"
   scenarioViewElement.style.opacity = 0.5
   scenarioViewElement.style.pointerEvents = 'none'
 }
 
 function stopLoading(){
+  detailsTextElement.style.display = "none"
   scenarioViewElement.style.opacity = 1
   scenarioViewElement.style.pointerEvents = 'all'
+}
+
+function setError(error){
+  errorTextElement.innerText = error
+  errorTextElement.style.display = "flex"
 }
 
 function destroyAllCharts(){
@@ -228,6 +256,10 @@ function getLesson(lessonNum){
       // Handle the response data if needed
       console.log('Response:', data);
 
+      if (data['error_num'] == 404){
+        setLessonNotFound()
+      }else{
+
       lesson_num = data['lesson_num']
       lesson_name = data['lesson_name']
 
@@ -239,11 +271,17 @@ function getLesson(lessonNum){
 
       populateLessonDetails(lesson_num, lesson_name)
       populateScenarioDetails(scenario_name, scenario_details)
-
+      }
   })
   .catch(error => {
       console.error('Error:', error);
   });
+}
+
+function setLessonNotFound(){
+  scenarioViewElement.style.opacity = "0"
+  detailsTextElement.style.visibility = "visible"
+  detailsTextElement.innerText = "Lesson not found"
 }
 
 function populateLessonDetails(lesson_num, lesson_name){
