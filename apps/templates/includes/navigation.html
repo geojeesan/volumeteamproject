@@ -1,5 +1,4 @@
  <!-- Navbar -->
-    
  <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
   <div class="container-fluid py-1 px-3">
      <nav aria-label="breadcrumb">
@@ -39,6 +38,15 @@
              <li><a class="dropdown-item" href="#">Settings</a></li>
            </ul>
          </li>
+          <!-- Streaks -->
+          <li class="nav-item pe-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0">
+              <div class="streak-badge position-relative d-inline-flex align-items-center justify-content-center" style="width: 33px; height: 30px;">
+                <img src="{{ config.ASSETS_ROOT }}/img/fire.svg" alt="Streak" class="position-absolute">
+                <span class="streak-number position-absolute fw-bold">5</span>
+              </div>
+            </a>
+          </li>                
          <!-- Notifications dropmenu-->
          <li class="nav-item dropdown pe-3 d-flex align-items-center">
            <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
