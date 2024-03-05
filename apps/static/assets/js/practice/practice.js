@@ -185,7 +185,7 @@ function sendRecording(blob) {
   .then(response => response.json())
   .then(data => {
 
-    let error_num = data['error']
+    let error_num = data['code']
 
     if(!error_num){
       stopLoading()
@@ -193,6 +193,7 @@ function sendRecording(blob) {
       endScenario()
     }else{
       stopLoading()
+
        // Error 209 is a speech recognition error
         if (error_num == 209){
           setError("Error in recognizing your speech, please try again.")
@@ -221,20 +222,20 @@ function processData(data){
 
 function startLoading(){
   errorTextElement.style.display = "none"
-  detailsTextElement.style.display = "flex"
+  detailsTextElement.style.visibility = "visible"
   scenarioViewElement.style.opacity = 0.5
   scenarioViewElement.style.pointerEvents = 'none'
 }
 
 function stopLoading(){
-  detailsTextElement.style.display = "none"
+  detailsTextElement.style.visibility = "hidden"
   scenarioViewElement.style.opacity = 1
   scenarioViewElement.style.pointerEvents = 'all'
 }
 
 function setError(error){
   errorTextElement.innerText = error
-  errorTextElement.style.display = "flex"
+  errorTextElement.style.display = "block"
 }
 
 function destroyAllCharts(){
@@ -344,9 +345,9 @@ function populateAttitudeChart(sentiments){
           borderRadius: 4,
           borderSkipped: false,
           backgroundColor: [
-            "#cb0c9f",
-            "#575f9a", 
-            "#EF0B8A"
+            "#3A416F",
+            "#7571AD", 
+            "#C0BEDA"
         ],
           data: sentiment_values
       }]
@@ -378,7 +379,7 @@ function populatePaceChart(pace){
 
   var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
 
-  gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
+  gradientStroke1.addColorStop(1, '#C0BEDA');
   gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
   gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
 
