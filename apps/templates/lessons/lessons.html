@@ -1,4 +1,7 @@
-{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %} <style>
+{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %} 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
   .main-content {
     flex: 1;
   }
@@ -15,8 +18,10 @@
   }
 
   .wave-graph {
-    width: 100%;
-    height: auto;
+    width: 100%; /* Responsive to container size */
+    max-width: 600px; /* Maximum width */
+    height: 400px; /* Fixed height */
+    margin: auto; /* Centering if needed */
     /* Adjust as necessary to maintain aspect ratio */
   }
 
@@ -31,9 +36,20 @@
     border-radius: 15px;
   }
 
-  .card .card-body {
+  .card-body {
     padding: 3rem;
+    position: relative; /* If not already set, for positioning context */
+    overflow: hidden; /* Prevents content from spilling outside the card */
+
   }
+
+  #wave-placeholder {
+    width: 100%; /* Make canvas width responsive */
+    max-width: 400px; /* Max width to prevent excessive expansion */
+    height: 400px; /* Fixed height, adjust as needed */
+    margin: auto; /* Center the canvas element */
+}
+
 
   /* Styles for the title and content */
   h2 {
@@ -99,6 +115,10 @@
     border-radius: 20px;
     padding: 1rem;
     text-align: center;
+    width: 100%; /* Responsive to container size */
+    max-width: 600px; /* Maximum width */
+    height: 400px; /* Fixed height */
+    margin: auto; /* Centering if needed */
     /* Center content if the graph is not as wide as the container */
   }
 
@@ -208,48 +228,51 @@
         </div>
       </div>
     </div>
-     <!-- Right Column for Volume Wave and Skills Progress -->
-     <div class="col-lg-4">
-        <div class="card mb-4">
-         <div class="card-body">
-           <h5>Your Volume™ Wave:</h5>
-           <div id="wave-placeholder" class="wave-graph-container" style="height: 200px; /* Adjust as needed */">
-          <!-- Dynamic graph will be rendered here -->
+    <div class="col-lg-4">
+      <div class="card mb-4">
+          <div class="card-body">
+            <div style="height: 400px;"> <!-- SET THE HEIGHT HERE TO NOT BREAK THE BOX-->
+              <h5>Your Volume™ Wave:</h5>
+              <!-- <h6>Take a look at your previous lesson's feedback!</h6> -->
+              <!-- Whenever i do this, x-axis goes down? -->
+              <canvas id="wave-placeholder"></canvas> <!-- Removed inline style -->
+              <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
             </div>
-            <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
-      <!-- Skills Progress Section -->
-      <h5 class="mt-4">Your Progress</h5>
-      <!-- Dynamic progress bars will be rendered here -->
-      <div id="skills-progress-container">
-        <!-- Placeholder for Pitch progress bar -->
-        <div class="skill-progress">
-          <label for="pitch-progress">Pitch</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
           </div>
-        </div>
-        <!-- Placeholder for Diction progress bar -->
-        <div class="skill-progress">
-          <label for="diction-progress">Diction</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="diction-progress"></div>
-          </div>
-        </div>
-        <!-- Placeholder for Pace progress bar -->
-        <div class="skill-progress">
-          <label for="pace-progress">Pace</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="pace-progress"></div>
-          </div>
-        </div>
-        <!-- Placeholder for Confidence progress bar -->
-        <div class="skill-progress">
-          <label for="confidence-progress">Confidence</label>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
-</div> {% endblock %} {% block javascripts %} <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> {% endblock %}
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div style="height: 20px;"></div>
+          <h5>Your Progress</h5> <!-- Why is there space? -->
+          <div id="skills-progress-container">
+            <div class="skill-progress">
+              <label for="pitch-progress">Pitch</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="diction-progress">Diction</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="diction-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="pace-progress">Pace</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="pace-progress"></div>
+              </div>
+            </div>
+            <div class="skill-progress">
+              <label for="confidence-progress">Confidence</label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      
+</div> {% endblock %} {% block javascripts %} 
+<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> 
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
