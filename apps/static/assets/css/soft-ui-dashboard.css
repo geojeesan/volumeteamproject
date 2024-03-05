@@ -123,11 +123,14 @@ h1, .h1 {
 @media (min-width: 1200px) {
   h1, .h1 {
     font-size: 3rem;
+    font-family: "Alegreya Sans SC", sans-serif;
+
   }
 }
 
 h2, .h2 {
   font-size: calc(1.35rem + 1.2vw);
+
 }
 @media (min-width: 1200px) {
   h2, .h2 {
@@ -164,6 +167,8 @@ h6, .h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  font-family: "Roboto", sans-serif;
+
 }
 
 abbr[title] {
@@ -19869,7 +19874,7 @@ hr.horizontal.gray-light {
   background-color: #fff;
 }
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon {
-  background-image: linear-gradient(310deg, #cb0c9f 0%, #cb0c9f 100%);
+  background-image: linear-gradient(310deg, #306D9C 0%, #306D9C 100%);
 }
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon svg .color-background,
 .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon svg .color-foreground {
@@ -20942,6 +20947,7 @@ h1, .h1 {
 }
 
 h2, .h2 {
+  font-family: "Alegreya Sans SC", sans-serif;
   font-size: 2.25rem;
   line-height: 1.3;
   letter-spacing: 0.05rem;

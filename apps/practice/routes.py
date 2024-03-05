@@ -7,7 +7,8 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-from flask import jsonify, send_file
+from flask import request, jsonify, send_file
+from apps.models import Lesson, SubLesson
 
 from apps.config import API_GENERATOR
 
@@ -26,25 +27,37 @@ user_sentiments = None
 def practice():
     return render_template('practice/practice.html', segment='practice', API_GENERATOR=len(API_GENERATOR))
 
-
 @blueprint.route('/get_lesson', methods=['POST'])
 def get_lesson():
     global current_lesson
 
+    # Retrieve the lesson number from the form data
     lesson_num = request.form.get('lesson_num')
 
-    scenario_details = "Your friend John Doe is currently grappling with significant academic pressure. Despite excelling in all\
-          other subjects, he's experiencing pessimism about the current academic year. Encourage him by highlighting that he still\
-              maintains control over the situation."
+    # Fetch the lesson from the database using the lesson number
+    lesson = Lesson.query.filter_by(id=lesson_num).first()
 
-    # User will send as a request the lesson number. 
-    # Then we will return something like the following:
-    lesson = {'lesson_name':'Instilling Confidence', 'lesson_num':'1', 'scenarios':{'1':{"scenario_name": 
-    'A Wake-up Call', "scenario_details": scenario_details, "expected_sentiments": {'optimism': 0.6, 'excitement': 0.4,  'caring': 0.4}}}}
+    if not lesson:
+        return jsonify({'error': 'Lesson not found'}), 404
 
-    current_lesson = lesson
-    
-    return lesson
+    # Fetch associated scenarios for the lesson
+    scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).all()
+
+    # Prepare scenarios data
+    scenarios_data = {}
+    for index, scenario in enumerate(scenarios, start=1):
+        scenarios_data[str(index)] = scenario.to_dict()
+
+    # Prepare the lesson data
+    lesson_data = {
+        'lesson_name': lesson.title,  # Assuming 'title' is an attribute of Lesson model
+        'lesson_num': lesson.id,
+        'scenarios': scenarios_data
+    }
+
+    current_lesson = lesson_data  # Set the global variable if needed
+
+    return jsonify(lesson_data)
 
 
 def calculate_score(scenario_num):

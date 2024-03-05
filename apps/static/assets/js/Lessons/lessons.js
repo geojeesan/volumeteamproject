@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+    const startLessonBtn = document.getElementById('start-confidence-boost');
+    startLessonBtn.addEventListener('click', function() {
+        // Assuming you want to pass the lesson title to the practice page
+        const lessonTitle = 'Confidence Boost'; // The title for 'Confidence Boost'
+        // Navigate to the practice page with the lesson title as a query parameter
+        window.location.href = `/practice?lesson_title=${encodeURIComponent(lessonTitle)}`;
+    });
 });
 
 
@@ -187,6 +194,8 @@ function updateLastAccessedLessonUI(lesson) {
     const lessonDifficulty = document.getElementById('lesson-difficulty'); // Add this line
     const continueLessonBtn = document.getElementById('continue-lesson');
 
+
+
     lessonTitle.textContent = lesson.title;
     lessonImage.src = lesson.image_path;
     lessonImage.alt = `Image for ${lesson.title}`;
@@ -216,22 +225,28 @@ function displayLesson(lesson) {
         // Do not display this lesson in the list
         return;
     }
+
+
     const lessonContainer = document.getElementById('lessons-display');
     const lessonElement = document.createElement('div');
     lessonElement.className = 'lesson';
     lessonElement.innerHTML = `
-        <div class="lesson-card">
-            <h5>${lesson.title}</h5>
-            <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
-            <p>${lesson.description}</p>
-            <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
-            <p>Progress: ${lesson.progress}%</p>
-            <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}">
-                ${lesson.in_progress ? 'Continue Lesson' : 'Start Lesson'}
-            </button>
-        </div>
-    `;
+    <div class="lesson-card">
+        <h5>${lesson.title}</h5>
+        <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
+        <p>${lesson.description}</p>
+        <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
+        <p>Progress: ${lesson.progress}%</p>
+        <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}">
+        ${lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title} Lesson`}
+         </button>
+    </div>
+`;
     lessonContainer.appendChild(lessonElement);
+    const button = lessonElement.querySelector('button');
+    button.addEventListener('click', () => {
+    window.location.href = `/practice/${lesson.id}`;
+});
 }
 
 function updateProgressBars(lessonDetails) {
