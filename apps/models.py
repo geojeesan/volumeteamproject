@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Import Enum from SQLAlchemy for column definitions
 from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import JSON
 # Import the enum module for creating enumerations in Python
 import enum
 from apps import db
@@ -16,6 +17,33 @@ class DifficultyLevel(enum.Enum):
     intermediate = 'intermediate'
     advanced = 'advanced'
 
+class SubLesson(db.Model):
+    __tablename__ = 'scenarios'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    scenario_name = db.Column(db.String(150), nullable=False)
+    scenario_details = db.Column(db.Text, nullable=True)
+    expected_sentiments = db.Column(JSON, nullable=False)  # This will store the sentiments as a JSON object
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+    
+    # Relationship backref, allows access from the Lesson model
+    lesson = db.relationship('Lesson', backref=db.backref('scenarios', lazy=True))
+
+    def __init__(self, scenario_name, scenario_details, expected_sentiments, lesson_id):
+        self.scenario_name = scenario_name
+        self.scenario_details = scenario_details
+        self.expected_sentiments = expected_sentiments
+        self.lesson_id = lesson_id
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'scenario_name': self.scenario_name,
+            'scenario_details': self.scenario_details,
+            'expected_sentiments': self.expected_sentiments,
+            'lesson_id': self.lesson_id
+        }
+        
 class Lesson(db.Model):
     __tablename__ = 'lessons'
 
