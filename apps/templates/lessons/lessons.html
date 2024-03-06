@@ -64,7 +64,7 @@
 
 .card-title {
   font-size: 18px; /* Smaller font size for the title */
-  color: #FFFFFF; /* White color for the title text */
+  color: #344767; /* White color for the title text */
   font-weight: normal;
   font-family: 'Allerta', sans-serif;
 }
@@ -83,7 +83,7 @@
   .card {
     border: none;
     border-radius: 15px;
-    margin-bottom: 1rem; /* Reduce from larger values if necessary */
+    margin-bottom: 0; /* Reduce from larger values if necessary */
   }
 
   .card-body {
@@ -100,14 +100,6 @@
     height: 400px; /* Fixed height, adjust as needed */
     margin: auto; /* Center the canvas element */
 }
-
-
-  /* Styles for the title and content */
-   h2 {
-    /* color: #5e72e4; */
-    /* Adjust the color to match your brand color */
-    /* margin-bottom: 1rem; */
-  }
 
   p {
     color: #8898aa;
@@ -244,6 +236,9 @@
     color: #fff;
     background-color: #dc3545; /* Red for advanced */
   }
+  #skills-progress-container {
+  margin-top: 0; /* Adjust this value if you want less space above the progress bars */
+}
 
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
@@ -284,7 +279,7 @@
     <div class="col-lg-4">
       <div class="card mb-4">
           <div class="card-body">
-            <div style="height: 400px;"> <!-- SET THE HEIGHT HERE TO NOT BREAK THE BOX-->
+            <div style="height: 340px;"> <!-- SET THE HEIGHT HERE TO NOT BREAK THE BOX-->
               <h5>Your Volume™ Wave:</h5>
               <!-- <h6>Take a look at your previous lesson's feedback!</h6> -->
               <!-- Whenever i do this, x-axis goes down? -->
@@ -293,10 +288,8 @@
             </div>
           </div>
       </div>
-
       <div class="card mb-4">
         <div class="card-body">
-          <div style="height: 20px;"></div>
           <h5>Your Progress</h5> <!-- Why is there space? -->
           <div id="skills-progress-container">
             <div class="skill-progress">
