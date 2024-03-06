@@ -1,6 +1,9 @@
-# teamproject
+<div align="center">
+  <img src="apps/static/assets/img/audio-waves-light.svg" width="100">
+  <h1 style="font-size: 40px; color: #3b4662; margin-top: 0;">Volume</h1>
+</div>
 
-This application was generated using JHipster 7.9.4, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.4](https://www.jhipster.tech/documentation-archive/v7.9.4).
+Volume is a full-stack web application designed to enhance individuals' public speaking skills through the assistance of AI. It offers personalized lessons, real-time feedback, and resources tailored to users' skill levels. This project is built on Flask.
 
 ## This repository belongs to team 68
 
@@ -16,8 +19,40 @@ This application was generated using JHipster 7.9.4, you can find documentation 
 
 - Sajia Balkees Sayed (sbs255@student.bham.ac.uk)
 
+## Features
 
-## changes for Teamproject
+- **Dashboard**: Provides a holistic view of the user's journey, tracking progress and accessing key features.
+- **Lessons Page**: Offers tailored lessons of different complexities to improve public speaking skills.
+- **Speech Breakdown (AI)**: Analyzes users' speech patterns and provides scores and feedback on various aspects such as pitch variability, stuttering, pausing, and emotional tone.
+- **Resource Page**: Allows users to access a collection of videos, articles, and expert insights to further enhance their skills.
+- **Profile Page**: Displays user progress, notifications, and enables users to follow other users.
+- **Favorites Page**: Stores favorite learning sessions and resources for easy access.
+- **Feedback Page**: Provides users with the opportunity to rate their satisfaction with the service and provide feedback.
+
+## Technologies Used
+
+- **Flask**: Used as the web framework for the backend development.
+- **SQLite**: Utilized as the database management system for storing user data.
+- **Python Libraries**: Including librosa, numpy, and speech_recognition for speech analysis, as well as SamLowe's roberta-base-go_emotions for sentiment analysis.
+- **HTML/CSS/JavaScript**: Used for frontend development to create a responsive and interactive user interface.
+
+## Website URL
+
+**Production**: [team68dub.bham.team](https://team68dub.bham.team)
+**Development**: [team68dub.dev.bham.team](https://team68dub.dev.bham.team)
+
+## Setup Locally
+
+1. Clone the repository:
+`git clone git@git.cs.bham.ac.uk:team-projects-2023-24/team68dub.git Volume`
+`cd Volume`
+2. Install dependencies:
+`pip install -r requirements.txt`
+3. Run the application:
+`python run.py`
+4. Access the website at `http://127.0.0.1:5000`
+
+<!-- ## changes for Teamproject
 
 Modified by Madasar Shah for Team Project
 
@@ -323,3 +358,4 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [leaflet]: https://leafletjs.com/
 [definitelytyped]: https://definitelytyped.org/
 [angular cli]: https://cli.angular.io/
+-->
