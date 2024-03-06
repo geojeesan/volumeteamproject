@@ -38,19 +38,20 @@ Volume is a full-stack web application designed to enhance individuals' public s
 
 ## Website URL
 
-**Production**: [team68dub.bham.team](https://team68dub.bham.team)
+**Production**: [team68dub.bham.team](https://team68dub.bham.team) <br>
 **Development**: [team68dub.dev.bham.team](https://team68dub.dev.bham.team)
 
 ## Setup Locally
 
-1. Clone the repository:
-`git clone git@git.cs.bham.ac.uk:team-projects-2023-24/team68dub.git Volume`
-`cd Volume`
-2. Install dependencies:
-`pip install -r requirements.txt`
-3. Run the application:
-`python run.py`
-4. Access the website at `http://127.0.0.1:5000`
+1. Clone the repository: <br>
+`git clone git@git.cs.bham.ac.uk:team-projects-2023-24/team68dub.git Volume` <br>
+`cd Volume` <br>
+2. Install dependencies: <br>
+`pip install -r requirements.txt` <br>
+3. Run the application: <br>
+`python run.py` <br>
+4. Access the website on any modern browser at: <br>
+`http://127.0.0.1:5000`
 
 <!-- ## changes for Teamproject
 
