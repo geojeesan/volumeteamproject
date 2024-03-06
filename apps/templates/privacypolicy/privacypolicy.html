@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base-fullscreen.html' %}
 
 {% block title %} Privacy Policy {% endblock title %}
 
@@ -7,12 +7,22 @@
 
 {% block content %}
 
+<div class="container position-sticky z-index-sticky top-1">
+    <div class="row">
+      <div class="col-12">
+
+        {% include "includes/navigation-fullscreen.html" %}
+
+      </div>
+    </div>
+  </div>
+
     <div class="container-fluid">
 
-      <div class="page-header min-height-300 border-radius-xl mt-4" style="background-image: url('{{ config.ASSETS_ROOT }}/img/privacy-policy-banner.jpg'); background-position-y: 50%;">
+      <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
         <span class="mask bg-gradient-primary opacity-6"></span>
       </div>
-      <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+      <div class="card card-body blur shadow-blur mx-12 mt-n10 overflow-hidden">
         <div class="row gx-4">
           <div class="col-12">
             <h1>Volume Privacy Policy</h1>
@@ -108,15 +118,15 @@
             <h2>How to contact us</h2>
             <p>If you have any questions about Volume's privacy policy, the data we hold on you, or you would like to exercise one of your data protection rights, please do not hesitate to contact us.</p>
             <ul>
-                <li><b>Email:</b>gnj224@student.bham.ac.uk</li>
-                <li><b>Address:</b>University of Birmingham Dubai, Academic City, Dubai, United Arab Emirates</li>
+                <li><b>Email:</b> gnj224@student.bham.ac.uk</li>
+                <li><b>Address:</b> University of Birmingham Dubai, Academic City, Dubai, United Arab Emirates</li>
             </ul>
 
             <h2>How to contact the appropriate authority</h2>
             <p>Should you wish to report a complaint or if you feel that Volume has not addressed your concern in a satisfactory manner, you may contact the Information Commissioner's Office.</p>
             <ul>
-                <li><b>Email:</b>sbs255@student.bham.ac.uk</li>
-                <li><b>Address:</b>University of Birmingham Dubai, Academic City, Dubai, United Arab Emirates</li>
+                <li><b>Email:</b> sbs255@student.bham.ac.uk</li>
+                <li><b>Address:</b> University of Birmingham Dubai, Academic City, Dubai, United Arab Emirates</li>
             </ul>
             </div>
         </div>
@@ -126,7 +136,7 @@
 
     <div class="container-fluid py-4">
 
-      {% include "includes/footer.html" %}
+      {% include "includes/footer-fullscreen.html" %}
 
     </div>
 
