@@ -11,6 +11,7 @@ from jinja2 import TemplateNotFound
 from apps.config import API_GENERATOR
 
 @blueprint.route('/index')
+@login_required
 def index():
     return render_template('home/index.html', segment='index', API_GENERATOR=len(API_GENERATOR))
 
