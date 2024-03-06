@@ -33,9 +33,9 @@
              <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- Font Awesome caret icon -->
            </a>
            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-             <li><a class="dropdown-item" href="#">My Profile</a></li>
-             <li><a class="dropdown-item" href="#">Logout</a></li>
-             <li><a class="dropdown-item" href="#">Settings</a></li>
+             <li><a class="dropdown-item" href="profilepage">My Profile</a></li>
+             <li><a class="dropdown-item" href="{{ url_for('authentication_blueprint.logout') }}">Logout</a></li>
+             <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
            </ul>
          </li>
           <!-- Streaks -->
