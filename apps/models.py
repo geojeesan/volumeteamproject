@@ -1,7 +1,4 @@
 # -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 # Import Enum from SQLAlchemy for column definitions
 from sqlalchemy import Enum as SQLEnum
