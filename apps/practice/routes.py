@@ -37,6 +37,8 @@ def get_lesson():
     # Fetch the lesson from the database using the lesson number
     lesson = Lesson.query.filter_by(num=lesson_num).first()
 
+    print("LESSON", lesson)
+
     if not lesson:
         return jsonify({'error': 'Lesson not found', 'error_num': 404})
 
