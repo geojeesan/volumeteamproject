@@ -126,6 +126,7 @@ function startRecording() {
   isRecording = true;
   console.log("Starting");
   recordButton.style.opacity = 0.5;
+  updateRecordingStatus("Recording in Progress. Click again to end recording.", true);
 
   navigator.mediaDevices.getUserMedia({ audio: true })
   .then(function (stream) {
@@ -136,24 +137,31 @@ function startRecording() {
       mediaRecorder.onstop = function() {
           // Handle the stop event
           sendRecording();
+          updateRecordingStatus("", false); // Hide the status when recording stops
       };
       mediaRecorder.start();
-      // recordButton.disabled = true;
-      // Call a function to monitor volume level during recording
   })
   .catch(function (err) {
       console.error('Error: ', err);
+      updateRecordingStatus("", false); // Hide the status on error
   });
 }
-
 
 function stopRecording() {
   console.log("Recording stopped");
   isRecording = false;
   mediaRecorder.stop();
   recordButton.disabled = false;
+  updateRecordingStatus("", false); // Hide the status when manually stopped
 }
 
+function updateRecordingStatus(message, visible) {
+  const statusElement = document.getElementById("recording-status");
+  if (statusElement) {
+    statusElement.innerText = message;
+    statusElement.style.visibility = visible ? "visible" : "hidden";
+  }
+}
 
 
 function sendRecording(blob) {
