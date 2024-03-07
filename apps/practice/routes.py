@@ -35,7 +35,7 @@ def get_lesson():
     lesson_num = request.form.get('lesson_num')
 
     # Fetch the lesson from the database using the lesson number
-    lesson = Lesson.query.filter_by(id=lesson_num).first()
+    lesson = Lesson.query.filter_by(num=lesson_num).first()
 
     if not lesson:
         return jsonify({'error': 'Lesson not found', 'error_num': 404})
@@ -51,11 +51,12 @@ def get_lesson():
     # Prepare the lesson data
     lesson_data = {
         'lesson_name': lesson.title,  # Assuming 'title' is an attribute of Lesson model
-        'lesson_num': lesson.id,
+        'lesson_num': lesson.num,
         'scenarios': scenarios_data
     }
 
     current_lesson = lesson_data  # Set the global variable if needed
+    
 
     return jsonify(lesson_data)
 
@@ -66,9 +67,7 @@ def calculate_score(scenario_num):
 
     score = 1
 
-    print(current_lesson)
     expected_sentiments = current_lesson['scenarios'][str(scenario_num)]['expected_sentiments']
-
 
     formatted_user_sentiments = {}
     for sentiment in user_sentiments[0]:

@@ -21,10 +21,11 @@ def get_lessons():
     in_progress_lesson = Lesson.query.filter_by(in_progress=True).order_by(Lesson.last_accessed.desc()).first()
     lessons_data = [{
         'id': lesson.id,
+        'num': lesson.num,
         'title': lesson.title,
         'description': lesson.description,
         'image_path': lesson.image_path,
-        'difficulty': lesson.difficulty.name  # Include difficulty here
+        'difficulty': lesson.difficulty.name
     } for lesson in lessons]
     return jsonify(lessons_data)
 
