@@ -302,10 +302,22 @@
   <div class="row">
     <!-- Left Column for Lessons -->
     <div class="col-lg-8">
-      <div class="card mb-4 text-center">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Start a new challenge:</h5>
+          <br>
+          <div class="challenge-item">
+            <div id="lessons-display"></div>
+            <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4 text-center" style="margin-top:2%; opacity: 0.5;pointer-events: none;filter: grayscale(100%);">
         <div class="card-body">
           <!-- Static header to indicate the purpose of the section -->
-          <h5 class="card-title">Pick up where you left off:</h5>
+          <h5 class="card-title">Or perhaps, pick up where you left off:</h5>
           <h6 id="lesson-title">Loading...</h6>
           <p id="lesson-description">Loading description...</p> <!-- Add this line -->
           <div id="lesson-difficulty" class="badge">Loading difficulty...</div> <!-- Add this line -->
@@ -317,16 +329,7 @@
 <button class="btn btn-primary" id="continue-lesson">Continue Lesson</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Or perhaps, start a new challenge:</h5>
-          <br>
-          <div class="challenge-item">
-            <div id="lessons-display"></div>
-            <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
-          </div>
-        </div>
-      </div>
+
     </div>
 
           <!-- Lessons Completed Badge Card -->
