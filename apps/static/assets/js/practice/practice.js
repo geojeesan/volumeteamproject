@@ -53,9 +53,6 @@ getLesson(lesson_num)
 getPreRecorded()
 
 
-
-
-
 })
 
 function playAudio(elementId) {

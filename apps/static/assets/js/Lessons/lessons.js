@@ -243,7 +243,7 @@ function displayLesson(lesson) {
     lessonContainer.appendChild(lessonElement);
     const button = lessonElement.querySelector('button');
     button.addEventListener('click', () => {
-    window.location.href = `/practice/${lesson.id}`;
+    window.location.href = `/practice/${lesson.num}`;
 });
 }
 

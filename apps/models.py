@@ -48,6 +48,7 @@ class Lesson(db.Model):
     __tablename__ = 'lessons'
 
     id = db.Column(db.Integer, primary_key=True)
+    num = db.Column(db.Integer, primary_key=False)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=True)
     image_path = db.Column(db.String(255), nullable=True)
@@ -58,7 +59,8 @@ class Lesson(db.Model):
     # Use SQLEnum (imported as Enum from sqlalchemy) for the column type, specifying the Python enum for allowed values
     difficulty = db.Column(SQLEnum(DifficultyLevel), nullable=False)
 
-    def __init__(self, title, description, image_path, difficulty, in_progress=False, last_accessed=None, progress=0, completed=False):
+    def __init__(self, title, description, image_path, difficulty, num, in_progress=False, last_accessed=None, progress=0, completed=False):
+        self.lesson_num = num
         self.title = title
         self.description = description
         self.image_path = image_path
@@ -74,6 +76,7 @@ class Lesson(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'num': self.num,
             'title': self.title,
             'description': self.description,
             'image_path': self.image_path,
