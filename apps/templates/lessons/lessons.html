@@ -196,18 +196,24 @@
   margin-top: 0; /* Remove top margin if there's unnecessary space inside the card */
   }
   .progress {
-    height: 20px;
-    /* Thinner bars as per the design */
-    margin-bottom: 10px;
-    background-color: #e9ecef;
-    border-radius: 10px;
-  }
+  height: 20px; /* Adjust the height to make it more visible */
+  background-color: #e9ecef; /* Light grey background */
+  border-radius: 10px; /* Rounded corners */
+  overflow: hidden; /* Ensures that the inner bar doesn't overflow */
+}
 
-  .progress-bar {
-    line-height: 20px;
-    /* Match the height of the progress bar for vertical centering */
-    border-radius: 10px;
-  }
+.progress-bar {
+  height: 100%; /* Fills the entire height of the progress container */
+  background-color: #ACAACC; /* The filled color part, same as your custom blue */
+  border-radius: 10px 0 0 10px; /* Rounded corners on the left side */
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  justify-content: center; /* Centers text horizontally */
+  color: white; /* Text color */
+  font-weight: bold; /* Bold text */
+  transition: width 0.6s ease; /* Smooth transition for the bar loading */
+}
+
 
   .badge {
     display: inline-block;
@@ -221,6 +227,52 @@
     border-radius: 0.25rem;
     margin-top: 0.5rem;
   }
+
+  /* Styles for the progress card containing the badge */
+.progress-card {
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem; /* Space between cards */
+  position: relative; /* For absolute positioning of the percentage */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styles for the badge image container */
+.badge-container {
+  position: relative; /* To position the percentage text over the image */
+  display: inline-block; /* To fit the width of the content */
+}
+
+/* Styles for the badge image itself */
+.badge-image {
+  width: 100%; /* Adjust this to the size of your badge image */
+  height: auto;
+  margin-bottom: -50px; /* Adjust this value to position the percentage text */
+}
+
+/* Position and style the percentage text */
+.completion-percentage {
+  position: absolute;
+  top: 65%; /* Center vertically - adjust if needed */
+  left: 50%; /* Center horizontally - adjust if needed */
+  transform: translate(-50%, -50%); /* Adjust for exact centering */
+  font-size: 2.5rem; /* Large font size for the number */
+  color: #344767; /* Adjust this color to suit your badge's color scheme */
+  font-weight: bold;
+}
+
+
+/* Styles for the progress card title */
+.progress-card-title {
+  font-size: 1.25rem;
+  color: #344767;
+  margin-top: 2rem; /* Space from the top of the badge */
+}
 
   .badge-beginner {
     color: #fff;
@@ -276,49 +328,64 @@
         </div>
       </div>
     </div>
+
+          <!-- Lessons Completed Badge Card -->
     <div class="col-lg-4">
-      <div class="card mb-4">
-          <div class="card-body">
-            <div style="height: 340px;"> <!-- SET THE HEIGHT HERE TO NOT BREAK THE BOX-->
-              <h5>Your Volume™ Wave:</h5>
-              <!-- <h6>Take a look at your previous lesson's feedback!</h6> -->
-              <!-- Whenever i do this, x-axis goes down? -->
-              <canvas id="wave-placeholder"></canvas> <!-- Removed inline style -->
-              <button id="analyze-btn" class="btn btn-primary">Analyze Progress</button>
-            </div>
-          </div>
-      </div>
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5>Your Progress</h5> <!-- Why is there space? -->
-          <div id="skills-progress-container">
-            <div class="skill-progress">
-              <label for="pitch-progress">Pitch</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" id="pitch-progress"></div>
-              </div>
-            </div>
-            <div class="skill-progress">
-              <label for="diction-progress">Diction</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" id="diction-progress"></div>
-              </div>
-            </div>
-            <div class="skill-progress">
-              <label for="pace-progress">Pace</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" id="pace-progress"></div>
-              </div>
-            </div>
-            <div class="skill-progress">
-              <label for="confidence-progress">Confidence</label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" id="confidence-progress"></div>
-              </div>
-            </div>
-          </div>
+    <div class="card mb-4 text-center">
+      <div class="card-body">
+        <div class="badge-container">
+          <img src="{{ url_for('static', filename='/assets/img/banner1.png') }}" alt="Badge" class="badge-image">
+          <div class="completion-percentage" id="lessons-completion-percentage">0%</div>
         </div>
-      </div>      
+        <br>
+        <h5 class="progress-card-title">Lessons Completed</h5>
+      </div>
+    </div>
+    
+      <!-- Volume Wave Card -->
+      <div class="card mb-4 text-center">
+        <div class="card-body" style="height: 340px;">
+          <h5>Your Volume™ Wave:</h5>
+          <canvas id="wave-placeholder"></canvas>
+        </div>
+      </div>
+
+
+
+<!-- Your Progress Card -->
+<div class="card mb-4 text-center">
+  <div class="card-body">
+    <h5>Your Progress</h5>
+    <div id="skills-progress-container">
+      <div class="skill-progress">
+        <label for="articulation-progress">Articulation</label>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="articulation-progress"></div>
+        </div>
+      </div>
+      <div class="skill-progress">
+        <label for="volume-progress">Volume</label>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="volume-progress"></div>
+        </div>
+      </div>
+      <div class="skill-progress">
+        <label for="rhythm-progress">Rhythm</label>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="rhythm-progress"></div>
+        </div>
+      </div>
+      <div class="skill-progress">
+        <label for="expression-progress">Expression</label>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" id="expression-progress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
 </div> {% endblock %} {% block javascripts %} 
 <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> 
 <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
