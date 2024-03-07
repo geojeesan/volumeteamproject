@@ -181,7 +181,17 @@ def analyze_speech():
         print(traceback.print_exc())
         return jsonify({"error": "An unknown error has occured", "code": 404})
     
-
+@blueprint.route('/api/skill_progress', methods=['GET'])
+def get_skill_progress():
+    # Retrieve lesson progress data from the database
+    # For demonstration, I am using static values
+    skill_progress = {
+        'articulation': 70,  # Percentage of progress for the 'Articulation' skill
+        'volume': 50,        # Percentage of progress for the 'Volume' skill
+        'rhythm': 30,        # Percentage of progress for the 'Rhythm' skill
+        'expression': 90     # Percentage of progress for the 'Expression' skill
+    }
+    return jsonify(skill_progress)
 
 
 

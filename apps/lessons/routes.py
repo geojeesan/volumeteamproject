@@ -28,6 +28,20 @@ def get_lessons():
     } for lesson in lessons]
     return jsonify(lessons_data)
 
+@blueprint.route('/api/lessons/completion', methods=['GET'])
+def get_lessons_completion():
+    total_lessons = Lesson.query.count()
+    completed_lessons = Lesson.query.filter_by(completed=True).count()
+
+    if total_lessons > 0:
+        completion_percentage = (completed_lessons / total_lessons) * 100
+    else:
+        completion_percentage = 0  # To handle division by zero if no lessons are present
+
+    return jsonify({
+        'completionPercentage': completion_percentage
+    })
+
 @blueprint.route('/api/lessons/status', methods=['GET'])
 def get_lessons_status():
     # Get the last accessed lesson

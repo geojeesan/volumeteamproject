@@ -15,28 +15,26 @@ let lastAccessedLessonId = null;
 document.addEventListener('DOMContentLoaded', function() {
     const analyzeProgressBtn = document.getElementById('analyze-btn');
 
-    // Ensure all necessary preparations, like fetching lessons, are done before enabling the button
     fetchLastLesson().then(() => {
         fetchAllLessons();
-        // Enable the button only after the initial setup is done
+        updateLessonsCompletion(); // Add this to update the completion percentage
+        updateSkillProgressBars();
         analyzeProgressBtn.disabled = false;
-
-        // Event listener for the button click
+        
         analyzeProgressBtn.addEventListener('click', function() {
-            // Fetch pace data when the button is clicked
             fetchPaceData().then(paceData => {
-                // Use the fetched pace data to populate the chart
                 populatePaceChartInLessons(paceData);
             });
         });
     });
+    
     const startLessonBtn = document.getElementById('start-confidence-boost');
-    startLessonBtn.addEventListener('click', function() {
-        // Assuming you want to pass the lesson title to the practice page
-        const lessonTitle = 'Confidence Boost'; // The title for 'Confidence Boost'
-        // Navigate to the practice page with the lesson title as a query parameter
-        window.location.href = `/practice?lesson_title=${encodeURIComponent(lessonTitle)}`;
-    });
+    if (startLessonBtn) { // Check if the button exists
+        startLessonBtn.addEventListener('click', function() {
+            const lessonTitle = 'Confidence Boost';
+            window.location.href = `/practice?lesson_title=${encodeURIComponent(lessonTitle)}`;
+        });
+    }
 });
 
 
@@ -254,6 +252,38 @@ function updateProgressBars(lessonDetails) {
     console.log('Updating progress bars with data:', lessonDetails);
     // Example: document.getElementById('confidence-progress').style.width = `${lessonDetails.confidenceScore}%`;
 }
+
+function updateLessonsCompletion() {
+    fetch('/api/lessons/completion')
+        .then(response => response.json())
+        .then(data => {
+            const completionElement = document.getElementById('lessons-completion-percentage');
+            completionElement.textContent = `${data.completionPercentage.toFixed(0)}%`; // Rounds to nearest whole number
+            // Here you can also update a progress bar or similar visual element
+        })
+        .catch(error => {
+            console.error('Error fetching lessons completion:', error);
+        });
+}
+
+function updateSkillProgressBars() {
+    fetch('/api/skill_progress')
+        .then(response => response.json())
+        .then(skillProgress => {
+            Object.entries(skillProgress).forEach(([skill, progress]) => {
+                const progressBar = document.getElementById(`${skill}-progress`);
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`; // Ensure this line works
+                    progressBar.setAttribute('aria-valuenow', progress); // Accessibility
+                    progressBar.textContent = `${progress}%`; // Optional: Shows text inside the bar
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching skill progress:', error);
+        });
+}
+
 
 
 // function fetchWaveData() {
