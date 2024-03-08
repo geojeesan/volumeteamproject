@@ -19,6 +19,8 @@ Volume is a full-stack web application designed to enhance individuals' public s
 
 - Sajia Balkees Sayed (sbs255@student.bham.ac.uk)
 
+- Adnan Alfatouhi Aljundi (axa1888@student.bham.ac.uk)
+
 ## Features
 
 - **Dashboard**: Provides a holistic view of the user's journey, tracking progress and accessing key features.
