@@ -1,42 +1,178 @@
 let lastAccessedLessonId = null;
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     fetchLastLesson().then(() => {
-//     fetchAllLessons();
-//     populatePaceChartInLessons();
-//     });
-//     // Initialize fetchWaveData if needed
-//     const analyzeProgressBtn = document.getElementById('analyze-btn');
-//     analyzeProgressBtn.addEventListener('click', function() {
-//         fetchWaveData();
-//     });
-// });
-
 document.addEventListener('DOMContentLoaded', function() {
-    const analyzeProgressBtn = document.getElementById('analyze-btn');
-
     fetchLastLesson().then(() => {
         fetchAllLessons();
-        updateLessonsCompletion(); // Add this to update the completion percentage
+        updateLessonsCompletion();
         updateSkillProgressBars();
-        analyzeProgressBtn.disabled = false;
-        
-        analyzeProgressBtn.addEventListener('click', function() {
-            fetchPaceData().then(paceData => {
-                populatePaceChartInLessons(paceData);
-            });
-        });
     });
-    
+
+    const analyzeProgressBtn = document.getElementById('analyze-btn');
+    if (analyzeProgressBtn) {
+        analyzeProgressBtn.addEventListener('click', function() {
+            // Placeholder for functionality, e.g., submitting audio for analysis
+            console.log('Analyze button clicked');
+        });
+    }
+
     const startLessonBtn = document.getElementById('start-confidence-boost');
-    if (startLessonBtn) { // Check if the button exists
+    if (startLessonBtn) {
         startLessonBtn.addEventListener('click', function() {
             const lessonTitle = 'Confidence Boost';
             window.location.href = `/practice?lesson_title=${encodeURIComponent(lessonTitle)}`;
         });
     }
+    const nextScenarioBtn = document.getElementById('next-scenario-btn');
+    if (nextScenarioBtn) {
+        nextScenarioBtn.addEventListener('click', function() {
+            // Logic to go to the next scenario or complete the lesson
+            goToNextScenario();
+        });
+    }
 });
 
+async function fetchLastLesson() {
+    try {
+        const response = await fetch('/api/lessons/status', { method: 'GET' });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.lastAccessed && Object.keys(data.lastAccessed).length !== 0) {
+            updateLastAccessedLessonUI(data.lastAccessed);
+        } else if (data.message) {
+            // Handle the case with no last accessed lesson more gracefully
+            console.log(data.message);
+            // Optionally, update the UI to reflect that no last lesson is available
+            // showNoLastAccessedLessonMessage();
+        }
+    } catch (error) {
+        console.error('Error fetching last accessed lesson:', error);
+        // showErrorFetchingLastAccessedLesson(); for handling unexpected errors
+    }
+}
+
+
+function updateLastAccessedLessonUI(lesson) {
+    lastAccessedLessonId = lesson.id;
+    const lessonTitle = document.getElementById('lesson-title');
+    const lessonImage = document.getElementById('lesson-image');
+    const lessonDescriptionText = document.getElementById('lesson-description'); // Add this line
+    const lessonProgress = document.getElementById('lesson-progress'); // Add this line
+    const lessonDifficulty = document.getElementById('lesson-difficulty'); // Add this line
+    const continueLessonBtn = document.getElementById('continue-lesson');
+    lessonTitle.textContent = lesson.title;
+    lessonImage.src = lesson.image_path;
+    lessonImage.alt = `Image for ${lesson.title}`;
+    lessonDescriptionText.textContent = lesson.description; // Add this line
+    lessonProgress.textContent = `Progress: ${lesson.progress}%`; // Add this line
+    lessonDifficulty.textContent = lesson.difficulty; // Add this line
+    lessonDifficulty.className = `badge badge-${lesson.difficulty}`; // Add this line
+    continueLessonBtn.textContent = 'Continue Lesson';
+}
+
+
+async function fetchAllLessons() {
+    try {
+        const response = await fetch('/api/lessons', { method: 'GET' });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const lessons = await response.json();
+        if (Array.isArray(lessons)) {
+            displayLessons(lessons);
+        } else {
+            console.error('Fetched lessons data is not an array.');
+        }
+    } catch (error) {
+        console.error('Error fetching lessons:', error);
+    }
+}
+
+
+function displayLessons(lessons) {
+    const lessonsContainer = document.getElementById('lessons-display');
+    lessonsContainer.innerHTML = ''; // Clear previous lessons
+    lessons.forEach(lesson => { // Iterate through each lesson
+        displayLesson(lesson, lessonsContainer);
+    });
+}
+
+function displayLesson(lesson, lessonsContainer) {
+    // The check to not display the last accessed lesson is removed
+    const lessonElement = document.createElement('div');
+    lessonElement.className = 'lesson';
+    lessonElement.innerHTML = `
+    <div class="lesson-card">
+        <h5>${lesson.title}</h5>
+        <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
+        <p>${lesson.description}</p>
+        <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
+        <p>Progress: ${lesson.progress}%</p>
+        <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}">
+        ${lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title} Lesson`}
+        </button>
+    </div>
+`;
+    lessonsContainer.appendChild(lessonElement);
+    const button = lessonElement.querySelector('button');
+    button.addEventListener('click', () => {
+        window.location.href = `/practice/${lesson.num}`;
+    });
+}
+
+function updateProgressBars(lessonDetails) {
+    // Your logic to update the progress bars goes here
+    console.log('Updating progress bars with data:', lessonDetails);
+    // Example: document.getElementById('confidence-progress').style.width = `${lessonDetails.confidenceScore}%`;
+}
+
+function updateLastAccessedLessonUI(lesson) {
+    // Implement how you want to display the last accessed lesson
+    console.log('Last Accessed Lesson:', lesson);
+}
+
+function updateLessonsCompletion() {
+    fetch('/api/lessons/completion', { method: 'GET' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const completionPercentageElement = document.getElementById('lessons-completion-percentage');
+            if (completionPercentageElement && typeof data.completionPercentage === 'number') {
+                completionPercentageElement.textContent = `Lessons Completed: ${data.completionPercentage}%`;
+            } else {
+                console.error('Invalid completion percentage data.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching lessons completion:', error);
+        });
+}
+
+function updateSkillProgressBars() {
+    fetch('/api/skill_progress')
+        .then(response => response.json())
+        .then(skillProgress => {
+            Object.entries(skillProgress).forEach(([skill, progress]) => {
+                const progressBar = document.getElementById(`${skill}-progress`);
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`; // Ensure this line works
+                    progressBar.setAttribute('aria-valuenow', progress); // Accessibility
+                    progressBar.textContent = `${progress}%`; // Optional: Shows text inside the bar
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching skill progress:', error);
+        });
+}
+
+
+// ------------------------------------------
 
 function fetchPaceData() {
     // Adjust to fetch from the new endpoint that serves the latest pace data
@@ -161,144 +297,5 @@ function populatePaceChartInLessons(paceData) {
 
 // Example usage
 document.addEventListener('DOMContentLoaded', function() {
-    // Your existing code
-    // Initialize the pace chart for a lesson after fetching details or when needed
     populatePaceChartInLessons(); // Call this function where it fits in your logic
 });
-
-function fetchLastLesson() {
-    // Return the promise chain here
-    return fetch('/api/lessons/status') // This endpoint should return the last accessed lesson
-        .then(response => response.json())
-        .then(data => {
-            if (data.lastAccessed) {
-                updateLastAccessedLessonUI(data.lastAccessed);
-                // Set the last accessed lesson ID
-                lastAccessedLessonId = data.lastAccessed.id;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching last accessed lesson:', error);
-        });
-}
-
-
-function updateLastAccessedLessonUI(lesson) {
-    lastAccessedLessonId = lesson.id;
-    const lessonTitle = document.getElementById('lesson-title');
-    const lessonImage = document.getElementById('lesson-image');
-    const lessonDescriptionText = document.getElementById('lesson-description'); // Add this line
-    const lessonProgress = document.getElementById('lesson-progress'); // Add this line
-    const lessonDifficulty = document.getElementById('lesson-difficulty'); // Add this line
-    const continueLessonBtn = document.getElementById('continue-lesson');
-
-
-
-    lessonTitle.textContent = lesson.title;
-    lessonImage.src = lesson.image_path;
-    lessonImage.alt = `Image for ${lesson.title}`;
-    lessonDescriptionText.textContent = lesson.description; // Add this line
-    lessonProgress.textContent = `Progress: ${lesson.progress}%`; // Add this line
-    lessonDifficulty.textContent = lesson.difficulty; // Add this line
-    lessonDifficulty.className = `badge badge-${lesson.difficulty}`; // Add this line
-    continueLessonBtn.textContent = 'Continue Lesson';
-}
-
-
-function fetchAllLessons() {
-    fetch('/api/lessons') // This endpoint returns all lessons
-        .then(response => response.json())
-        .then(lessons => {
-            lessons.forEach(lesson => {
-                displayLesson(lesson);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching lessons:', error);
-        });
-}
-
-function displayLesson(lesson) {
-    if (lesson.id === lastAccessedLessonId) {
-        // Do not display this lesson in the list
-        return;
-    }
-
-
-    const lessonContainer = document.getElementById('lessons-display');
-    const lessonElement = document.createElement('div');
-    lessonElement.className = 'lesson';
-    lessonElement.innerHTML = `
-    <div class="lesson-card">
-        <h5>${lesson.title}</h5>
-        <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
-        <p>${lesson.description}</p>
-        <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
-        <p>Progress: ${lesson.progress}%</p>
-        <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}">
-        ${lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title} Lesson`}
-         </button>
-    </div>
-`;
-    lessonContainer.appendChild(lessonElement);
-    const button = lessonElement.querySelector('button');
-    button.addEventListener('click', () => {
-    window.location.href = `/practice/${lesson.num}`;
-});
-}
-
-function updateProgressBars(lessonDetails) {
-    // Your logic to update the progress bars goes here
-    console.log('Updating progress bars with data:', lessonDetails);
-    // Example: document.getElementById('confidence-progress').style.width = `${lessonDetails.confidenceScore}%`;
-}
-
-function updateLessonsCompletion() {
-    fetch('/api/lessons/completion')
-        .then(response => response.json())
-        .then(data => {
-            const completionElement = document.getElementById('lessons-completion-percentage');
-            completionElement.textContent = `${data.completionPercentage.toFixed(0)}%`; // Rounds to nearest whole number
-            // Here you can also update a progress bar or similar visual element
-        })
-        .catch(error => {
-            console.error('Error fetching lessons completion:', error);
-        });
-}
-
-function updateSkillProgressBars() {
-    fetch('/api/skill_progress')
-        .then(response => response.json())
-        .then(skillProgress => {
-            Object.entries(skillProgress).forEach(([skill, progress]) => {
-                const progressBar = document.getElementById(`${skill}-progress`);
-                if (progressBar) {
-                    progressBar.style.width = `${progress}%`; // Ensure this line works
-                    progressBar.setAttribute('aria-valuenow', progress); // Accessibility
-                    progressBar.textContent = `${progress}%`; // Optional: Shows text inside the bar
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching skill progress:', error);
-        });
-}
-
-
-
-// function fetchWaveData() {
-//     // Your existing logic to fetch wave data
-//     console.log('Fetching wave data...');
-//     // Simulate fetching wave data
-//     setTimeout(() => {
-//         console.log('Wave data fetched successfully');
-//         // Update your wave graph based on fetched data
-//         // updateWaveGraph(waveData); // You'll need to implement updateWaveGraph
-//     }, 1000);
-// }
-
-// function updateWaveGraph(data) {
-//     // Your logic to update the wave graph based on the data
-//     console.log('Updating wave graph with data:', data);
-//     // Example: document.getElementById('wave-graph').textContent = JSON.stringify(data);
-// }

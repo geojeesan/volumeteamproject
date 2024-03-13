@@ -2,11 +2,11 @@
 
 from apps.home import blueprint
 from flask import render_template, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from flask import request, jsonify, send_file
-from apps.models import Lesson, SubLesson
-
+from apps.models import db, Lesson, SubLesson, UserScenarioProgress
+from speech_recognition import UnknownValueError
 from apps.config import API_GENERATOR
 
 import speech_recognition as sr
@@ -26,70 +26,80 @@ def practice(number):
 
 @blueprint.route('/get_lesson', methods=['POST'])
 def get_lesson():
-    global current_lesson
-
-    # Retrieve the lesson number from the form data
     lesson_num = request.form.get('lesson_num')
-
-    # Fetch the lesson from the database using the lesson number
     lesson = Lesson.query.filter_by(num=lesson_num).first()
 
-    print("LESSON", lesson)
-
     if not lesson:
-        return jsonify({'error': 'Lesson not found', 'error_num': 404})
+        return jsonify({'error': 'Lesson not found', 'error_num': 404}), 404
 
-    # Fetch associated scenarios for the lesson
     scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).all()
+    scenarios_data = {str(index): scenario.to_dict() for index, scenario in enumerate(scenarios, start=1)}
 
-    # Prepare scenarios data
-    scenarios_data = {}
-    for index, scenario in enumerate(scenarios, start=1):
-        scenarios_data[str(index)] = scenario.to_dict()
-
-    # Prepare the lesson data
     lesson_data = {
-        'lesson_name': lesson.title,  # Assuming 'title' is an attribute of Lesson model
+        'lesson_name': lesson.title,
         'lesson_num': lesson.num,
         'scenarios': scenarios_data
     }
 
-    current_lesson = lesson_data  # Set the global variable if needed
-    
-
     return jsonify(lesson_data)
 
+def calculate_user_progress(user_id, lesson_id):
+    """Calculates the user's progress for a specific lesson based on completed scenarios."""
+    total_scenarios = SubLesson.query.filter_by(lesson_id=lesson_id).count()
+    completed_scenarios = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=SubLesson.id, completed=True).join(SubLesson).filter(SubLesson.lesson_id==lesson_id).count()
 
-def calculate_score(scenario_num):
-    
-    global current_lesson, user_sentiments
+    progress_percentage = (completed_scenarios / total_scenarios) * 100 if total_scenarios else 0
+    return progress_percentage
 
+def update_user_scenario_progress(user_id, scenario_id, score):
+    """Update or create progress entry for a user's scenario."""
+    progress_entry = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario_id).first()
+
+    if progress_entry:
+        progress_entry.score = score  # Update score if already exists
+        progress_entry.completed = True
+    else:
+        new_progress = UserScenarioProgress(user_id=user_id, scenario_id=scenario_id, completed=True, score=score)
+        db.session.add(new_progress)
+
+    db.session.commit()
+
+def convert_lesson_to_dict(lesson, user_id=None):
+    lesson_dict = lesson.to_dict(user_id=user_id)
+    lesson_dict['scenarios'] = {scenario.id: scenario.to_dict() for scenario in lesson.scenarios}
+    return lesson_dict
+
+def calculate_score(scenario_num, lesson, sentiments):
     score = 1
-
-    expected_sentiments = current_lesson['scenarios'][str(scenario_num)]['expected_sentiments']
-
-    formatted_user_sentiments = {}
-    for sentiment in user_sentiments[0]:
-        formatted_user_sentiments[sentiment['label']] = sentiment['score']
-
+    # Find the specific scenario using the relationship between Lesson and SubLesson
+    scenario_data = next((scenario for scenario in lesson.scenarios if scenario.id == scenario_num), None)
     
+    if scenario_data is None:
+        raise ValueError("Scenario data not found for the given scenario number.")
+    
+    expected_sentiments = scenario_data.expected_sentiments
+
+    # Adjusted processing of sentiments to handle list of dictionaries
+    formatted_user_sentiments = {}
+    for sentiment in sentiments:
+        if 'label' in sentiment and 'score' in sentiment:
+            formatted_user_sentiments[sentiment['label']] = sentiment['score']
+
     first_item = True
     for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
-        user_sentiment_score = formatted_user_sentiments[exp_sentiment_label]
+        user_sentiment_score = formatted_user_sentiments.get(exp_sentiment_label, 0)
         difference = abs(exp_sentiment_score - user_sentiment_score)
         
-        # Penalize user for only the first expected sentiment, as it is the most important
         if first_item:
             score -= difference
             first_item = False
         else:
-            # Give bonus to user if they are within 5% of the rest of the sentiments
-            if abs(difference) <= 0.2:
-                score += difference
-        
-        
+            score += max(0, 0.2 - difference)  # Adjusted scoring logic to prevent adding differences greater than 0.2
 
-    return score * 10
+    return max(score, 0) * 10
+
+
+
 
 
 def transcribe_text(new_path):
@@ -143,41 +153,46 @@ def get_wav_path(file):
 
 
 @blueprint.route('/analyze_speech', methods=['POST'])
+@login_required
 def analyze_speech():
-    global user_sentiments
-    user_sentiments = None
     try:
-        files = request.files
-        file = files.get('file')
-        scenario_num = request.form['scenario_num']
-        # Save the audio file received into disk & convert it to .wav format (speech_recognition doesn't work with .mp3 format)
-        new_path = get_wav_path(file)
+        file = request.files.get('file')
+        scenario_num = request.form.get('scenario_num', type=int)
+        lesson_num = request.form.get('lesson_num', type=int)
 
+        if not file or scenario_num is None or lesson_num is None:
+            return jsonify({"error": "Missing required data", "code": 400}), 400
+
+        lesson = Lesson.query.filter_by(num=lesson_num).first()
+        if not lesson:
+            return jsonify({"error": "Lesson not found", "code": 404}), 404
+
+        new_path = get_wav_path(file)
         try:
             text = transcribe_text(new_path)
-        except (sr.UnknownValueError, sr.RequestError):
-            # 209 is a speech recognition error
-            return jsonify({"error": "Speech recognition could not understand audio", "code": 209})
-    
-        # Delete the WAV  file as we don't need it anymore
-        os.remove(new_path)
+        except UnknownValueError:
+            os.remove(new_path)  # Clean up even in case of transcription failure
+            return jsonify({"error": "Speech recognition could not understand the audio", "code": 209}), 400
+        os.remove(new_path)  # Clean up after successful transcription
 
-        # Try 3 times if it's not getting the sentiment
-        attempt_nums = 0
-        while not user_sentiments and attempt_nums < 3:
-            attempt_nums += 1
-            user_sentiments = get_sentiments(text)
-            time.sleep(1)
-        if not user_sentiments:
-            # 309 is a sentiment analysis API error
-            return jsonify({"error":"Error occurred while connecting to Hugging Face API; {0}".format(e), "code": 309})
-        
-        score = calculate_score(scenario_num=scenario_num)
+        sentiments = get_sentiments(text)
+        if sentiments is None:
+            return jsonify({"error": "Failed to get sentiments from the analysis API", "code": 309}), 400
 
-        return {'user_speech':text, 'user_sentiments': user_sentiments, 'score':score}
+        # Assuming your existing functions to calculate score and update progress...
+        score = calculate_score(scenario_num, lesson, sentiments)
+        update_user_scenario_progress(current_user.id, scenario_num, score)
+        progress_percentage = calculate_user_progress(current_user.id, lesson.id)
+
+        return jsonify({
+            'user_speech': text,
+            'user_sentiments': sentiments,
+            'score': score,
+            'progress': progress_percentage
+        })
     except Exception as e:
-        print(traceback.print_exc())
-        return jsonify({"error": "An unknown error has occured", "code": 404})
+        traceback.print_exc()
+        return jsonify({"error": "An unknown error occurred", "code": 500}), 500
     
 @blueprint.route('/api/skill_progress', methods=['GET'])
 def get_skill_progress():

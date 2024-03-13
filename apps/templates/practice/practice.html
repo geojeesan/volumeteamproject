@@ -8,7 +8,13 @@
 
 {% block content %}
 
+<script type="text/javascript">
+  // Dynamically set the USER_ID variable for use in JavaScript
+  var USER_ID = "{{ user_id }}";
+</script>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
 
 <style>
 
@@ -107,6 +113,23 @@
 <button class="btn btn-primary" id="pre-recorded-button">Pre-recorded attempts (for testing)</button>
 </div>
 
+<!-- Lesson Completion Modal -->
+<div class="modal fade" id="lessonCompletionModal" tabindex="-1" aria-labelledby="lessonCompletionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lessonCompletionModalLabel">Congratulations!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        You have completed all scenarios in this lesson.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="return-to-lessons">Return to Lessons</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="row justify-content-center" style="margin-top:1.5%;opacity:0.5;display:none" id="pre-recorded">
   <div class="col-lg-4">
@@ -160,6 +183,7 @@
           <h6 class="text-center">Pace Analysis</h6>
           <p class="text-sm">
             <!-- <i class="fa fa-arrow-up text-success"></i>
+              
             <span class="font-weight-bold">4% more</span> in 2021 -->
           </p>
         </div>
@@ -173,7 +197,7 @@
 
     <div class="text-center mt-4">
     <button class="btn btn-primary btn-sm mb-0" onclick="retryScenario()">Retry</button>
-    <button class="btn btn-primary btn-sm mb-0" style="opacity:0.5;pointer-events: none;">Next Scenario</button>
+    <button class="btn btn-primary btn-sm mb-0" id="next-scenario-btn">Next Scenario</button>
   </div>
 
 </div>
@@ -191,4 +215,6 @@
 {% block javascripts %}
 <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
 <script src="{{ url_for('static', filename='assets/js/practice/practice.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 {% endblock %}

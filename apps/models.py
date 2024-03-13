@@ -7,6 +7,8 @@ from sqlalchemy import JSON
 import enum
 from apps import db
 from datetime import datetime
+from flask_login import login_required, current_user
+from sqlalchemy.orm import relationship
 
 # Define an enumeration for difficulty levels using Python's built-in enum
 class DifficultyLevel(enum.Enum):
@@ -41,53 +43,71 @@ class SubLesson(db.Model):
             'lesson_id': self.lesson_id
         }
         
+class DifficultyLevel(enum.Enum):
+    beginner = 'beginner'
+    intermediate = 'intermediate'
+    advanced = 'advanced'
+
 class Lesson(db.Model):
     __tablename__ = 'lessons'
 
     id = db.Column(db.Integer, primary_key=True)
-    num = db.Column(db.Integer, primary_key=False)
+    num = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=True)
     image_path = db.Column(db.String(255), nullable=True)
-    in_progress = db.Column(db.Boolean, default=False, nullable=False)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow)
-    progress = db.Column(db.Integer, default=0)  # 0-100 to represent percentage completion
-    completed = db.Column(db.Boolean, default=False, nullable=False)
-    # Use SQLEnum (imported as Enum from sqlalchemy) for the column type, specifying the Python enum for allowed values
     difficulty = db.Column(SQLEnum(DifficultyLevel), nullable=False)
 
-    def __init__(self, title, description, image_path, difficulty, num, in_progress=False, last_accessed=None, progress=0, completed=False):
-        self.lesson_num = num
+
+    def __init__(self, title, description, image_path, difficulty, num, last_accessed=None):
+        self.num = num
         self.title = title
         self.description = description
         self.image_path = image_path
-        self.in_progress = in_progress
         self.last_accessed = last_accessed if last_accessed else datetime.utcnow()
-        self.progress = progress
-        self.completed = completed
-        # Convert string difficulty to DifficultyLevel enum if necessary
         if isinstance(difficulty, str):
             difficulty = DifficultyLevel(difficulty)
         self.difficulty = difficulty
 
-    def to_dict(self):
+    def calculate_progress(self, user_id):
+        # Ensure there's at least one scenario to avoid division by zero
+        total_scenarios = len(self.scenarios)
+        if total_scenarios == 0:
+            return 0
+
+        # Query the database for the count of completed scenarios for this lesson and user
+        completed_scenarios = UserScenarioProgress.query.filter_by(user_id=user_id, completed=True).join(SubLesson, SubLesson.id == UserScenarioProgress.scenario_id).filter(SubLesson.lesson_id == self.id).count()
+        
+        progress_percentage = (completed_scenarios / total_scenarios) * 100
+        return progress_percentage
+
+    def to_dict(self, user_id=None):
+        progress = self.calculate_progress(user_id) if user_id else None
         return {
             'id': self.id,
             'num': self.num,
             'title': self.title,
             'description': self.description,
             'image_path': self.image_path,
-            'in_progress': self.in_progress,
-            'last_accessed': self.last_accessed.isoformat() if self.last_accessed else None,
-            'progress': self.progress,
-            'completed': self.completed,
-            'difficulty': self.difficulty.name  # Return the name of the Enum member
+            'last_accessed': self.last_accessed,
+            'progress': progress,  # Use the calculated progress
+            'difficulty': self.difficulty.name
         }
 
     def __repr__(self):
         return f'<Lesson {self.title} | Difficulty: {self.difficulty.name}>'
 
+class UserScenarioProgress(db.Model):
+    __tablename__ = 'user_scenario_progress'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    scenario_id = db.Column(db.Integer, db.ForeignKey('scenarios.id'), nullable=False)
+    completed = db.Column(db.Boolean, default=False, nullable=False)
+    score = db.Column(db.Float, nullable=True)  # Store the scenario score here
 
+    user = relationship('Users', backref='scenario_progress')
+    scenario = relationship('SubLesson', backref='user_progress')
 
 # Book Sample
 class Book(db.Model):
