@@ -1,3 +1,252 @@
+# -*- encoding: utf-8 -*-
+
+from apps.home import blueprint
+from flask import render_template, request, jsonify
+from flask_login import login_required, current_user
+from jinja2 import TemplateNotFound
+from flask import send_file
+from apps.models import Lesson, SubLesson, UserScenarioProgress
+from apps import db
+
+from apps.config import API_GENERATOR
+
+import speech_recognition as sr
+import traceback    
+from pydub import AudioSegment
+import requests
+import os
+import time
+
+current_lesson = None
+user_sentiments = None
+
+@blueprint.route('/practice/<int:number>')
+def practice(number):
+    user_id = current_user.id if current_user.is_authenticated else None
+    return render_template('practice/practice.html', segment='practice', lesson_number=number, user_id=user_id)
+
+@blueprint.route('/get_lesson', methods=['POST'])
+def get_lesson():
+    global current_lesson
+
+    # Retrieve the lesson number from the form data
+    lesson_num = request.form.get('lesson_num')
+
+    # Fetch the lesson from the database using the lesson number
+    lesson = Lesson.query.filter_by(num=lesson_num).first()
+
+    print("LESSON", lesson)
+
+    if not lesson:
+        return jsonify({'error': 'Lesson not found', 'error_num': 404})
+
+    # Fetch associated scenarios for the lesson
+    scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).all()
+
+    # Prepare scenarios data
+    scenarios_data = {}
+    for index, scenario in enumerate(scenarios, start=1):
+        scenarios_data[str(index)] = scenario.to_dict()
+
+    # Prepare the lesson data
+    lesson_data = {
+        'lesson_name': lesson.title,  # Assuming 'title' is an attribute of Lesson model
+        'lesson_num': lesson.num,
+        'scenarios': scenarios_data
+    }
+
+    current_lesson = lesson_data  # Set the global variable if needed
+    
+
+    return jsonify(lesson_data)
+
+
+def calculate_score(scenario_num):
+    
+    global current_lesson, user_sentiments
+
+    score = 1
+
+    expected_sentiments = current_lesson['scenarios'][str(scenario_num)]['expected_sentiments']
+
+    formatted_user_sentiments = {}
+    for sentiment in user_sentiments[0]:
+        formatted_user_sentiments[sentiment['label']] = sentiment['score']
+
+    
+    first_item = True
+    for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
+        user_sentiment_score = formatted_user_sentiments[exp_sentiment_label]
+        difference = abs(exp_sentiment_score - user_sentiment_score)
+        
+        # Penalize user for only the first expected sentiment, as it is the most important
+        if first_item:
+            score -= difference
+            first_item = False
+        else:
+            # Give bonus to user if they are within 5% of the rest of the sentiments
+            if abs(difference) <= 0.2:
+                score += difference
+        
+        
+
+    return score * 10
+
+
+def transcribe_text(new_path):
+    # Initialize the recognizer
+    recognizer = sr.Recognizer()
+
+    with sr.AudioFile(new_path) as source:
+        # Record the audio
+        audio_data = recognizer.record(source)
+
+    # Use the recognizer to transcribe the audio from the WAV file
+    text = recognizer.recognize_google(audio_data=audio_data, language='en-US')
+    
+    return text
+
+
+def get_sentiments(text):
+    try:
+        API_URL = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
+        headers = {"Authorization": "Bearer REMOVED"}
+
+        def query(payload):
+            response = requests.post(API_URL, headers=headers, json=payload)
+            return response.json()
+            
+        output = query({
+            "inputs": text,
+        })
+        return output
+    except requests.exceptions.RequestException as e:
+        return None
+    
+
+# - Takes the MP3 audio blob sent from the user
+# - Saves MP3 file to disk
+# - Converts MP3 to WAV and saves to disk 
+# - Returns the path of the WAV file
+def get_wav_path(file):
+    blob_content = file.read()
+    save_path = 'saved_file.mp3'
+    with open(save_path, 'wb') as f:
+        f.write(blob_content)
+    new_path = "new_file.wav"
+    sound = AudioSegment.from_file(save_path)
+
+    # Delete MP3 file as we don't need it anymore
+    os.remove(save_path)
+
+    sound.export(new_path, format="wav")
+    return new_path
+
+
+@blueprint.route('/analyze_speech', methods=['POST'])
+def analyze_speech():
+    try:
+        files = request.files
+        file = files.get('file')
+        scenario_num = request.form.get('scenario_num')
+        user_id = current_user.id  # Assuming Flask-Login provides current_user
+
+        # Convert the audio file for processing
+        new_path = get_wav_path(file)
+
+        try:
+            # Convert speech to text
+            text = transcribe_text(new_path)
+        except (sr.UnknownValueError, sr.RequestError) as e:
+            return jsonify({"error": "Speech recognition could not understand audio", "code": 209})
+        finally:
+            # Clean up the converted WAV file
+            os.remove(new_path)
+
+        # Attempt to analyze sentiment from the transcribed text
+        user_sentiments = get_sentiments(text)
+        if not user_sentiments:
+            return jsonify({"error": "Error occurred while connecting to sentiment analysis API", "code": 309})
+
+        # Calculate the user's score based on sentiment analysis results
+        score = calculate_score(scenario_num, user_sentiments)
+
+        # Update or create a new record in UserScenarioProgress
+        scenario_progress = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario_num).first()
+        if scenario_progress:
+            scenario_progress.completed = True
+            scenario_progress.score = score
+        else:
+            new_progress = UserScenarioProgress(
+                user_id=user_id, 
+                scenario_id=scenario_num, 
+                completed=True, 
+                score=score
+            )
+            db.session.add(new_progress)
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return jsonify({"error": "An unknown error occurred while saving progress", "code": 409})
+
+        return jsonify({
+            'user_speech': text,
+            'user_sentiments': user_sentiments,  # Assuming this returns a meaningful structure
+            'score': score
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": "An unknown error has occurred", "code": 404})
+    
+def calculate_score(scenario_num, user_sen):
+    # Implement your scoring logic based on user_sentiments and scenario requirements
+    score = 10  # Placeholder score calculation
+    return score
+
+
+@blueprint.route('/api/skill_progress', methods=['GET'])
+def get_skill_progress():
+    # Retrieve lesson progress data from the database
+    # For demonstration, I am using static values
+    skill_progress = {
+        'articulation': 70,  # Percentage of progress for the 'Articulation' skill
+        'volume': 50,        # Percentage of progress for the 'Volume' skill
+        'rhythm': 30,        # Percentage of progress for the 'Rhythm' skill
+        'expression': 90     # Percentage of progress for the 'Expression' skill
+    }
+    return jsonify(skill_progress)
+
+@blueprint.route('/check_completion/<int:lesson_id>', methods=['GET'])
+@login_required
+def check_completion(lesson_id):
+    user_id = current_user.id
+    total_scenarios = SubLesson.query.filter_by(lesson_id=lesson_id).count()
+    completed_scenarios = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=lesson_id, completed=True).count()
+
+    all_completed = total_scenarios == completed_scenarios
+    return jsonify({'all_completed': all_completed})
+
+
+# Helper - Extract current page name from request
+def get_segment(request):
+
+    try:
+
+        segment = request.path.split('/')[-1]
+
+        if segment == '':
+            segment = 'index'
+
+        return segment
+
+    except:
+        return None
+
+------
+
 let resultElement
 let inputElement
 let recordButton
@@ -12,8 +261,8 @@ let attitudeChart
 
 
 document.addEventListener('DOMContentLoaded', function () {
-resultElement = document.getElementById("result");
-inputElement = document.getElementById("score");
+resultElement = document.getElementById("result")
+inputElement = document.getElementById("score")
 recordButton = document.getElementById("voiceBtn")
 lessonNumElement = document.getElementById("lesson-num")
 lessonNameElement = document.getElementById("lesson-name")
@@ -48,10 +297,6 @@ preRecordedElement.addEventListener('mouseleave', function(event) {
 // Fetch the lesson number from the HTML
 lessonNumberElement = document.getElementById("lesson-number")
 lesson_num = parseInt(lessonNumberElement.innerText)
-
-document.getElementById('next-scenario-btn').addEventListener('click', function() {
-  nextScenario();
-});
 
 getLesson(lesson_num)
 getPreRecorded()
@@ -185,8 +430,7 @@ function sendRecording(blob) {
 
   const formData = new FormData();
   formData.append('scenario_num', scenario_num)
-  formData.append('lesson_num', lesson_num); // Added this line to send the lesson number
-  formData.append('file', blob)
+  formData.append('file', blob);
 
   fetch('/analyze_speech', {
       method: 'POST',
@@ -307,7 +551,39 @@ function populateScenarioDetails(scenario_name, scenario_details){
 
 function endScenario(){
   // Here, we will send to the database that the user has finished this scenario
-
+    fetch('/analyze_speech', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            user_id: USER_ID, // Use the dynamically obtained user ID
+            scenario_id: scenario_num,
+            completed: true,
+            score: scenario_score
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Additional logic here based on the response
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+        fetch(`/check_completion/${lesson_num}`)  // Adjust `lesson_num` as necessary to ensure it's the lesson ID
+    .then(response => response.json())
+    .then(data => {
+        if(data.all_completed){
+            document.getElementById("completion-message").style.display = "block";  // Make sure you have this element in your HTML
+            document.getElementById("scenario-view").style.display = "none";
+        } else {
+            nextScenario();  // This function needs to properly increment and load the next scenario
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
   scenarioViewElement.style.display = "none"
   scenarioResultsElement.style.display = "block"
   scenarioScoreElement.innerText = "Score:" + scenario_score.toFixed(1).toString() + "/10"
@@ -315,56 +591,10 @@ function endScenario(){
   populatePaceChart()
 }
 
-function nextScenario() {
-  destroyAllCharts();
-
-  // Increment the scenario number
-  scenario_num += 1;
-
-  var nextScenario = scenario_data[scenario_num.toString()];
-
-  if (nextScenario) {
-    populateScenarioDetails(nextScenario['scenario_name'], nextScenario['scenario_details']);
-    scenarioViewElement.style.display = "block";
-    scenarioResultsElement.style.display = "none";
-  } else {
-    // No more scenarios available, show completion message
-    displayCongratulationsPage();
-  }
+function nextScenario(){
+  destroyAllCharts()
+  scenario_num += 1
 }
-
-function displayCongratulationsPage() {
-  // Clear the main content area
-  document.body.innerHTML = '';
-
-  // Create the congratulatory message
-  var congratsMessage = document.createElement('h2');
-  congratsMessage.textContent = 'Congratulations! You have completed the lesson.';
-  document.body.appendChild(congratsMessage);
-
-  // Create the return button
-  var returnButton = document.createElement('button');
-  returnButton.textContent = 'Return to Lessons';
-  returnButton.onclick = function() {
-    window.location.href = '/lessons'; // Replace with the correct path
-  };
-  document.body.appendChild(returnButton);
-
-  // Apply some basic styles
-  document.body.style.display = 'flex';
-  document.body.style.flexDirection = 'column';
-  document.body.style.alignItems = 'center';
-  document.body.style.justifyContent = 'center';
-  document.body.style.height = '100vh';
-
-  returnButton.style.marginTop = '20px';
-  returnButton.style.padding = '10px 20px';
-  returnButton.style.fontSize = '1.2em';
-  returnButton.style.cursor = 'pointer';
-}
-
-
-
 
 function retryScenario(){
   scenarioViewElement.style.display = "block"

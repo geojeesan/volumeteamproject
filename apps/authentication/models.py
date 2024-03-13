@@ -20,9 +20,6 @@ class Users(db.Model, UserMixin):
     username      = db.Column(db.String(64), unique=True)
     email         = db.Column(db.String(64), unique=True)
     password      = db.Column(db.LargeBinary)
-
-    oauth_github  = db.Column(db.String(100), nullable=True)
-
     api_token     = db.Column(db.String(100))
     api_token_ts  = db.Column(db.Integer)    
 
@@ -54,6 +51,8 @@ def request_loader(request):
     username = request.form.get('username')
     user = Users.query.filter_by(username=username).first()
     return user if user else None
+
+
 
 class OAuth(OAuthConsumerMixin, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("Users.id", ondelete="cascade"), nullable=False)
