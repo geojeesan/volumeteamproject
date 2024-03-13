@@ -67,21 +67,21 @@ deploy-dev:
     - exit 0
 
 # TEMPORARY REMOVAL
-# deploy-prod:
-#   stage: deploy
-#   when: on_success
-#   tags:
-#     - prod
-#   resource_group: deployment
-#   variables:
-#     URL: '${CI_PROJECT_NAME}.bham.team'
-#     ACME: 'https://acme-staging-v02.api.letsencrypt.org/directory'
-#   before_script:
-#     - chmod 600 $RSA
-#     - source .venv/bin/activate
-#     - pip install -U pip
-#     - pip install -r requirements.txt
-#   script:
-#     - lsof -t -i :5000 | xargs kill -9 || true  # Kill processes listening on port 5000 if any, ignore errors
-#     - nohup python3 run.py > /dev/null 2>&1 &
-#     - exit 0
+deploy-prod:
+  stage: deploy
+  when: on_success
+  tags:
+    - prod
+  resource_group: deployment
+  variables:
+    URL: '${CI_PROJECT_NAME}.bham.team'
+    ACME: 'https://acme-staging-v02.api.letsencrypt.org/directory'
+  before_script:
+    - chmod 600 $RSA
+    - source .venv/bin/activate
+    - pip install -U pip
+    - pip install -r requirements.txt
+  script:
+    - lsof -t -i :5000 | xargs kill -9 || true  # Kill processes listening on port 5000 if any, ignore errors
+    - nohup python3 run.py > /dev/null 2>&1 &
+    - exit 0
