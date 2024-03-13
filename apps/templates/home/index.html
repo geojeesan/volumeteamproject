@@ -3,6 +3,7 @@
 <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:400,400i,700,700i" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
+
 <style>
   /*fonts*/
   .custom-font {
@@ -62,6 +63,29 @@
     min-height: 120px;
   }
 
+  .card-body {
+  align-items: center;
+  justify-content: space-between; /* This will space out the number/text and the icon */
+}
+/* This class will contain the icon and needs to be at the end of the card */
+.icon-container {
+  display: flex; /* Use flex to enable alignment features */
+  align-items: center; /* Center the icon vertically */
+  justify-content: center; /* Center the icon horizontally */
+  margin-left: 175px; /* Pushes the container to the right */
+  padding: 1rem; /* Add padding inside the container as needed */
+  background: #ACAACC; /* Light grey background, adjust as necessary */
+  border-radius: 0.5rem; /* Rounded corners for the icon background */
+  align-self: center; /* This will center the container along the cross axis of the flex container */
+margin-top: 18px;
+}
+
+/* The icon itself */
+.icon-container i {
+  font-size: 2rem; /* Adjust the icon size as needed */
+}
+
+
   .card-number {
     margin-top: 20px;
     font-size: 36px;
@@ -70,72 +94,118 @@
     line-height: 1;
     /* Ensures the number is closely followed by the title */
     font-weight: 700
+    
   }
 
   .card-title {
     font-size: 18px;
     /* Smaller font size for the title */
-    color: #FFFFFF;
+    color: #676974;
     /* White color for the title text */
     font-weight: normal;
     font-family: 'Allerta', sans-serif;
   }
 
-  .card-color-blue {
-    background-color: #ACAACC;
+  .card-color{
+    background-color: #FFFFFF;
     /* Example blue background color */
   }
-</style> {% endblock stylesheets %} {% block content %} <div class="container-fluid py-4">
+
+/* Color for the trophy icon */
+.icon-lessons-completed {
+  color: #ffffff; /* Replace with the color you want for this icon */
+}
+
+/* Color for the spinner icon */
+.icon-lessons-progress {
+  color: #FFFFFF; /* Replace with the color you want for this icon */
+}
+
+/* Color for the clock icon */
+.icon-total-hours {
+  color: #FFFFFF; /* Replace with the color you want for this icon */
+}
+
+#dynamicSticker {
+  width: 93%; /* Adjust the width to the percentage or px you desire */
+  height: auto; /* This will maintain the aspect ratio */
+}
+
+</style> {% endblock stylesheets %} 
+
+{% block content %} 
+<div class="container-fluid py-4">
   <div class="hello-nadir">
     <h1>Hello Nadir! </h1>
   </div>
   <div class="empower-speech">
     <p>Empower your speech with Volume! </p>
   </div>
-  <!-- 4 cards on top -->
-  <div class="row">
-    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
-        <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 16 </h2>
-              </div>
-              <div class="card-title card-text-color"> Lessons Completed </div>
+  <!-- 3 cards on top -->
+<div class="row">
+  <!-- Card 1: Lessons Completed -->
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+    <div class="card card-color">
+      <div class="card-body p-3 custom-card-height">
+        <div class="row justify-content-between">
+          <div class="col text-left">
+            <div class="card-number">
+              <h2 class="font-weight-bolder mb-0">16</h2>
+            </div>
+            <div class="card-title card-text-color">Lessons Completed</div>
+          </div>
+          <div class="col-auto">
+            <div class="icon-container">
+              <i class="fas fa-trophy icon-lessons-completed"></i>  <!-- Trophy icon for completed lessons -->
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
-        <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 02 </h2>
-              </div>
-              <div class="card-title card-text-color"> Lessons In Progress </div>
+  </div>
+
+  <!-- Card 2: Lessons In Progress -->
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+    <div class="card card-color">
+      <div class="card-body p-3 custom-card-height">
+        <div class="row justify-content-between">
+          <div class="col text-left">
+            <div class="card-number">
+              <h2 class="font-weight-bolder mb-0">02</h2>
+            </div>
+            <div class="card-title card-text-color">Lessons In Progress</div>
+          </div>
+          <div class="col-auto">
+            <div class="icon-container">
+              <i class="fas fa-spinner icon-lessons-progress"></i> <!-- Spinner icon for in-progress lessons -->
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
-        <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 23 </h2>
-              </div>
-              <div class="card-title card-text-color"> Total Practice Hours </div>
+  </div>
+
+  <!-- Card 3: Total Practice Hours -->
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+    <div class="card card-color">
+      <div class="card-body p-3 custom-card-height">
+        <div class="row justify-content-between">
+          <div class="col text-left">
+            <div class="card-number">
+              <h2 class="font-weight-bolder mb-0">23</h2>
+            </div>
+            <div class="card-title card-text-color">Total Practice Hours</div>
+          </div>
+          <div class="col-auto">
+            <div class="icon-container">
+              <i class="fas fa-clock icon-total-hours"></i> <!-- Clock icon for total hours -->
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
   <!-- Lessons and resources-->
   <div class="row mt-4">
@@ -155,7 +225,7 @@
               <div class="bg-gradient-primary border-radius-lg h-100">
                 <img src="{{ config.ASSETS_ROOT }}/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                  <img class="w-100 position-relative z-index-2 pt-4 conference-icon" src="{{ config.ASSETS_ROOT }}/img/conference.svg" alt="conference">
+                  <img id="dynamicSticker" src="{{ url_for('static', filename='img/logos/interview.svg') }}" alt="Dynamic Sticker"/>
                 </div>
               </div>
             </div>
@@ -192,10 +262,10 @@
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h5>Your Activity Over Time</h5>
+          <h5>Test Scores Over Time</h5>
         </div>
         <div class="card-body p-3">
-          <canvas id="activityChart" class="chart-canvas" height="110"></canvas>
+          <canvas id="testScoresChart" class="chart-canvas" height="320"></canvas>
         </div>
       </div>
     </div>
@@ -301,136 +371,18 @@
           <h6>Upcoming Events</h6>
         </div>
         <div class="card-body p-3">
-          <div class="timeline timeline-one-side">
-            <!-- Event 1 -->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-bell-55 text-success text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Public Speaking Workshop: "Speak Like a Pro!"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 27/9/2024, Time: 2:00 - 4:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Instructor: Jane Doe</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Enhance your public speaking skills with this interactive workshop.</p>
-              </div>
-            </div>
-            <!-- Event 2-->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-html5 text-danger text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Debate Club: "Argue It Out!"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 30/9/2024, Time: 5:00 - 7:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Coordinator: John Smith</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Join our debate club session and sharpen your argumentation skills.</p>
-              </div>
-            </div>
-            <!-- Event 3 -->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-cart text-info text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Leadership Seminar: "Lead the Way"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 5/10/2024, Time: 1:00 - 3:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Speaker: Emily Rose</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Develop your leadership skills with insights from industry leaders.</p>
-              </div>
-            </div>
-            <!-- Event 4-->
-            <div class="timeline-block">
-              <span class="timeline-step">
-                <i class="ni ni-key-25 text-primary text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Networking Event: "Connect & Grow"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 12/10/2024, Time: 6:00 - 9:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Host: TechStartups Inc.</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Expand your professional network at our annual networking event.</p>
-              </div>
-            </div>
+          <!-- Events will be dynamically loaded into this div -->
+          <div id="events-container">
+            <!-- JavaScript will populate this div with event data -->
           </div>
         </div>
       </div>
     </div> {% include "includes/footer.html" %}
   </div> {% endblock content %}
-  <!-- Specific JS goes HERE --> {% block javascripts %} <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
-  <script>
-    Chart.defaults.font.family = 'Roboto'; // Set the font family globally
-    Chart.defaults.color = '#353B3C'; // Set the global font color
-    const progressCtx = document.getElementById('progressChart').getContext('2d');
-    const progressChart = new Chart(progressCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Clear Diction', 'Emotional Expression', 'Tone Consistency', 'Pace Regulation'],
-        datasets: [{
-          label: 'Current Progress',
-          data: [65, 59, 80, 81], // Replace these numbers with your actual data
-          backgroundColor: '#fe76a8',
-          borderWidth: 0,
-          borderRadius: 10, // Rounded corners for the bars (Chart.js 3.x and newer)
-        }, {
-          label: 'Goal',
-          data: [85, 90, 100, 100], // Replace these numbers with your actual data
-          backgroundColor: '#8ac9fe',
-          borderWidth: 0,
-          borderRadius: 10, // Rounded corners for the bars (Chart.js 3.x and newer)
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              font: {
-                size: 14, // You can adjust the size here
-              },
-              color: '#353B3C', // Y-axis ticks color
-            }
-          },
-          x: {
-            ticks: {
-              font: {
-                size: 14, // You can adjust the size here
-              },
-              color: '#353B3C', // X-axis ticks color
-            }
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                size: 14, // Legend font size
-              },
-              color: '#353B3C', // Legend font color
-            }
-          },
-        }
-      }
-    });
-    const activityCtx = document.getElementById('activityChart').getContext('2d');
-    const activityChart = new Chart(activityCtx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Replace with actual date labels
-        datasets: [{
-          label: 'User Activity',
-          data: [10, 6, 30, 70, 12, 80], // Replace with actual data
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script> {% endblock javascripts %}
+
+  <!-- Specific JS goes HERE --> 
+  {% block javascripts %}
+  <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
+  <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
+  <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
+  {% endblock javascripts %}
