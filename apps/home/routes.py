@@ -2,12 +2,13 @@
 
 from apps.home import blueprint
 from flask import render_template, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from flask import jsonify
 
 import requests
 from apps.config import API_GENERATOR
+from apps.models import db, Event
 
 @blueprint.route('/index')
 @login_required
@@ -16,30 +17,49 @@ def index():
 
 @blueprint.route('/api/index/events', methods=['GET'])
 @login_required
-def events():
-    url = "https://www.eventbriteapi.com/v3/"
+def events_api():
+    # Retrieve the event_id from the query string
+    event_id = request.args.get('event_id')
+    
+    # Ensure an event_id was provided
+    if not event_id:
+        return jsonify({'error': 'No event_id provided'}), 400
+
+    # Construct the URL using the provided event_id
+    url = f"https://www.eventbriteapi.com/v3/events/{event_id}/"
     headers = {
-        "Authorization": "Bearer MDSVTTIPXDGH3ZNUIWW3",  # Make sure to use your actual API key
+        "Authorization": "Bearer MDSVTTIPXDGH3ZNUIWW3",
         "Content-Type": "application/json"
     }
-    params = {
-        "q": "public speaking",
-        # Add any other parameters you might need
-    }
-    response = requests.get(url, headers=headers, params=params)
+    
+    # Make the GET request to the Eventbrite API
+    response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
-        events_data = response.json()
-        # Check if the 'events' key is in the response data
-        if 'events' in events_data:
-            return jsonify(events=events_data['events'])
-        else:
-            # If the 'events' key isn't there, log the error and return an empty array
-            print('No events key in response:', events_data)
-            return jsonify(events=[])
+        event_data = response.json()
+        
+        # Process and save the fetched event to the database
+        new_event = Event(
+            id=event_data['id'],
+            name=event_data['name']['text'],
+            description=event_data.get('description', {}).get('text', ''),
+            url=event_data['url'],
+            start_utc=event_data['start']['utc'],
+            end_utc=event_data['end']['utc'],
+            status=event_data['status'],
+            online_event=event_data.get('online_event', False),
+            logo_url=event_data.get('logo', {}).get('url', ''),
+            user_id=current_user.id  # Assuming you have user authentication set up
+        )
+        db.session.add(new_event)
+        db.session.commit()
+        
+        # Respond with the newly added event
+        return jsonify(new_event.to_dict())
     else:
-        print('Failed to fetch events:', response.status_code, response.text)
-        return jsonify(events=[{'name': 'Event 1', 'start': {'local': 'date and time'}, 'summary': 'Event 1 summary'}])
+        print(f'Failed to fetch event: {response.status_code}', response.text)
+        return jsonify({'error': response.text}), response.status_code
+
 
 
 @blueprint.route('/<template>')

@@ -109,6 +109,26 @@ class UserScenarioProgress(db.Model):
     user = relationship('Users', backref='scenario_progress')
     scenario = relationship('SubLesson', backref='user_progress')
 
+# Event database
+class Event(db.Model):
+    __tablename__ = 'events'
+    
+    id = db.Column(db.String(150), primary_key=True)  # Eventbrite event ID
+    name = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    url = db.Column(db.Text, nullable=False)
+    start_utc = db.Column(db.DateTime, nullable=False)
+    end_utc = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    online_event = db.Column(db.Boolean, default=False, nullable=False)
+    logo_url = db.Column(db.Text, nullable=True)
+    category_id = db.Column(db.String(50), nullable=True)
+    format_id = db.Column(db.String(50), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)  # Assuming you have a User model
+
+    # Relationship with the User model
+    user = relationship('Users', backref='events')
+
 # Book Sample
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
