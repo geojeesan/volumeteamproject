@@ -20,9 +20,10 @@ import time
 current_lesson = None
 user_sentiments = None
 
-@blueprint.route('/practice/<int:number>')
-def practice(number):
-    return render_template('practice/practice.html', segment='practice', lesson_number=number)
+@blueprint.route('/practice/<int:lesson_num>-<int:scenario_num>')
+def practice(lesson_num, scenario_num):
+        return render_template('practice/practice.html', segment='practice', 
+                           lesson_number=lesson_num, scenario_number=scenario_num)
 
 @blueprint.route('/get_lesson', methods=['POST'])
 def get_lesson():
