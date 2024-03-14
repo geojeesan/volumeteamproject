@@ -249,9 +249,16 @@ function setError(error){
 }
 
 function destroyAllCharts(){
-paceChart.destroy()
-attitudeChart.destroy()
+  if (paceChart) {
+    paceChart.destroy();
+    paceChart = null; // Clear the reference to fully dispose of the chart
+  }
+  if (attitudeChart) {
+    attitudeChart.destroy();
+    attitudeChart = null; // Clear the reference to fully dispose of the chart
+  }
 }
+
 
 function getLesson(lessonNum){
 
@@ -306,32 +313,44 @@ function populateScenarioDetails(scenario_name, scenario_details){
 }
 
 function endScenario(){
-  // Here, we will send to the database that the user has finished this scenario
+  destroyAllCharts(); // Ensure any existing charts are destroyed before creating new ones
 
-  scenarioViewElement.style.display = "none"
-  scenarioResultsElement.style.display = "block"
-  scenarioScoreElement.innerText = "Score:" + scenario_score.toFixed(1).toString() + "/10"
-  populateAttitudeChart(user_sentiments)
-  populatePaceChart()
+  scenarioViewElement.style.display = "none";
+  scenarioResultsElement.style.display = "block";
+  scenarioScoreElement.innerText = "Score: " + scenario_score.toFixed(1).toString() + "/10";
+  
+  // These functions should create new chart instances with the latest data
+  populateAttitudeChart(user_sentiments);
+  populatePaceChart(); // Make sure this function is updated to use the latest data
 }
 
-function nextScenario() {
-  destroyAllCharts();
 
+function nextScenario() {
   // Increment the scenario number
   scenario_num += 1;
+
+  // Update the URL to reflect the new scenario number
+  history.pushState({}, '', `/practice/${lesson_num}-${scenario_num}`);
 
   var nextScenario = scenario_data[scenario_num.toString()];
 
   if (nextScenario) {
+    // Populate the scenario details using the next scenario data
     populateScenarioDetails(nextScenario['scenario_name'], nextScenario['scenario_details']);
+    // Ensure the main scenario view is visible and the results are hidden
     scenarioViewElement.style.display = "block";
     scenarioResultsElement.style.display = "none";
   } else {
-    // No more scenarios available, show completion message
+    // If the next scenario doesn't exist, you might want to fetch new lesson data or handle the end of scenarios
+    console.log('No more scenarios. Consider fetching new lesson data or handling completion.');
     displayCongratulationsPage();
+    // For example, you could call getLesson(lesson_num) to refresh or handle completion
+    // getLesson(lesson_num); // Uncomment or modify as needed
+    // Alternatively, display a completion message or navigate to another page
+    // displayCongratulationsPage(); // This is already your method for handling lesson completion
   }
 }
+
 
 function displayCongratulationsPage() {
   // Clear the main content area

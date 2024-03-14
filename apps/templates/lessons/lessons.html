@@ -18,6 +18,7 @@
     /* Center content if the graph is not as wide as the container */
   }
 
+  
   .wave-graph {
     width: 100%; /* Responsive to container size */
     max-width: 600px; /* Maximum width */
@@ -83,7 +84,8 @@
   .card {
     border: none;
     border-radius: 15px;
-    margin-bottom: 0; /* Reduce from larger values if necessary */
+    margin-bottom: 2rem;
+    margin-right: 1rem; /* Reduce from larger values if necessary */
   }
 
   .card-body {
@@ -293,72 +295,83 @@
   margin-top: 0; /* Adjust this value if you want less space above the progress bars */
 }
 
-</style> {% endblock %} {% block content %} <div class="container-fluid py-4">
+</style> {% endblock %} {% block content %} 
+<div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
       <h1 class="fw-bold">Lessons</h1>
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
   </div>
-  <div class="row">
-    <!-- Left Column for Lessons -->
+<!--  
+  <div class="container-fluid py-4">  
+  Lessons Completed Badge Card should be first -->
+   <!-- <div class="row justify-content-center mb-4">
     <div class="col-lg-8">
+      <div class="card mb-4 text-center">
+        <div class="card-body">
+          <div class="badge-container">
+            <img src="{{ url_for('static', filename='assets/img/banner1.png') }}" alt="Badge" class="badge-image">
+            <div class="completion-percentage" id="lessons-completion-percentage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  -->
 
+      <!-- Continue Where You Left Off Card -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-6">
+      <div class="card mb-4 text-center">  
+      <!-- <div class="card mb-4 text-center" style="margin-top:2%; opacity: 0.5;pointer-events: none;filter: grayscale(100%);"> -->
+        <div class="card-body d-flex flex-column align-items-center">
+          <h5 class="card-title">Pick up where you left off:</h5>
+          <h6 id="lesson-title">Loading...</h6>
+          <p id="lesson-description">Loading description...</p>
+          <div id="lesson-difficulty" class="badge">Loading difficulty...</div>
+          <p id="lesson-progress">Loading progress...</p>
+          <div class="lesson-icon mb-3">
+            <img id="lesson-image" src="" alt="Loading lesson image...">
+          </div>
+          <!-- Continue Lesson button -->
+          <button class="btn btn-primary " id="continue-lesson">Continue Lesson</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <div class="row">
+    <!-- Start New Challenge Card -->
+    <div class="row justify-content-center mb-5">
+    <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Start a new challenge:</h5>
+          <h5 class="card-title">Or perhaps, start a new challenge:</h5>
           <br>
           <div class="challenge-item">
-            <div id="lessons-display"></div>
+            <div id="lessons-display" class="row"></div>
             <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
           </div>
         </div>
       </div>
-
-      <div class="card mb-4 text-center" style="margin-top:2%; opacity: 0.5;pointer-events: none;filter: grayscale(100%);">
-        <div class="card-body">
-          <!-- Static header to indicate the purpose of the section -->
-          <h5 class="card-title">Or perhaps, pick up where you left off:</h5>
-          <h6 id="lesson-title">Loading...</h6>
-          <p id="lesson-description">Loading description...</p> <!-- Add this line -->
-          <div id="lesson-difficulty" class="badge">Loading difficulty...</div> <!-- Add this line -->
-          <p id="lesson-progress">Loading progress...</p> <!-- Add this line -->
-          <div class="lesson-icon mb-3">
-    <img id="lesson-image" src="" alt="Loading lesson image...">
-</div>
-<!-- Continue Lesson button -->
-<button class="btn btn-primary" id="continue-lesson">Continue Lesson</button>
-        </div>
-      </div>
-
     </div>
 
-          <!-- Lessons Completed Badge Card -->
-<div class="col-lg-4">
+
+      <!-- Volume Wave Card -->
+<div class="row justify-content-around mb-4">
+  <div class="col-md-6">
+<div class="card mb-4 text-center">
+   <div class="card-body" style="height: 340px;">
+    <h5>Your Volume™ Wave:</h5>
+     <canvas id="wave-placeholder"></canvas>
+   </div>
+  </div>
+ </div>
+ 
+<!-- Your Progress Card -->
+<div class="col-md-6">
   <div class="card mb-4 text-center">
     <div class="card-body">
-      <div class="badge-container">
-        <img src="{{ url_for('static', filename='assets/img/banner1.png') }}" alt="Badge" class="badge-image">
-        <div class="completion-percentage" id="lessons-completion-percentage"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    
-      <!-- Volume Wave Card -->
-      <div class="card mb-4 text-center">
-        <div class="card-body" style="height: 340px;">
-          <h5>Your Volume™ Wave:</h5>
-          <canvas id="wave-placeholder"></canvas>
-        </div>
-      </div>
-
-
-
-<!-- Your Progress Card -->
-<div class="card mb-4 text-center">
-  <div class="card-body">
     <h5>Your Progress</h5>
     <div id="skills-progress-container">
       <div class="skill-progress">
