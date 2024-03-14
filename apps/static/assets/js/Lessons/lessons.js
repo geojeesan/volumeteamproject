@@ -202,11 +202,28 @@ function displayLesson(lesson, lessonsContainer) {
 
 
 
-function updateProgressBars(lessonDetails) {
-    // Your logic to update the progress bars goes here
-    console.log('Updating progress bars with data:', lessonDetails);
-    // Example: document.getElementById('confidence-progress').style.width = `${lessonDetails.confidenceScore}%`;
+function updateSkillProgressBars() {
+    fetch('/api/skill_progress')
+        .then(response => response.json())
+        .then(skillProgress => {
+            // Clear existing bars
+            const progressBarContainer = document.getElementById('progress-bar-container');
+            progressBarContainer.innerHTML = ''; // Adjust this to your actual container for progress bars
+
+            // Create a progress bar for each top sentiment
+            Object.entries(skillProgress).forEach(([sentiment, progress]) => {
+                const bar = document.createElement('div');
+                bar.className = 'progress-bar';
+                bar.style.width = `${progress}%`; // Adjust styles as needed
+                bar.textContent = `${sentiment}: ${progress.toFixed(2)}%`;
+                progressBarContainer.appendChild(bar); // Append the new bar to the container
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching skill progress:', error);
+        });
 }
+
 
 
 function updateLessonsCompletion() {
@@ -238,19 +255,55 @@ function updateSkillProgressBars() {
     fetch('/api/skill_progress')
         .then(response => response.json())
         .then(skillProgress => {
-            Object.entries(skillProgress).forEach(([skill, progress]) => {
-                const progressBar = document.getElementById(`${skill}-progress`);
-                if (progressBar) {
-                    progressBar.style.width = `${progress}%`; // Ensure this line works
-                    progressBar.setAttribute('aria-valuenow', progress); // Accessibility
-                    progressBar.textContent = `${progress}%`; // Optional: Shows text inside the bar
-                }
-            });
+            const container = document.getElementById('sentiments-progress-container');
+            container.innerHTML = ''; // Clear any existing content
+
+            const entries = Object.entries(skillProgress);
+            if (entries.length === 0) {
+                // Handle the case where there's no sentiment data
+                grayOutSentimentsProgressContainer();
+            } else {
+                entries.forEach(([sentiment, progress]) => {
+                    // Create and append sentiment progress bars as before
+                    const label = document.createElement('div');
+                    label.textContent = `${sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}:`;
+                    label.className = 'progress-label';
+                    container.appendChild(label);
+
+                    const progressBarContainer = document.createElement('div');
+                    progressBarContainer.className = 'progress';
+
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'progress-bar';
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.setAttribute('aria-valuenow', progress);
+                    progressBar.setAttribute('aria-valuemin', '0');
+                    progressBar.setAttribute('aria-valuemax', '100');
+                    progressBar.textContent = `${progress.toFixed(2)}%`;
+
+                    progressBarContainer.appendChild(progressBar);
+                    container.appendChild(progressBarContainer);
+                });
+            }
         })
         .catch(error => {
             console.error('Error fetching skill progress:', error);
+            grayOutSentimentsProgressContainer();
         });
 }
+
+function grayOutSentimentsProgressContainer() {
+    const container = document.getElementById('sentiments-progress-container');
+    container.innerHTML = '<p>No sentiment analysis data available</p>';
+    container.style.opacity = '0.5';
+    container.style.backgroundColor = '#f4f5f7';
+    container.style.color = '#8898aa';
+    container.style.textAlign = 'center';
+    container.style.padding = '20px';
+    container.style.borderRadius = '10px';
+}
+
+
 
 
 // ------------------------------------------

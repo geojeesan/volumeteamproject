@@ -8,7 +8,6 @@ from flask import request, jsonify, send_file
 from apps.models import db, Lesson, SubLesson, UserScenarioProgress
 from speech_recognition import UnknownValueError
 from apps.config import API_GENERATOR
-
 import speech_recognition as sr
 import traceback    
 from pydub import AudioSegment
@@ -25,9 +24,17 @@ def practice(lesson_num, scenario_num):
         return render_template('practice/practice.html', segment='practice', 
                            lesson_number=lesson_num, scenario_number=scenario_num)
 
+from flask import jsonify, request
+from apps.models import db, Lesson, SubLesson
+
 @blueprint.route('/get_lesson', methods=['POST'])
 def get_lesson():
-    lesson_num = request.form.get('lesson_num')
+    # Explicitly convert lesson_num to integer
+    try:
+        lesson_num = int(request.form.get('lesson_num'))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid lesson number format', 'error_num': 400}), 400
+
     lesson = Lesson.query.filter_by(num=lesson_num).first()
 
     if not lesson:
@@ -44,6 +51,7 @@ def get_lesson():
 
     return jsonify(lesson_data)
 
+
 def calculate_user_progress(user_id, lesson_id):
     """Calculates the user's progress for a specific lesson based on completed scenarios."""
     total_scenarios = SubLesson.query.filter_by(lesson_id=lesson_id).count()
@@ -54,6 +62,13 @@ def calculate_user_progress(user_id, lesson_id):
 
 def update_user_scenario_progress(user_id, scenario_id, score):
     """Update or create progress entry for a user's scenario."""
+
+    # Validate scenario_id
+    scenario_exists = db.session.query(SubLesson.id).filter_by(id=scenario_id).first() is not None
+    if not scenario_exists:
+        print(f"Scenario with id {scenario_id} does not exist.")
+        return False
+    
     progress_entry = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario_id).first()
 
     if progress_entry:
@@ -62,8 +77,11 @@ def update_user_scenario_progress(user_id, scenario_id, score):
     else:
         new_progress = UserScenarioProgress(user_id=user_id, scenario_id=scenario_id, completed=True, score=score)
         db.session.add(new_progress)
-
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()  # Rollback in case of an exception
+        print(f"Database commit failed: {e}")
 
 def convert_lesson_to_dict(lesson, user_id=None):
     lesson_dict = lesson.to_dict(user_id=user_id)
@@ -72,15 +90,19 @@ def convert_lesson_to_dict(lesson, user_id=None):
 
 def calculate_score(scenario_num, lesson, sentiments):
     score = 1
-    # Find the specific scenario using the relationship between Lesson and SubLesson
-    scenario_data = next((scenario for scenario in lesson.scenarios if scenario.id == scenario_num), None)
-    
-    if scenario_data is None:
-        raise ValueError("Scenario data not found for the given scenario number.")
-    
+    scenarios = sorted(lesson.scenarios, key=lambda x: x.id)  # Sort scenarios by ID for consistent ordering
+
+    # Convert scenario_num from 1-based to 0-based index for Python list indexing
+    index = scenario_num - 1
+
+    if index >= len(scenarios) or index < 0:
+        raise ValueError("Scenario number out of range.")
+
+    scenario_data = scenarios[index]
+
     expected_sentiments = scenario_data.expected_sentiments
 
-    # Adjusted processing of sentiments to handle list of dictionaries
+    # Process sentiments (remaining logic stays the same)
     formatted_user_sentiments = {}
     for sentiment in sentiments:
         if 'label' in sentiment and 'score' in sentiment:
@@ -90,12 +112,12 @@ def calculate_score(scenario_num, lesson, sentiments):
     for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
         user_sentiment_score = formatted_user_sentiments.get(exp_sentiment_label, 0)
         difference = abs(exp_sentiment_score - user_sentiment_score)
-        
+
         if first_item:
             score -= difference
             first_item = False
         else:
-            score += max(0, 0.2 - difference)  # Adjusted scoring logic to prevent adding differences greater than 0.2
+            score += max(0, 0.2 - difference)  # Adjusted scoring logic
 
     return max(score, 0) * 10
 
@@ -168,6 +190,10 @@ def analyze_speech():
         if not lesson:
             return jsonify({"error": "Lesson not found", "code": 404}), 404
 
+        scenario = SubLesson.query.filter_by(lesson_id=lesson.id).order_by(SubLesson.id).offset(scenario_num - 1).first()
+        if not scenario:
+            return jsonify({"error": "Scenario not found", "code": 404}), 404
+
         new_path = get_wav_path(file)
         try:
             text = transcribe_text(new_path)
@@ -182,7 +208,7 @@ def analyze_speech():
 
         # Assuming your existing functions to calculate score and update progress...
         score = calculate_score(scenario_num, lesson, sentiments)
-        update_user_scenario_progress(current_user.id, scenario_num, score)
+        update_user_scenario_progress(current_user.id, scenario.id, score)
         progress_percentage = calculate_user_progress(current_user.id, lesson.id)
 
         return jsonify({
@@ -193,19 +219,44 @@ def analyze_speech():
         })
     except Exception as e:
         traceback.print_exc()
-        return jsonify({"error": "An unknown error occurred", "code": 500}), 500
+        return jsonify({"error": "An unknown error occurred", "code": 500, "details": str(e)}), 500
     
 @blueprint.route('/api/skill_progress', methods=['GET'])
+@login_required
 def get_skill_progress():
-    # Retrieve lesson progress data from the database
-    # For demonstration, I am using static values
-    skill_progress = {
-        'articulation': 70,  # Percentage of progress for the 'Articulation' skill
-        'volume': 50,        # Percentage of progress for the 'Volume' skill
-        'rhythm': 30,        # Percentage of progress for the 'Rhythm' skill
-        'expression': 90     # Percentage of progress for the 'Expression' skill
-    }
-    return jsonify(skill_progress)
+    sentiment_totals = {}  # Total scores per sentiment
+    sentiment_counts = {}  # Count of occurrences per sentiment
+
+    user_scenarios = UserScenarioProgress.query.filter_by(user_id=current_user.id, completed=True).all()
+    for user_scenario in user_scenarios:
+        scenario = SubLesson.query.filter_by(id=user_scenario.scenario_id).first()
+        if scenario:
+            # Assuming sentiment scores are between 0 and 1
+            for sentiment, expected_score in scenario.expected_sentiments.items():
+                actual_score = user_scenario.score / 100  # Convert user score back to 0-1 scale if stored as percentage
+                score_diff = abs(expected_score - actual_score)
+                sentiment_score = max(0, 1 - score_diff)  # Higher score for closer match
+
+                if sentiment not in sentiment_totals:
+                    sentiment_totals[sentiment] = 0
+                    sentiment_counts[sentiment] = 0
+
+                sentiment_totals[sentiment] += sentiment_score
+                sentiment_counts[sentiment] += 1
+
+    # Average out the scores for each sentiment
+    for sentiment in sentiment_totals.keys():
+        sentiment_totals[sentiment] /= sentiment_counts[sentiment]
+
+    # Sort sentiments by total score and get top 4
+    top_sentiments = sorted(sentiment_totals.items(), key=lambda item: item[1], reverse=True)[:4]
+
+    # Convert to a dict for JSON response, scaling scores up to percentage
+    top_sentiments_dict = {sentiment: score * 100 for sentiment, score in top_sentiments}
+
+    return jsonify(top_sentiments_dict)
+
+
 
 
 
