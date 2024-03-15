@@ -3,8 +3,7 @@
 from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
-from jinja2 import TemplateNotFound
-from flask import request, jsonify, send_file
+from flask import request, jsonify
 from apps.models import db, Lesson, SubLesson, UserScenarioProgress
 from speech_recognition import UnknownValueError
 from apps.config import API_GENERATOR
@@ -24,8 +23,6 @@ def practice(lesson_num, scenario_num):
         return render_template('practice/practice.html', segment='practice', 
                            lesson_number=lesson_num, scenario_number=scenario_num)
 
-from flask import jsonify, request
-from apps.models import db, Lesson, SubLesson
 
 @blueprint.route('/get_lesson', methods=['POST'])
 def get_lesson():
@@ -41,8 +38,12 @@ def get_lesson():
         return jsonify({'error': 'Lesson not found', 'error_num': 404}), 404
 
     scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).all()
-    scenarios_data = {str(index): scenario.to_dict() for index, scenario in enumerate(scenarios, start=1)}
+    # Sort scenarios based on the "order_in_lesson" attribute
+    sorted_scenarios = sorted(scenarios, key=lambda x: x.order_in_lesson)
 
+    # Create a dictionary where the keys are the order_in_lesson and values are scenario dictionaries
+    scenarios_data = {str(scenario.order_in_lesson): scenario.to_dict() for scenario in sorted_scenarios}
+    
     lesson_data = {
         'lesson_name': lesson.title,
         'lesson_num': lesson.num,

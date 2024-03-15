@@ -24,15 +24,17 @@ class SubLesson(db.Model):
     scenario_details = db.Column(db.Text, nullable=True)
     expected_sentiments = db.Column(JSON, nullable=False)  # This will store the sentiments as a JSON object
     lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+    order_in_lesson = db.Column(db.Integer, nullable=True)
     
     # Relationship backref, allows access from the Lesson model
     lesson = db.relationship('Lesson', backref=db.backref('scenarios', lazy=True))
 
-    def __init__(self, scenario_name, scenario_details, expected_sentiments, lesson_id):
+    def __init__(self, scenario_name, scenario_details, expected_sentiments, lesson_id, order_in_lesson):
         self.scenario_name = scenario_name
         self.scenario_details = scenario_details
         self.expected_sentiments = expected_sentiments
         self.lesson_id = lesson_id
+        self.order_in_lesson = order_in_lesson
 
     def to_dict(self):
         return {
@@ -40,7 +42,8 @@ class SubLesson(db.Model):
             'scenario_name': self.scenario_name,
             'scenario_details': self.scenario_details,
             'expected_sentiments': self.expected_sentiments,
-            'lesson_id': self.lesson_id
+            'lesson_id': self.lesson_id,
+            'order_in_lesson': self.order_in_lesson
         }
         
 class DifficultyLevel(enum.Enum):

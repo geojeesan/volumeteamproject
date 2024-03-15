@@ -92,6 +92,7 @@ function updateLastAccessedLessonUI(lesson, isInProgress) {
                     .then(data => {
                         if(data.lesson_num && data.scenario_id) {
                             // If we have an ID, redirect to the scenario
+
                             window.location.href = `/practice/${data.lesson_num}-${data.scenario_id}`;
                         } else {
                             // Handle the case where no more scenarios are incomplete
