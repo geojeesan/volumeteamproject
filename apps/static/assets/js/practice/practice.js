@@ -5,7 +5,7 @@ let scenario_data
 let user_sentiments
 let user_speech
 let scenario_score = 10
-let scenario_num = 1
+let scenario_num;
 let lesson_num
 let paceChart
 let attitudeChart
@@ -44,16 +44,23 @@ preRecordedElement.addEventListener('mouseleave', function(event) {
   event.target.style.opacity = "0.5";
 });
 
-// We will dynamically get the lesson num in the future using Flask's template system
-// Fetch the lesson number from the HTML
-lessonNumberElement = document.getElementById("lesson-number")
-lesson_num = parseInt(lessonNumberElement.innerText)
-
 document.getElementById('next-scenario-btn').addEventListener('click', function() {
-  nextScenario();
+  // Increment the scenario number
+  scenario_num += 1;
+  updateScenario();
 });
 
+// We will dynamically get the lesson num in the future using Flask's template system
+// Fetch the lesson number from the HTML
+lessonNumberVar = document.getElementById("lesson-num-var")
+lesson_num = parseInt(lessonNumberVar.innerText)
+
+// Same idea as above
+scenarioNumberVar = document.getElementById("scenario-num-var")
+scenario_num = parseInt(scenarioNumberVar.innerText)
+
 getLesson(lesson_num)
+
 getPreRecorded()
 
 
@@ -282,13 +289,12 @@ function getLesson(lessonNum){
       lesson_name = data['lesson_name']
 
       scenario_data = data['scenarios']
-      
-      // Get the first scenario's name & details
-      scenario_name = scenario_data['1']['scenario_name']
-      scenario_details = scenario_data['1']['scenario_details']
 
       populateLessonDetails(lesson_num, lesson_name)
-      populateScenarioDetails(scenario_name, scenario_details)
+
+      // updateScenario() can only be called after scenario_data is populated, which
+      // is done in this function.
+      updateScenario()
       }
   })
   .catch(error => {
@@ -325,14 +331,20 @@ function endScenario(){
 }
 
 
-function nextScenario() {
-  // Increment the scenario number
-  scenario_num += 1;
+function updateScenario() {
+
+  console.log("Updating scenario to ", scenario_num)
 
   // Update the URL to reflect the new scenario number
   history.pushState({}, '', `/practice/${lesson_num}-${scenario_num}`);
 
   var nextScenario = scenario_data[scenario_num.toString()];
+
+
+        // Get the first scenario's name & details
+        scenario_name = scenario_data['1']['scenario_name']
+        scenario_details = scenario_data['1']['scenario_details']
+        populateScenarioDetails(scenario_name, scenario_details)
 
   if (nextScenario) {
     // Populate the scenario details using the next scenario data
