@@ -73,6 +73,8 @@ def get_lessons_status():
             # Determine the progress for the lesson
             progress = lesson.calculate_progress(current_user.id)
 
+            print(lesson, progress)
+
             # Consider the lesson in progress if any progress is made but not 100%
             if progress > 0 and progress < 100:
                 last_accessed_lesson_data = lesson.to_dict(user_id=current_user.id)
