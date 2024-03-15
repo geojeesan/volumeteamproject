@@ -101,8 +101,9 @@ def latest_pace_data():
 @blueprint.route('/api/lessons/<int:lesson_id>/next_scenario_after_last_completed', methods=['GET'])
 @login_required
 def get_next_scenario_after_last_completed(lesson_id):
+
     # Find the highest id of a completed scenario in the given lesson
-    last_completed_scenario = UserScenarioProgress.query \
+    scenario_progress = UserScenarioProgress.query \
         .join(SubLesson, SubLesson.id == UserScenarioProgress.scenario_id) \
         .filter(
             UserScenarioProgress.user_id == current_user.id,
@@ -112,17 +113,27 @@ def get_next_scenario_after_last_completed(lesson_id):
         .order_by(UserScenarioProgress.scenario_id.desc()) \
         .first()
 
-    if last_completed_scenario:
-        last_completed_scenario_id = last_completed_scenario.scenario_id
+    if scenario_progress:
+        scenario_id = scenario_progress.scenario_id
     else:
         # If no scenarios are completed, we start from the beginning
-        last_completed_scenario_id = 0
+        scenario_id = 0
 
-    # Now find the next scenario
+    # Then, we will find the scenario's order in the lesson of the user's last completed scenario
+    order_in_lesson = SubLesson.query \
+        .filter(
+            SubLesson.id == scenario_id
+        ) \
+        .order_by(SubLesson.id) \
+        .first().order_in_lesson
+
+
+    # Now, we will check whether there is a scenario in the same lesson with a higher order
+    # (If none, this means it's the last scenario)
     next_scenario = SubLesson.query \
         .filter(
             SubLesson.lesson_id == lesson_id,
-            SubLesson.id > last_completed_scenario_id
+            SubLesson.order_in_lesson > order_in_lesson
         ) \
         .order_by(SubLesson.id) \
         .first()
@@ -133,9 +144,8 @@ def get_next_scenario_after_last_completed(lesson_id):
         if lesson:
             # If there's a next scenario, return its details along with lesson number
             return jsonify({
-                'id': next_scenario.lesson_id,  # This is actually redundant, given we already have lesson_id
-                'scenario_id': next_scenario.id,
-                'lesson_num': lesson.num  # Add the lesson number to the response
+                'scenario_id': next_scenario.order_in_lesson,
+                'lesson_num': lesson.num  
             })
         else:
             # If lesson is not found, return an error message
