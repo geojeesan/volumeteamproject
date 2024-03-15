@@ -131,6 +131,7 @@ margin-top: 18px;
   height: auto; /* This will maintain the aspect ratio */
 }
 
+
 </style> {% endblock stylesheets %} 
 
 {% block content %} 
@@ -215,7 +216,7 @@ margin-top: 18px;
           <div class="row">
             <div class="col-lg-6">
               <div class="d-flex flex-column h-100">
-                <h5 class="font-weight-bolder custom-font">Today's Lesson</h5>
+                <h5 class="font-weight-bolder custom-font">Featured Lesson</h5>
                 <p class="mb-5 custom-text">Instilling Confidence</p>
                 <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/lessons"> Get Started <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                 </a>
@@ -385,4 +386,6 @@ margin-top: 18px;
   <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
   <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
   <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
+  
   {% endblock javascripts %}
+
