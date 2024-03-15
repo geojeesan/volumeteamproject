@@ -98,7 +98,7 @@ const scoresChart = new Chart(scoresCtx, {
     labels: ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'],
     datasets: [{
       label: 'Test Scores',
-      data: [45, 67, 71, 82, 90],
+      data: [0, 2, 3, 5, 10],
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
       tension: 0.1
