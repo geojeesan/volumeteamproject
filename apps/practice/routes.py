@@ -23,7 +23,7 @@ user_sentiments = None
 @login_required
 def practice(lesson_num, scenario_num):
         return render_template('practice/practice.html', segment='practice', 
-                           lesson_number=lesson_num, scenario_number=scenario_num)
+                           lesson_number=lesson_num, scenario_number=scenario_num, API_GENERATOR=len(API_GENERATOR))
 
 
 @blueprint.route('/get_lesson', methods=['POST'])
@@ -165,8 +165,10 @@ def get_sentiments(text):
 def get_wav_path(file):
     blob_content = file.read()
     save_path = 'saved_file.mp3'
+
     with open(save_path, 'wb') as f:
         f.write(blob_content)
+
     new_path = "new_file.wav"
     sound = AudioSegment.from_file(save_path)
 
@@ -247,17 +249,12 @@ def analyze_speech():
 
         new_path = get_wav_path(file)
 
-
         pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
 
         pitch_values = list(pitch_values)
         pitch_times = list(pitch_times)
 
         audio_length = get_audio_length(new_path)
-
-        # tone_data = {"pitch": pitch_times, "values": pitch_values}
-
-        # print(tone_data)
 
         try:
             text = transcribe_text(new_path)
@@ -348,10 +345,6 @@ def get_average_performance():
             lesson_scores[lesson.id] = 0  # No scenarios or no score yet
     print(lesson_scores)
     return jsonify(lesson_scores)
-
-
-
-
 
 
 # Helper - Extract current page name from request
