@@ -3,12 +3,14 @@ let inputElement
 let recordButton
 let scenario_data
 let user_sentiments
+let tone_data;
 let user_speech
 let scenario_score = 10
 let scenario_num;
 let lesson_num
 let paceChart
 let attitudeChart
+let audio_length
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -205,6 +207,9 @@ function sendRecording(blob) {
     let error_num = data['code']
 
     if(!error_num){
+
+      console.log(data)
+
       stopLoading()
       processData(data)
       endScenario()
@@ -232,8 +237,10 @@ function sendRecording(blob) {
 // Processes data received from /analyze_speech
 function processData(data){
   user_sentiments = data['user_sentiments'][0]
+  tone_data = data['tone_data']
   user_speech = data['user_speech']
   scenario_score = data['score']
+  audio_length = data['audio_length']
 }
 
 
@@ -327,7 +334,7 @@ function endScenario(){
   
   // These functions should create new chart instances with the latest data
   populateAttitudeChart(user_sentiments);
-  populatePaceChart(); // Make sure this function is updated to use the latest data
+  populateToneChart(tone_data); // Make sure this function is updated to use the latest data
 }
 
 
@@ -460,7 +467,61 @@ function populateAttitudeChart(sentiments){
 }
 
 
-function populatePaceChart(pace){
+function movingAverage(values, windowSize) {
+  let smoothedValues = [];
+  for (let i = 0; i < values.length; i++) {
+      let sum = 0;
+      let count = 0;
+      for (let j = Math.max(0, i - Math.floor(windowSize / 2)); j <= Math.min(values.length - 1, i + Math.floor(windowSize / 2)); j++) {
+          sum += values[j];
+          count++;
+      }
+      smoothedValues.push(sum / count);
+  }
+  return smoothedValues;
+}
+
+
+function populateToneChart(tone_data){
+
+  // times = tone_data[0]
+  // values = tone_data[1]
+  values = tone_data
+
+  values = values.filter(element => element !== 0);
+
+
+
+  // NEED TO DO A LOT OF THIS PROCESSING IN PYTHON INSTEAD. 
+
+
+  let windowSize = 25; // Example window size
+  values = movingAverage(values, windowSize);
+
+
+  console.log("AUDIO LENGTH:", audio_length)
+
+
+// Calculate the interval length between segments
+let interval_length = audio_length / values.length;
+
+// Create an array to store the resulting time points
+let time_points = [];
+
+
+    // Iterate to generate time points
+    for (let i = 0; i < values.length; i++) {
+      // Calculate the time point for the current segment
+      let seconds = Math.floor(i * interval_length);
+      let minutes = Math.floor(seconds / 60);
+      seconds %= 60;
+
+      // Format the time point as "mm:ss"
+      let time_point = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+      time_points.push(time_point);
+  }
+
+console.log(time_points)
   
   var ctx2 = document.getElementById("chart-line").getContext("2d");
 
@@ -479,32 +540,20 @@ function populatePaceChart(pace){
   paceChart = new Chart(ctx2, {
     type: "line",
     data: {
-      labels: ["0:00", "0:05", "0:10", "0:15", "0:20", "0:25", "0:30", "0:35", "0:40"],
+      labels: time_points,
       datasets: [{
           label: "Pitch",
-          tension: 0.4,
+          tension: 0.2,
           borderWidth: 0,
           pointRadius: 0,
           borderColor: "#cb0c9f",
           borderWidth: 3,
           backgroundColor: gradientStroke1,
           fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+          data: values,
           maxBarThickness: 6
 
-        },
-        {
-          label: "Volume",
-          tension: 0.4,
-          borderWidth: 0,
-          pointRadius: 0,
-          borderColor: "#575f9a",
-          borderWidth: 3,
-          backgroundColor: gradientStroke2,
-          fill: true,
-          data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-          maxBarThickness: 6
-        },
+        }
       ],
     },
     options: {
@@ -512,7 +561,7 @@ function populatePaceChart(pace){
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          display: false,
+          display: true,
         }
       },
       interaction: {
