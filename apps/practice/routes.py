@@ -327,6 +327,27 @@ def get_skill_progress():
 
 
 
+@blueprint.route('/api/lessons/average_performance', methods=['GET'])
+@login_required
+def get_average_performance():
+    # Get all lessons
+    lessons = Lesson.query.all()
+    # Dict to hold lesson id and its average score
+    lesson_scores = {}
+
+    for lesson in lessons:
+        # Calculate the average score for each lesson
+        user_scenarios = UserScenarioProgress.query\
+    .join(SubLesson, UserScenarioProgress.scenario_id == SubLesson.id)\
+    .filter(SubLesson.lesson_id == lesson.id, UserScenarioProgress.user_id == current_user.id, UserScenarioProgress.completed == True)\
+    .all()
+        if user_scenarios:
+            average_score = sum([scenario.score for scenario in user_scenarios]) / len(user_scenarios)
+            lesson_scores[lesson.id] = average_score
+        else:
+            lesson_scores[lesson.id] = 0  # No scenarios or no score yet
+    print(lesson_scores)
+    return jsonify(lesson_scores)
 
 
 
