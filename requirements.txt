@@ -26,8 +26,6 @@ ffmpeg-python
 pydub
 # tensorflow
 transformers
-
-#test
-
-# flask_mysqldb
-# psycopg2-binary
+# librosa
+praat-parselmouth
+numpy

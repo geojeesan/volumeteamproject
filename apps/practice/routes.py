@@ -12,13 +12,15 @@ import traceback
 from pydub import AudioSegment
 import requests
 import os
-import time
+import parselmouth
+import numpy as np
 
 
 current_lesson = None
 user_sentiments = None
 
 @blueprint.route('/practice/<int:lesson_num>-<int:scenario_num>')
+@login_required
 def practice(lesson_num, scenario_num):
         return render_template('practice/practice.html', segment='practice', 
                            lesson_number=lesson_num, scenario_number=scenario_num)
@@ -43,7 +45,7 @@ def get_lesson():
 
     # Create a dictionary where the keys are the order_in_lesson and values are scenario dictionaries
     scenarios_data = {str(scenario.order_in_lesson): scenario.to_dict() for scenario in sorted_scenarios}
-    
+
     lesson_data = {
         'lesson_name': lesson.title,
         'lesson_num': lesson.num,
@@ -51,6 +53,7 @@ def get_lesson():
     }
 
     return jsonify(lesson_data)
+
 
 
 def calculate_user_progress(user_id, lesson_id):
@@ -124,8 +127,6 @@ def calculate_score(scenario_num, lesson, sentiments):
 
 
 
-
-
 def transcribe_text(new_path):
     # Initialize the recognizer
     recognizer = sr.Recognizer()
@@ -176,8 +177,57 @@ def get_wav_path(file):
     return new_path
 
 
+
+
+def analyze_tone(audio_file_path):
+    """
+    Calculate pitch variability in speech using the fundamental frequency (F0).
+    
+    Parameters:
+        audio_file_path (str): Path to the audio file containing speech.
+    
+    Returns:
+        float: Pitch variability score.
+    """
+    # Load audio file
+    snd = parselmouth.Sound(audio_file_path)
+    
+    # Extract pitch information
+    pitch = snd.to_pitch()
+    if pitch is None:  # If unable to extract pitch information
+        return None
+    
+    increment = 0.25 # Every 0.25s
+    times = np.arange(0, snd.duration, increment)
+
+
+    # Get pitch contour
+    pitch_values = pitch.selected_array['frequency']
+
+    # pitch_values_data = [pitch.get_value_at_time(t) for t in times]
+    
+    # Calculate standard deviation of pitch values
+    pitch_std_dev = np.std(pitch_values)
+    
+    return pitch_std_dev, pitch_values , times
+
+
+
+def get_audio_length(audio_file_path):
+    # Load the audio file
+    audio = AudioSegment.from_file(audio_file_path)
+
+    # Get the length of the audio in milliseconds
+    length_in_ms = len(audio)
+
+    # Convert milliseconds to seconds
+    length_in_seconds = length_in_ms / 1000
+
+    return length_in_seconds
+
+
 @blueprint.route('/analyze_speech', methods=['POST'])
-@login_required
+# @login_required
 def analyze_speech():
     try:
         file = request.files.get('file')
@@ -196,6 +246,19 @@ def analyze_speech():
             return jsonify({"error": "Scenario not found", "code": 404}), 404
 
         new_path = get_wav_path(file)
+
+
+        pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
+
+        pitch_values = list(pitch_values)
+        pitch_times = list(pitch_times)
+
+        audio_length = get_audio_length(new_path)
+
+        # tone_data = {"pitch": pitch_times, "values": pitch_values}
+
+        # print(tone_data)
+
         try:
             text = transcribe_text(new_path)
         except UnknownValueError:
@@ -216,6 +279,11 @@ def analyze_speech():
             'user_speech': text,
             'user_sentiments': sentiments,
             'score': score,
+            'tone_data': pitch_values,
+            'tone_times': pitch_times,
+            'audio_length': audio_length,
+
+            # Need to do this in a different function
             'progress': progress_percentage
         })
     except Exception as e:
