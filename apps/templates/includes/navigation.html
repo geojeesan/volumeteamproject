@@ -29,7 +29,7 @@
          <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 20px;">
            <a href="javascript:;" class="nav-link p-0" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
              <img src="{{ config.ASSETS_ROOT }}/img/defaultprofile.png" class="avatar avatar-sm rounded-circle me-2">
-             <span class="d-none d-md-inline"> Nadir Alex</span>
+             <span class="d-none d-md-inline">{{current_user.username}}</span>
              <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- Font Awesome caret icon -->
            </a>
            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
