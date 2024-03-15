@@ -124,10 +124,7 @@ class Event(db.Model):
     status = db.Column(db.String(50), nullable=False)
     online_event = db.Column(db.Boolean, default=False, nullable=False)
     format = db.Column(db.String(50))  # Changed to a simple string column without ForeignKey
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)  # Assuming you have a User model
 
-    # Relationship with the User model
-    user = relationship('Users', backref='events')
 
 # Book Sample
 class Book(db.Model):
