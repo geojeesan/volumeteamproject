@@ -360,13 +360,18 @@
       <!-- Volume Wave Card -->
 <div class="row justify-content-around mb-4">
   <div class="col-md-6">
-<div class="card mb-4 text-center">
-   <div class="card-body" style="height: 340px;">
-    <h5>Your Volume™ Wave:</h5>
-     <canvas id="wave-placeholder"></canvas>
-   </div>
+    <div class="card mb-4 text-center">
+      <div class="card-body d-flex flex-column" style="height: 340px;">
+        <h5>Your Volume™ Spectrum:</h5>
+        <p>Here's how your attitude spans with your Volume™ lessons.</p>
+        <!-- Container div for the canvas -->
+        <div style="flex-grow: 1; position: relative; height: calc(100% - 60px);">
+          <!-- Ensure the container div for the canvas fills up the remaining space -->
+          <canvas id="sentimentSkillChart"></canvas>
+        </div>
+      </div>
+    </div>
   </div>
- </div>
  
 <!-- Your Progress Card -->
 <div class="col-md-6">

@@ -293,144 +293,119 @@ function updateSkillProgressBars() {
         });
 }
 
-function grayOutSentimentsProgressContainer() {
-    const container = document.getElementById('sentiments-progress-container');
-    container.innerHTML = '<p>No sentiment analysis data available</p>';
-    container.style.opacity = '0.5';
-    container.style.backgroundColor = '#f4f5f7';
-    container.style.color = '#8898aa';
-    container.style.textAlign = 'center';
-    container.style.padding = '20px';
-    container.style.borderRadius = '10px';
-}
-
-
-
 
 // ------------------------------------------
 
-function fetchPaceData() {
-    // Adjust to fetch from the new endpoint that serves the latest pace data
-    return fetch('/api/latest_pace_data', {
-        method: 'GET'
-    }) 
+document.addEventListener('DOMContentLoaded', function() {
+    fetchSentimentSkillDataAndPopulateChart();
+});
+
+function fetchSentimentSkillDataAndPopulateChart() {
+    fetch('/api/skill_progress', {
+        method: 'GET',
+        credentials: 'include', // Ensure cookies for session management are included with the request
+    })
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
-    .then(data => {
-        return data; // This is the pace data we will use to plot the graph
-    });
+    .then(data => populateSentimentSkillChart(data))
+    .catch(error => console.error('Failed to fetch sentiment skill data:', error));
 }
 
+function populateSentimentSkillChart(sentimentData) {
+    var ctx = document.getElementById("sentimentSkillChart").getContext("2d");
+    var labels = Object.keys(sentimentData);
+    var data = Object.values(sentimentData);
 
-function populatePaceChartInLessons(paceData) {
-    var ctx2 = document.getElementById("wave-placeholder").getContext("2d");
-    if (window.paceChart) {
-        window.paceChart.destroy(); // Destroy existing chart instance if present
+    // Check if data is not available and gray out the chart
+    if (labels.length === 0 || data.every(value => value === 0)) {
+        // If there are no labels or all data points are 0, consider it as no data
+        grayOutChartArea();
+        return; // Exit the function early as there's nothing to draw on the chart
     }
 
-    var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
-    gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
-    gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); // Purple colors
+    // Check if the chart instance already exists and has the destroy method
+    if (window.sentimentSkillChart && typeof window.sentimentSkillChart.destroy === 'function') {
+        window.sentimentSkillChart.destroy();
+    }
 
-    var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
-    gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
-    gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); // Purple colors
-
-    paceChart = new Chart(ctx2, {
-        type: "line",
+    window.sentimentSkillChart = new Chart(ctx, {
+        type: 'radar',
         data: {
-            labels: ["0:00", "0:05", "0:10", "0:15", "0:20", "0:25", "0:30", "0:35", "0:40"],
+            labels: labels,
             datasets: [{
-                    label: "Pitch",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#cb0c9f",
-                    borderWidth: 3,
-                    backgroundColor: gradientStroke1,
-                    fill: true,
-                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                    maxBarThickness: 6
-                },
-                {
-                    label: "Volume",
-                    tension: 0.4,
-                    borderWidth: 0,
-                    pointRadius: 0,
-                    borderColor: "#575f9a",
-                    borderWidth: 3,
-                    backgroundColor: gradientStroke2,
-                    fill: true,
-                    data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-                    maxBarThickness: 6
-                },
-            ],
+                label: 'Sentiment Skill Level',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                data: data
+            }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
+            elements: {
+                line: {
+                    borderWidth: 3
                 }
             },
-            interaction: {
-                intersect: false,
-                mode: 'index',
+            scale: {
+                ticks: {
+                    beginAtZero: true,
+                    max: 100 // Assuming the skill level is scaled up to 100
+                }
             },
-            scales: {
-                y: {
-                    grid: {
-                        drawBorder: false,
-                        display: true,
-                        drawOnChartArea: true,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        padding: 10,
-                        color: '#b2b9bf',
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
-                    }
-                },
-                x: {
-                    grid: {
-                        drawBorder: false,
-                        display: false,
-                        drawOnChartArea: false,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        color: '#b2b9bf',
-                        padding: 20,
-                        font: {
-                            size: 11,
-                            family: "Open Sans",
-                            style: 'normal',
-                            lineHeight: 2
-                        },
-                    }
-                },
+            plugins: {
+                legend: {
+                    display: true
+                }
             },
-        },
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 }
 
-// Example usage
-document.addEventListener('DOMContentLoaded', function() {
-    populatePaceChartInLessons(); // Call this function where it fits in your logic
-});
+function grayOutChartArea() {
+    const canvas = document.getElementById("sentimentSkillChart");
+    const ctx = canvas.getContext("2d");
+    const container = canvas.parentElement; // Get the parent container of the canvas
+
+    // Match the canvas dimensions to the parent container
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+
+    // Fill the canvas with a light gray color
+    ctx.fillStyle = '#f4f5f7';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Set the text style
+    ctx.font = "16px Arial";
+    ctx.fillStyle = '#8898aa';
+    ctx.textAlign = "center";
+
+    // Display the 'no data' message
+    ctx.fillText("No sentiment analysis data available", canvas.width / 2, canvas.height / 2);
+}
+
+function grayOutSentimentsProgressContainer() {
+    const container = document.getElementById('sentiments-progress-container');
+    container.innerHTML = '<p>No sentiment analysis data available</p>';
+    
+    // Set container styles
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.opacity = '0.5';
+    container.style.backgroundColor = '#f4f5f7';
+    container.style.color = '#8898aa';
+    container.style.textAlign = 'center';
+    container.style.padding = '20px';
+    container.style.borderRadius = '10px';
+
+    // Center the content vertically
+    container.style.display = 'flex';
+    container.style.justifyContent = 'center';
+    container.style.alignItems = 'center';
+}
+
