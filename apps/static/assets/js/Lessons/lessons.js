@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchLastLesson().then(() => { // We don't use 'data' since 'fetchLastLesson' handles updates internally
         fetchAllLessons();
         updateLessonsCompletion();
-        updateSkillProgressBars();
+        updatePerformanceProgressBars();
     }).catch(error => {
         console.error('Failed to fetch the last lesson:', error);
         grayOutLastAccessedLessonCard();
@@ -251,23 +251,28 @@ function updateLessonsCompletion() {
 }
 
 
-
-function updateSkillProgressBars() {
-    fetch('/api/skill_progress')
+function updatePerformanceProgressBars() {
+    fetch('/api/lessons/average_performance')
         .then(response => response.json())
-        .then(skillProgress => {
+        .then(performanceScores => {
             const container = document.getElementById('sentiments-progress-container');
             container.innerHTML = ''; // Clear any existing content
-
-            const entries = Object.entries(skillProgress);
-            if (entries.length === 0) {
-                // Handle the case where there's no sentiment data
+            
+            const hasScores = Object.values(performanceScores).some(score => score > 0);
+            
+            if (!hasScores) {
                 grayOutSentimentsProgressContainer();
-            } else {
-                entries.forEach(([sentiment, progress]) => {
-                    // Create and append sentiment progress bars as before
+                return; // Exit the function as there is nothing to display
+            }
+
+            Object.entries(performanceScores).forEach(([lessonId, score]) => {
+                // Check if the lesson has been attempted (score is greater than 0)
+                if (score > 0) {
+                    const scorePercentage = (score / 10) * 100; // Convert to percentage for score out of 10
+
+                    // Create and append performance progress bars
                     const label = document.createElement('div');
-                    label.textContent = `${sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}:`;
+                    label.textContent = `Performance for Lesson ${lessonId}:`;
                     label.className = 'progress-label';
                     container.appendChild(label);
 
@@ -276,22 +281,31 @@ function updateSkillProgressBars() {
 
                     const progressBar = document.createElement('div');
                     progressBar.className = 'progress-bar';
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.setAttribute('aria-valuenow', progress);
+                    progressBar.style.width = `${scorePercentage}%`; // Use the converted percentage
+                    progressBar.setAttribute('aria-valuenow', scorePercentage);
                     progressBar.setAttribute('aria-valuemin', '0');
                     progressBar.setAttribute('aria-valuemax', '100');
-                    progressBar.textContent = `${progress.toFixed(2)}%`;
+                    
+                    // Create the progress bar text container
+                    const progressBarText = document.createElement('div');
+                    progressBarText.className = 'progress-bar-text';
+                    progressBarText.textContent = `${score.toFixed(1)} / 10.0`; // Show score out of 10
 
+                    // Append the progress bar text to the progress bar
+                    progressBar.appendChild(progressBarText);
                     progressBarContainer.appendChild(progressBar);
                     container.appendChild(progressBarContainer);
-                });
-            }
+                }
+            });
         })
-        .catch(error => {
-            console.error('Error fetching skill progress:', error);
+        .catch (error => {
+            console.error('Error fetching performance scores:', error);
             grayOutSentimentsProgressContainer();
         });
 }
+
+
+
 
 
 // ------------------------------------------

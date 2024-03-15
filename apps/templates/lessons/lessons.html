@@ -197,6 +197,7 @@
   #skills-progress-container {
   margin-top: 0; /* Remove top margin if there's unnecessary space inside the card */
   }
+
   .progress {
   height: 20px; /* Adjust the height to make it more visible */
   background-color: #e9ecef; /* Light grey background */
@@ -206,14 +207,21 @@
 
 .progress-bar {
   height: 100%; /* Fills the entire height of the progress container */
-  background-color: #ACAACC; /* The filled color part, same as your custom blue */
-  border-radius: 10px 0 0 10px; /* Rounded corners on the left side */
+  background: #7571AD; /* Bu /* The filled color part, same as your custom blue */
+  border-radius: 10px; /* Rounded corners */
   display: flex;
   align-items: center; /* Centers text vertically */
   justify-content: center; /* Centers text horizontally */
   color: white; /* Text color */
   font-weight: bold; /* Bold text */
-  transition: width 0.6s ease; /* Smooth transition for the bar loading */
+  position: relative; /* Relative position for percentage text */
+  overflow: hidden; /* Hide the overflow to keep the text inside the bar */
+}
+
+.progress-bar-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
 }
 
 
@@ -377,31 +385,11 @@
 <div class="col-md-6">
   <div class="card mb-4 text-center">
     <div class="card-body">
-    <h5>Your Sentiment Analysis</h5>
-    <div id="sentiments-progress-container">
-      <div class="skill-progress">
-        <label for="articulation-progress">Articulation</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="articulation-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="volume-progress">Volume</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="volume-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="rhythm-progress">Rhythm</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="rhythm-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="expression-progress">Expression</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="expression-progress"></div>
-        </div>
+      <h5 class="card-title">Your Progression Tracker:</h5>
+      <p class="text-muted">Each bar represents your average performance score in each lesson.</p>
+      <div id="sentiments-progress-container">
+        <!-- Performance progress bars will be dynamically inserted here by the JavaScript -->
+        <!-- The static content has been removed to make way for dynamic content -->
       </div>
     </div>
   </div>
