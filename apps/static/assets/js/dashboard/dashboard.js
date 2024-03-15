@@ -1,46 +1,39 @@
-    resultElement = document.getElementById("result");
-    inputElement = document.getElementById("score");
+// Events widget 
+document.addEventListener('DOMContentLoaded', function() {
 
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchEvents();
-    });
-    
-function fetchEvents() {
-    fetch('/api/index/events')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
+  fetch('/index/upcoming-events')
+    .then(response => response.json())
+    .then(events => {
+      const eventsContainer = document.getElementById('events-container');
+      eventsContainer.innerHTML = ''; // Clear previous events
+      events.forEach(event => {
+        const startDate = new Date(event.start_utc);
+        const endDate = new Date(event.end_utc);
+      
+        const eventElement = document.createElement('div');
+        eventElement.className = 'd-flex.align-items-start.mb-3'; // This class is now more specific in the CSS
+        eventElement.innerHTML = `
+        <div class="card-body p-3">
+          <div class="timeline timeline-one-side">
+            <div class="timeline-block mb-0">
+              <span class="timeline-step">
+                <i class="ni ni-bell-55 text-success text-gradient"></i>
+              </span>
+              <div class="timeline-content">
+                <h6 class="text-dark text-sm font-weight-bold mb-0">${event.name}</h6>
+                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0"> Date: ${startDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}, Time: ${startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })} - ${endDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
+                <p class="text-secondary text-xs mt-1 mb-0">${event.description}</p>
+          </div>
+        </div>
+        `;
+        eventsContainer.appendChild(eventElement);
+      });
     })
-    .then(data => {
-        const eventsContainer = document.getElementById('events-container');
-        let eventsHtml = '';
-        data.events.forEach(event => {
-            eventsHtml += `
-                <div class="timeline-block mb-3">
-                    <span class="timeline-step">
-                        <i class="ni ni-bell-55 text-success text-gradient"></i>
-                    </span>
-                    <div class="timeline-content">
-                        <h6 class="text-dark text-sm font-weight-bold mb-0">${event.name.text}</h6>
-                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: ${event.start.local}, Time: ${event.start.local}</p>
-                        <p class="text-secondary text-xs mt-1 mb-0">${event.description.text}</p>
-                        <a href="${event.url}" target="_blank">Event Details</a>
-                    </div>
-                </div>
-            `;
-        });
-        eventsContainer.innerHTML = eventsHtml;
-    })
-    .catch(error => {
-        console.error('Error fetching events:', error);
-        const eventsContainer = document.getElementById('events-container');
-        eventsContainer.innerHTML = '<p>Error fetching events. Please try again later.</p>';
-    });
-}
+    .catch(error => console.error('Error loading events:', error));
+});
 
-    
+
+
     Chart.defaults.font.family = 'Roboto'; // Set the font family globally
     Chart.defaults.color = '#353B3C'; // Set the global font color
 

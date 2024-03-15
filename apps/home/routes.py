@@ -2,64 +2,39 @@
 
 from apps.home import blueprint
 from flask import render_template, request
-from flask_login import login_required, current_user
+from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask import jsonify
+from datetime import datetime
 
-import requests
 from apps.config import API_GENERATOR
-from apps.models import db, Event
+from apps.models import Event
+
+
 
 @blueprint.route('/index')
 @login_required
 def index():
     return render_template('home/index.html', segment='index', API_GENERATOR=len(API_GENERATOR))
 
-@blueprint.route('/api/index/events', methods=['GET'])
+#upcoming events 
+@blueprint.route('/index/upcoming-events')
 @login_required
-def events_api():
-    # Retrieve the event_id from the query string
-    event_id = request.args.get('event_id')
-    
-    # Ensure an event_id was provided
-    if not event_id:
-        return jsonify({'error': 'No event_id provided'}), 400
+def upcoming_events():
+    current_time = datetime.utcnow()
+    events = Event.query.filter(Event.end_utc > current_time).order_by(Event.start_utc.asc()).limit(4).all()
+    events_data = [
+        {
+            'id': event.id,
+            'name': event.name,
+            'description': event.description,
+            'start_utc': event.start_utc.strftime('%Y-%m-%d %H:%M:%S'),
+            'end_utc': event.end_utc.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        for event in events
+    ]
 
-    # Construct the URL using the provided event_id
-    url = f"https://www.eventbriteapi.com/v3/events/{event_id}/"
-    headers = {
-        "Authorization": "Bearer MDSVTTIPXDGH3ZNUIWW3",
-        "Content-Type": "application/json"
-    }
-    
-    # Make the GET request to the Eventbrite API
-    response = requests.get(url, headers=headers)
-    
-    if response.status_code == 200:
-        event_data = response.json()
-        
-        # Process and save the fetched event to the database
-        new_event = Event(
-            id=event_data['id'],
-            name=event_data['name']['text'],
-            description=event_data.get('description', {}).get('text', ''),
-            url=event_data['url'],
-            start_utc=event_data['start']['utc'],
-            end_utc=event_data['end']['utc'],
-            status=event_data['status'],
-            online_event=event_data.get('online_event', False),
-            logo_url=event_data.get('logo', {}).get('url', ''),
-            user_id=current_user.id  # Assuming you have user authentication set up
-        )
-        db.session.add(new_event)
-        db.session.commit()
-        
-        # Respond with the newly added event
-        return jsonify(new_event.to_dict())
-    else:
-        print(f'Failed to fetch event: {response.status_code}', response.text)
-        return jsonify({'error': response.text}), response.status_code
-
+    return jsonify(events_data)
 
 
 @blueprint.route('/<template>')
