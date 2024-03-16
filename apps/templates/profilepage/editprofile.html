@@ -1,0 +1,84 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Edit Profile {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ config.ASSETS_ROOT }}/css/edit-profile.css">
+
+<style>
+    /* Custom CSS styles */
+    .custom-file-input {
+        width: calc(100% - 12rem); /* Set width same as bio input field */
+    }
+
+    .profile-pic {
+        width: 150px; /* Define the size of the profile picture */
+        height: 150px;
+        object-fit: cover;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="page-header min-height-300 border-radius-xl mt-4" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved0.jpg'); background-position-y: 50%;">
+        <span class="mask bg-gradient-primary opacity-6"></span>
+    </div>
+    <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+        <div class="row gx-4">
+
+            <div class="container">
+                <h2>Edit Profile</h2>
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fullname" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullname" name="fullname" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location">
+                                <option selected disabled>Select Country</option>
+                                <option value="🇦🇪">United Arab Emirates</option>
+                                <option value="🇬🇧">United Kingdom</option>
+                                <option value="🌎">International</option>
+                                <!-- Add more countries as needed -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profilepic" class="form-label">Profile Picture</label>
+                        <div class="d-flex align-items-center">
+                            <input type="file" class="form-control me-3" id="profilepic" name="profilepic" accept="image/*">
+                            <label for="profilepic" class="btn btn-secondary">Upload</label>
+                        </div>
+                        <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg" alt="Profile Picture" class="profile-pic mt-2" id="profilePicPreview">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% include "includes/footer.html" %}
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="{{config.ASSETS_ROOT }}/js/profilepage/profilepage.js"></script>
+<script>
+    document.getElementById('profilepic').addEventListener('change', function() {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profilePicPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(this.files[0]);
+    });
+</script>
+{% endblock javascripts %}
