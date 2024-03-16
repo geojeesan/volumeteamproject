@@ -14,7 +14,7 @@ import requests
 import os
 import parselmouth
 import numpy as np
-
+import time
 
 current_lesson = None
 user_sentiments = None
@@ -142,17 +142,29 @@ def transcribe_text(new_path):
 
 
 def get_sentiments(text):
-    try:
-        API_URL = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
-        headers = {"Authorization": "Bearer REMOVED"}
+    API_URL = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
+    headers = {"Authorization": "Bearer REMOVED"}
+    num_attempts = 1
 
-        def query(payload):
-            response = requests.post(API_URL, headers=headers, json=payload)
-            return response.json()
-            
-        output = query({
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+    
+
+    def attempt_query():
+        return query({
             "inputs": text,
         })
+
+    try:
+        output = attempt_query()
+        # We will attempt 5 times, with each attempt waiting 3 times more than the last one.
+        while 'error' in output and num_attempts < 5:
+            print("Error in sentiment analysis, trying again...")
+            time.sleep(3*num_attempts)
+            num_attempts += 1
+            output = attempt_query()
+
         return output
     except requests.exceptions.RequestException as e:
         return None
@@ -260,12 +272,14 @@ def analyze_speech():
             text = transcribe_text(new_path)
         except UnknownValueError:
             os.remove(new_path)  # Clean up even in case of transcription failure
-            return jsonify({"error": "Speech recognition could not understand the audio", "code": 209}), 400
+            return jsonify({"error": "Speech recognition could not understand the audio. Please try again.", "code": 209}), 400
         os.remove(new_path)  # Clean up after successful transcription
 
+
         sentiments = get_sentiments(text)
-        if sentiments is None:
-            return jsonify({"error": "Failed to get sentiments from the analysis API", "code": 309}), 400
+
+        if not sentiments or 'error' in sentiments:
+            return jsonify({"error": "Failed to get sentiments from the analysis API. Please try again", "code": 309}), 400
 
         # Assuming your existing functions to calculate score and update progress...
         score = calculate_score(scenario_num, lesson, sentiments)
