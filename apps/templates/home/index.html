@@ -5,6 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
 
 <style>
+  
   /*fonts*/
   .custom-font {
     font-family: "Alegreya Sans SC", sans-serif;
@@ -72,7 +73,7 @@
   display: flex; /* Use flex to enable alignment features */
   align-items: center; /* Center the icon vertically */
   justify-content: center; /* Center the icon horizontally */
-  margin-left: 175px; /* Pushes the container to the right */
+  margin-left: 160px; /* Pushes the container to the right */
   padding: 1rem; /* Add padding inside the container as needed */
   background: #ACAACC; /* Light grey background, adjust as necessary */
   border-radius: 0.5rem; /* Rounded corners for the icon background */
@@ -82,7 +83,7 @@ margin-top: 18px;
 
 /* The icon itself */
 .icon-container i {
-  font-size: 2rem; /* Adjust the icon size as needed */
+  font-size: 1.2rem; /* Adjust the icon size as needed */
 }
 
 
@@ -98,7 +99,7 @@ margin-top: 18px;
   }
 
   .card-title {
-    font-size: 18px;
+    font-size: 14px;
     /* Smaller font size for the title */
     color: #676974;
     /* White color for the title text */
@@ -113,6 +114,7 @@ margin-top: 18px;
 
 /* Color for the trophy icon */
 .icon-lessons-completed {
+  font-size: 1.5rem; /* Adjust the font size as needed */
   color: #ffffff; /* Replace with the color you want for this icon */
 }
 
@@ -121,14 +123,46 @@ margin-top: 18px;
   color: #FFFFFF; /* Replace with the color you want for this icon */
 }
 
-/* Color for the clock icon */
-.icon-total-hours {
+/* Color for the progress icon */
+.icon-next-level {
   color: #FFFFFF; /* Replace with the color you want for this icon */
 }
 
 #dynamicSticker {
   width: 93%; /* Adjust the width to the percentage or px you desire */
   height: auto; /* This will maintain the aspect ratio */
+}
+
+.timeline-event-spacing {
+  margin-bottom: 5px; /* or any other value you see fit */
+}
+
+
+.badge-container {
+  position: relative;
+  display: inline-block;
+}
+
+.badge-icon {
+  height: 30px; /* or the size of your badges */
+  width: 30px;
+}
+
+.badge-number {
+  position: absolute;
+  top: 50%;  /* adjust as needed */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75em; /* adjust as needed */
+  color: black; /* color of your choice */
+}
+
+.leaderboard-header, #leaderboard-body td {
+  padding-left: 20px; /* adjust this value as needed */
+}
+
+#leaderboard-body td {
+  padding-bottom: 35px; /* Adjust this value as needed for more or less space */
 }
 
 
@@ -145,62 +179,61 @@ margin-top: 18px;
   <!-- 3 cards on top -->
 <div class="row">
   <!-- Card 1: Lessons Completed -->
-  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-    <div class="card card-color">
-      <div class="card-body p-3 custom-card-height">
-        <div class="row justify-content-between">
-          <div class="col text-left">
-            <div class="card-number">
-              <h2 class="font-weight-bolder mb-0">16</h2>
-            </div>
-            <div class="card-title card-text-color">Lessons Completed</div>
+<div class="col-xl-4 col-sm-6 mb-xl-0 mb-2">
+  <div class="card card-color">
+    <div class="card-body p-3 custom-card-height">
+      <div class="row justify-content-between">
+        <div class="col text-left">
+          <div class="card-number">
+            <h3 id="lessons-completed" class="font-weight-bolder mb-0"><!-- Data will be inserted here --></h3>
           </div>
-          <div class="col-auto">
-            <div class="icon-container">
-              <i class="fas fa-trophy icon-lessons-completed"></i>  <!-- Trophy icon for completed lessons -->
-            </div>
+          <div class="card-title card-text-color">Lessons Completed</div>
+        </div>
+        <div class="col-auto">
+          <div class="icon-container">
+            <i class="fas fa-trophy icon-lessons-completed"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Card 2: Lessons In Progress -->
-  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-    <div class="card card-color">
-      <div class="card-body p-3 custom-card-height">
-        <div class="row justify-content-between">
-          <div class="col text-left">
-            <div class="card-number">
-              <h2 class="font-weight-bolder mb-0">02</h2>
-            </div>
-            <div class="card-title card-text-color">Lessons In Progress</div>
+<!-- Card 2: Lessons In Progress -->
+<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+  <div class="card card-color">
+    <div class="card-body p-3 custom-card-height">
+      <div class="row justify-content-between">
+        <div class="col text-left">
+          <div class="card-number">
+            <h3 id="lessons-in-progress" class="font-weight-bolder mb-0"><!-- Data will be inserted here --></h3>
           </div>
-          <div class="col-auto">
-            <div class="icon-container">
-              <i class="fas fa-spinner icon-lessons-progress"></i> <!-- Spinner icon for in-progress lessons -->
-            </div>
+          <div class="card-title card-text-color">Lessons In Progress</div>
+        </div>
+        <div class="col-auto">
+          <div class="icon-container">
+            <i class="fas fa-spinner icon-lessons-progress"></i>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Card 3: Total Practice Hours -->
-  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-    <div class="card card-color">
-      <div class="card-body p-3 custom-card-height">
-        <div class="row justify-content-between">
-          <div class="col text-left">
-            <div class="card-number">
-              <h2 class="font-weight-bolder mb-0">23</h2>
-            </div>
-            <div class="card-title card-text-color">Total Practice Hours</div>
+<!-- Card 3: Level Progress -->
+<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+  <div class="card card-color">
+    <div class="card-body p-3 custom-card-height">
+      <div class="row justify-content-between">
+        <div class="col text-left">
+          <div class="card-number">
+            <h3 id="level_progress" class="font-weight-bolder mb-0">0%</h3> <!-- Make sure the ID matches your JavaScript -->
           </div>
-          <div class="col-auto">
-            <div class="icon-container">
-              <i class="fas fa-clock icon-total-hours"></i> <!-- Clock icon for total hours -->
-            </div>
+          <div class="card-title card-text-color">Level Progress</div>
+        </div>
+        <div class="col-auto">
+          <div class="icon-container">
+            <i class="fas fa-chart-line icon-next-level"></i> <!-- Icon representing progress -->
           </div>
         </div>
       </div>
@@ -217,23 +250,22 @@ margin-top: 18px;
             <div class="col-lg-6">
               <div class="d-flex flex-column h-100">
                 <h5 class="font-weight-bolder custom-font">Featured Lesson</h5>
-                <p class="mb-5 custom-text">Instilling Confidence</p>
+                <p class="mb-5 custom-text">{{ featured_lesson.title }}</p>
                 <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/lessons"> Get Started <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                 </a>
               </div>
             </div>
-            <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
+            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-1">
               <div class="bg-gradient-primary border-radius-lg h-100">
-                <img src="{{ config.ASSETS_ROOT }}/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                  <img id="dynamicSticker" src="{{ url_for('static', filename='img/logos/interview.svg') }}" alt="Dynamic Sticker"/>
+                  <img id="dynamicSticker" src="{{ ASSETS_ROOT }}/img/logos/microphone.svg" alt="Featured Lesson Image"/>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>    
     <div class="col-lg-5">
       <div class="card h-100 p-3">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('{{ config.ASSETS_ROOT }}/img/presentations-and-public-speaking.jpeg');">
@@ -253,10 +285,9 @@ margin-top: 18px;
     <div class="col-lg-5 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h5>My Progress</h5>
+          <h5>Leaderboard</h5>
         </div>
         <div class="card-body p-3">
-          <canvas id="progressChart" class="chart-canvas" height="320"></canvas>
         </div>
       </div>
     </div>
@@ -271,100 +302,33 @@ margin-top: 18px;
       </div>
     </div>
   </div>
-  <!-- Recent Activity -->
-  <div class="row my-4">
-    <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-      <div class="card">
-        <div class="card-header pb-0">
-          <h6>Recent Activity</h6>
-        </div>
-        <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <tbody>
-                <!-- Activity 1 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Completed Lesson: "Introduction to Public Speaking"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-calendar me-1" aria-hidden="true"></i> 1st Mar - 10:00 AM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 2 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Joined Group: "Advanced Debaters"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-users me-1" aria-hidden="true"></i> 28th Feb - 3:30 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 3 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Practice Session: "Tone & Pitch Exercises"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-microphone me-1" aria-hidden="true"></i> 25th Feb - 2:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 4 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Received Badge: "Confident Communicator"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-trophy me-1" aria-hidden="true"></i> 20th Feb - 4:45 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 5 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Feedback Received: "Great Improvisation Skills"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-star me-1" aria-hidden="true"></i> 15th Feb - 1:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Interactive Session: "Mastering the Art of Persuasion"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-comments me-1" aria-hidden="true"></i> 10th Mar - 5:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <!-- Leader Board -->
+<div class="row my-4">
+  <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+    <div class="card">
+      <div class="card-header pb-0">
+        <h6>Leaderboard</h6>
+      </div>
+      <div class="card-body px-0 pb-2">
+        <div class="table-responsive">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="leaderboard-header">Rank</th>
+                <th class="leaderboard-header">Username</th>
+                <th class="leaderboard-header">Score</th>
+                <th class="leaderboard-header">Level</th>
+                <th class="leaderboard-header">Progress</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Leaderboard entries will be inserted here by dashboard.js -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+  </div>
     <!-- Upcoming events -->
     <div class="col-lg-4 col-md-6">
       <div class="card h-100">
@@ -387,5 +351,7 @@ margin-top: 18px;
   <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
   <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
   
+   
+    
   {% endblock javascripts %}
 
