@@ -123,8 +123,7 @@ class Event(db.Model):
     end_utc = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(50), nullable=False)
     online_event = db.Column(db.Boolean, default=False, nullable=False)
-    format = db.Column(db.String(50))  # Changed to a simple string column without ForeignKey
-
+    format = db.Column(db.String(50))  
 
 # Book Sample
 class Book(db.Model):
