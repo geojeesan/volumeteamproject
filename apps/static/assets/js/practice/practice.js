@@ -63,9 +63,6 @@ scenario_num = parseInt(scenarioNumberVar.innerText)
 
 getLesson(lesson_num)
 
-getPreRecorded()
-
-
 })
 
 function playAudio(elementId) {
@@ -302,6 +299,10 @@ function getLesson(lessonNum){
       // updateScenario() can only be called after scenario_data is populated, which
       // is done in this function.
       updateScenario()
+
+
+      // Update the pre-recorded voice files based on the scenario
+      getPreRecorded()
       }
   })
   .catch(error => {
@@ -520,8 +521,6 @@ let time_points = [];
       let time_point = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
       time_points.push(time_point);
   }
-
-console.log(time_points)
   
   var ctx2 = document.getElementById("chart-line").getContext("2d");
 
@@ -629,7 +628,6 @@ function getPreRecorded() {
       }
     }
 
-
 var small_buttons = document.getElementsByClassName('small-button');
 
 // Loop through each button and attach the click event listener
@@ -642,6 +640,7 @@ Array.from(small_buttons).forEach(function(button) {
   console.log(url)
 
     button.addEventListener('click', function() {
+      console.log("Adding event listener for", button)
         fetch(url)
             .then(response => response.blob())
             .then(blob => {

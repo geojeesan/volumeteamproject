@@ -23,7 +23,7 @@ user_sentiments = None
 @login_required
 def practice(lesson_num, scenario_num):
         return render_template('practice/practice.html', segment='practice', 
-                           lesson_number=lesson_num, scenario_number=scenario_num)
+                           lesson_number=lesson_num, scenario_number=scenario_num, API_GENERATOR=len(API_GENERATOR))
 
 
 @blueprint.route('/get_lesson', methods=['POST'])
@@ -165,8 +165,10 @@ def get_sentiments(text):
 def get_wav_path(file):
     blob_content = file.read()
     save_path = 'saved_file.mp3'
+
     with open(save_path, 'wb') as f:
         f.write(blob_content)
+
     new_path = "new_file.wav"
     sound = AudioSegment.from_file(save_path)
 
@@ -247,17 +249,12 @@ def analyze_speech():
 
         new_path = get_wav_path(file)
 
-
         pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
 
         pitch_values = list(pitch_values)
         pitch_times = list(pitch_times)
 
         audio_length = get_audio_length(new_path)
-
-        # tone_data = {"pitch": pitch_times, "values": pitch_values}
-
-        # print(tone_data)
 
         try:
             text = transcribe_text(new_path)
@@ -327,10 +324,27 @@ def get_skill_progress():
 
 
 
+@blueprint.route('/api/lessons/average_performance', methods=['GET'])
+@login_required
+def get_average_performance():
+    # Get all lessons
+    lessons = Lesson.query.all()
+    # Dict to hold lesson id and its average score
+    lesson_scores = {}
 
-
-
-
+    for lesson in lessons:
+        # Calculate the average score for each lesson
+        user_scenarios = UserScenarioProgress.query\
+    .join(SubLesson, UserScenarioProgress.scenario_id == SubLesson.id)\
+    .filter(SubLesson.lesson_id == lesson.id, UserScenarioProgress.user_id == current_user.id, UserScenarioProgress.completed == True)\
+    .all()
+        if user_scenarios:
+            average_score = sum([scenario.score for scenario in user_scenarios]) / len(user_scenarios)
+            lesson_scores[lesson.id] = average_score
+        else:
+            lesson_scores[lesson.id] = 0  # No scenarios or no score yet
+    print(lesson_scores)
+    return jsonify(lesson_scores)
 
 
 # Helper - Extract current page name from request
