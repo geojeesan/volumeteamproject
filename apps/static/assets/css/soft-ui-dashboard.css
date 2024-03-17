@@ -1474,7 +1474,7 @@ progress {
   }
   .col-lg-5 {
     flex: 0 0 auto;
-    width: 41.66666667%;
+    width: 40.66666667%;
   }
   .col-lg-6 {
     flex: 0 0 auto;
@@ -17742,7 +17742,7 @@ textarea.form-control-lg {
 }
 .card .card-body {
   font-family: "Open Sans";
-  padding: 1.5rem;
+  padding: 1rem;
 }
 .card.card-plain {
   background-color: transparent;
@@ -17788,8 +17788,8 @@ textarea.form-control-lg {
 .card.card-background .card-body .content-left {
   min-height: 330px;
   max-width: 450px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding-top: 55px;
+  padding-bottom: 55px;
 }
 .card.card-background .card-body .content-center {
   text-align: center;
