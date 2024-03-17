@@ -162,7 +162,7 @@ margin-top: 18px;
 }
 
 #leaderboard-body td {
-  padding-bottom: 35px; /* Adjust this value as needed for more or less space */
+  padding-bottom: 35px;
 }
 
 
@@ -176,6 +176,7 @@ margin-top: 18px;
   <div class="empower-speech">
     <p>Empower your speech with Volume! </p>
   </div>
+
   <!-- 3 cards on top -->
 <div class="row">
   <!-- Card 1: Lessons Completed -->
@@ -185,7 +186,7 @@ margin-top: 18px;
       <div class="row justify-content-between">
         <div class="col text-left">
           <div class="card-number">
-            <h3 id="lessons-completed" class="font-weight-bolder mb-0"><!-- Data will be inserted here --></h3>
+            <h3 id="lessons-completed" class="font-weight-bolder mb-0"></h3>
           </div>
           <div class="card-title card-text-color">Lessons Completed</div>
         </div>
@@ -206,7 +207,7 @@ margin-top: 18px;
       <div class="row justify-content-between">
         <div class="col text-left">
           <div class="card-number">
-            <h3 id="lessons-in-progress" class="font-weight-bolder mb-0"><!-- Data will be inserted here --></h3>
+            <h3 id="lessons-in-progress" class="font-weight-bolder mb-0"></h3>
           </div>
           <div class="card-title card-text-color">Lessons In Progress</div>
         </div>
@@ -227,13 +228,13 @@ margin-top: 18px;
       <div class="row justify-content-between">
         <div class="col text-left">
           <div class="card-number">
-            <h3 id="level_progress" class="font-weight-bolder mb-0">0%</h3> <!-- Make sure the ID matches your JavaScript -->
+            <h3 id="level_progress" class="font-weight-bolder mb-0"></h3> 
           </div>
           <div class="card-title card-text-color">Level Progress</div>
         </div>
         <div class="col-auto">
           <div class="icon-container">
-            <i class="fas fa-chart-line icon-next-level"></i> <!-- Icon representing progress -->
+            <i class="fas fa-chart-line icon-next-level"></i>
           </div>
         </div>
       </div>
@@ -255,17 +256,20 @@ margin-top: 18px;
                 </a>
               </div>
             </div>
-            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-1">
+            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-0">
+              <!-- Iterate over all images and display them -->
+              {% for image_url in featured_image_urls %}
               <div class="bg-gradient-primary border-radius-lg h-100">
                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                  <img id="dynamicSticker" src="{{ ASSETS_ROOT }}/img/logos/microphone.svg" alt="Featured Lesson Image"/>
+                  <img id="dynamicSticker" src="{{ image_url }}" alt="Featured Lesson Image" class="img-fluid"/>
                 </div>
               </div>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
-    </div>    
+    </div>
     <div class="col-lg-5">
       <div class="card h-100 p-3">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('{{ config.ASSETS_ROOT }}/img/presentations-and-public-speaking.jpeg');">
@@ -280,17 +284,20 @@ margin-top: 18px;
       </div>
     </div>
   </div>
-  <!-- charts -->
+
+  <!-- Recent Activity -->
   <div class="row mt-4">
     <div class="col-lg-5 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h5>Leaderboard</h5>
+          <h5>Recent Activity</h5>
         </div>
         <div class="card-body p-3">
         </div>
       </div>
     </div>
+
+    <!-- Test Scores -->
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-header pb-0">
@@ -302,6 +309,7 @@ margin-top: 18px;
       </div>
     </div>
   </div>
+
   <!-- Leader Board -->
 <div class="row my-4">
   <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
@@ -322,13 +330,13 @@ margin-top: 18px;
               </tr>
             </thead>
             <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here by dashboard.js -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
+
     <!-- Upcoming events -->
     <div class="col-lg-4 col-md-6">
       <div class="card h-100">
@@ -336,9 +344,7 @@ margin-top: 18px;
           <h6>Upcoming Events</h6>
         </div>
         <div class="card-body p-3">
-          <!-- Events will be dynamically loaded into this div -->
           <div id="events-container">
-            <!-- JavaScript will populate this div with event data -->
           </div>
         </div>
       </div>
