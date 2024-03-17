@@ -2,7 +2,7 @@
 
 # Import Enum from SQLAlchemy for column definitions
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import JSON
+from sqlalchemy import JSON, and_, case, func, event
 
 # Import the enum module for creating enumerations in Python
 import enum
@@ -10,6 +10,9 @@ from apps import db
 from datetime import datetime
 from flask_login import login_required, current_user
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import func
+from apps.authentication.models import Users
+
 
 # Define an enumeration for difficulty levels using Python's built-in enum
 class DifficultyLevel(enum.Enum):
@@ -63,6 +66,15 @@ class DifficultyLevel(enum.Enum):
     intermediate = "intermediate"
     advanced = "advanced"
 
+class LessonImage(db.Model):
+    __tablename__ = 'lesson_images'
+
+    id = db.Column(db.Integer, primary_key=True)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+    image_path = db.Column(db.String(255), nullable=False)
+
+    # Relationship to the Lesson model
+    lesson = relationship('Lesson', back_populates='images')
 
 class Lesson(db.Model):
     __tablename__ = "lessons"
@@ -74,6 +86,9 @@ class Lesson(db.Model):
     image_path = db.Column(db.String(255), nullable=True)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow)
     difficulty = db.Column(SQLEnum(DifficultyLevel), nullable=False)
+
+    images = relationship('LessonImage', order_by=LessonImage.id, back_populates='lesson')
+
 
     def __init__(
         self, title, description, image_path, difficulty, num, last_accessed=None
@@ -131,6 +146,7 @@ class UserScenarioProgress(db.Model):
 
     user = relationship("Users", backref="scenario_progress")
     scenario = relationship("SubLesson", backref="user_progress")
+    date = db.Column(db.DateTime)
 
 
 # Event database
@@ -146,7 +162,144 @@ class Event(db.Model):
     online_event = db.Column(db.Boolean, default=False, nullable=False)
     format = db.Column(db.String(50))
 
+
+# # Give the new user default progress data
+# @event.listens_for(Users, "after_insert")
+# def create_user_progress(mapper, connection, target):
+#     new_user_id = target.id
+#     # Check if UserProgress entry already exists for this user
+#     existing_progress = UserProgress.query.filter_by(user_id=new_user_id).first()
+#     if existing_progress is None:
+#         # If not, create a new entry in UserProgress with default values
+#         new_user_progress = UserProgress(user_id=new_user_id)
+#         db.session.add(new_user_progress)
+#         db.session.commit()
+
+
+class UserProgress(db.Model):
+    __tablename__ = "user_progress"
+
+
+    def get_lessons_in_progress(user_id):
+        lessons_in_progress = Lesson.query \
+            .join(SubLesson, Lesson.id == SubLesson.lesson_id) \
+            .outerjoin(UserScenarioProgress, and_(SubLesson.id == UserScenarioProgress.scenario_id, UserScenarioProgress.user_id == user_id)) \
+            .group_by(Lesson.id) \
+            .having(
+                and_(
+                    func.count(SubLesson.id) > func.count(UserScenarioProgress.scenario_id),
+                    func.sum(case((UserScenarioProgress.completed == True, 1), else_=0)) > 0
+                )
+            ) \
+            .count()
+        return lessons_in_progress
+
+    def get_lessons_completed(user_id):
+        lessons_completed = Lesson.query \
+            .join(SubLesson, Lesson.id == SubLesson.lesson_id) \
+            .outerjoin(UserScenarioProgress, SubLesson.id == UserScenarioProgress.scenario_id
+                    and UserScenarioProgress.user_id == user_id
+                    and UserScenarioProgress.completed == True) \
+            .group_by(Lesson.id) \
+            .having(func.count(SubLesson.id) == func.count(UserScenarioProgress.scenario_id)) \
+            .count()
+
+        return lessons_completed
+    
+    def calculate_level_progress(user_id):
+        # Define the number of lessons required to complete each level
+        lessons_per_level = 3
+        
+        # Get the number of completed lessons for each difficulty level
+        completed_lessons_counts = db.session.query(
+            Lesson.difficulty, func.count(Lesson.id)
+        ).join(SubLesson, Lesson.id == SubLesson.lesson_id) \
+        .join(UserScenarioProgress, SubLesson.id == UserScenarioProgress.scenario_id) \
+        .filter(UserScenarioProgress.user_id == user_id) \
+        .filter(UserScenarioProgress.completed == True) \
+        .group_by(Lesson.difficulty) \
+        .all()
+
+        # Convert to a dictionary for easier access
+        completed_lessons_dict = {difficulty.name: count for difficulty, count in completed_lessons_counts}
+
+        # Determine the current level based on completed lessons
+        current_level = 'beginner'
+        level_progress = 0
+        
+        # Check progress within the beginner level
+        beginner_completed = completed_lessons_dict.get('beginner', 0)
+
+        if beginner_completed < lessons_per_level:
+            level_progress = round((beginner_completed / lessons_per_level) * 100, 1)
+        else:
+            current_level = 'intermediate'
+            intermediate_completed = completed_lessons_dict.get('intermediate', 0)
+            if intermediate_completed < lessons_per_level:
+                level_progress = round((intermediate_completed / lessons_per_level) * 100, 1)
+            else:
+                current_level = 'advanced'
+                advanced_completed = completed_lessons_dict.get('advanced', 0)
+                if advanced_completed < lessons_per_level:
+                    level_progress = round((advanced_completed / lessons_per_level) * 100, 1)
+                else:
+                    current_level = 'master'
+                    level_progress = 100  # Assuming 'master' is the highest level
+
+        return current_level, round(level_progress, 1)
+    
+    def check_streak(user_id):
+        pass
+
+
+    def update_progress(user_id):
+        # Get lessons completed and lessons in progress
+        lessons_completed = UserProgress.get_lessons_completed(user_id)
+        lessons_in_progress = UserProgress.get_lessons_in_progress(user_id)
+
+        # Calculate level progress and current level
+        current_level, level_progress = UserProgress.calculate_level_progress(user_id)
+
+        # Update user data
+        user_data = UserProgress.query.filter_by(user_id=user_id).first()
+        if user_data:
+            user_data.lessons_completed = lessons_completed
+            user_data.lessons_in_progress = lessons_in_progress
+            user_data.current_level = current_level
+            user_data.level_progress = level_progress
+        else:
+            # If user data doesn't exist, create new entry
+            user_data = UserProgress(
+                user_id=user_id,
+                lessons_completed=lessons_completed,
+                lessons_in_progress=lessons_in_progress,
+                user_level=current_level,
+                progress_to_next_level=level_progress
+            )
+            db.session.add(user_data)
+
+        db.session.commit()
+    
+    def create_new_progress(user_id):
+        new_user_progress = UserProgress(user_id=user_id)
+        db.session.add(new_user_progress)
+        db.session.commit()
+        UserProgress.update_progress(user_id=user_id)
+        
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("Users.id"), nullable=False)
+    lessons_completed = db.Column(db.Integer, default=0)
+    lessons_in_progress = db.Column(db.Integer, default=0)
+    streak = db.Column(db.Integer, default=0)
+    current_level = db.Column(db.Text, nullable=False, default="beginner")
+    level_progress = db.Column(db.Float, default=0)
+
+
+
+
 # Book Sample
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
+
