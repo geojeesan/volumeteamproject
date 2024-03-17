@@ -3,8 +3,4 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint(
-    'resource_blueprint',
-    __name__,
-    url_prefix=''
-)
+blueprint = Blueprint("resource_blueprint", __name__, url_prefix="")

@@ -9,9 +9,11 @@ from flask import jsonify
 from apps.config import API_GENERATOR
 
 
-@blueprint.route('/feedback')
+@blueprint.route("/feedback")
 def feedback():
-    return render_template('feedback/feedback.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
+    return render_template(
+        "feedback/feedback.html", segment="feedback", API_GENERATOR=len(API_GENERATOR)
+    )
 
 
 def get_speech_score(num):
@@ -26,14 +28,14 @@ def send_to_database(feedback):
     return sent
 
 
-@blueprint.route('/send_feedback', methods=['POST'])
+@blueprint.route("/send_feedback", methods=["POST"])
 def send_feedback():
 
     requestData = request.get_json()  # Retrieve requestData from the POST request
 
     # Use the requestData as needed
     # For example, pass it to get_speech_score function
-    feedback = requestData['feedback']
+    feedback = requestData["feedback"]
 
     has_been_sent = send_to_database(feedback)
 
@@ -54,10 +56,10 @@ def get_segment(request):
 
     try:
 
-        segment = request.path.split('/')[-1]
+        segment = request.path.split("/")[-1]
 
-        if segment == '':
-            segment = 'index'
+        if segment == "":
+            segment = "index"
 
         return segment
 
