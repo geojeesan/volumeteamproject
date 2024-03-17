@@ -18,7 +18,7 @@ from flask import flash
 github_blueprint = make_github_blueprint(
     client_id=Config.GITHUB_ID,
     client_secret=Config.GITHUB_SECRET,
-    scope='user',
+    scope="user",
     storage=SQLAlchemyStorage(
         OAuth,
         db.session,
@@ -47,7 +47,7 @@ def github_logged_in(blueprint, token):
 
             # Save to db
             user = Users()
-            user.username = '(gh)' + username
+            user.username = "(gh)" + username
             user.oauth_github = username
 
             # Save current user

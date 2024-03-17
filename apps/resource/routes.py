@@ -8,9 +8,11 @@ from jinja2 import TemplateNotFound
 from apps.config import API_GENERATOR
 
 
-@blueprint.route('/resource')
+@blueprint.route("/resource")
 def resource():
-    return render_template('resource/resource.html', segment='resource', API_GENERATOR=len(API_GENERATOR))
+    return render_template(
+        "resource/resource.html", segment="resource", API_GENERATOR=len(API_GENERATOR)
+    )
 
 
 # Helper - Extract current page name from request
@@ -18,10 +20,10 @@ def get_segment(request):
 
     try:
 
-        segment = request.path.split('/')[-1]
+        segment = request.path.split("/")[-1]
 
-        if segment == '':
-            segment = 'index'
+        if segment == "":
+            segment = "index"
 
         return segment
 

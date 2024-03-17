@@ -2,8 +2,4 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint(
-    'acknowledgements_blueprint',
-    __name__,
-    url_prefix=''
-)
+blueprint = Blueprint("acknowledgements_blueprint", __name__, url_prefix="")
