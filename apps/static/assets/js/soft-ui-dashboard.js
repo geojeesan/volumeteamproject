@@ -265,6 +265,8 @@ function sidebarColor(a) {
 
 // Set Navbar Fixed
 function navbarFixed(el) {
+
+  console.log("test")
   let classes = ['position-sticky', 'blur', 'shadow-blur', 'mt-4', 'left-auto', 'top-1', 'z-index-sticky'];
   const navbar = document.getElementById('navbarBlur');
 
@@ -280,6 +282,22 @@ function navbarFixed(el) {
     el.removeAttribute("checked");
   }
 };
+
+function setFontSize(newSize) {
+  document.body.style.zoom = newSize;
+  localStorage.setItem('fontSize', newSize); // Store the selected font size
+}
+
+// Function to retrieve the font size from localStorage and apply it on page load
+window.onload = function() {
+  var storedFontSize = localStorage.getItem('fontSize');
+  if (storedFontSize) {
+      setFontSize(storedFontSize); // Apply the stored font size
+  }
+}
+
+
+
 
 // Navbar blur on scroll
 
