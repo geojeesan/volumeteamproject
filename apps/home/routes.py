@@ -9,11 +9,7 @@ from flask import jsonify
 from datetime import datetime, timedelta
 
 from apps.config import API_GENERATOR
-<<<<<<< Updated upstream
-from apps.models import db, Event, Lesson, UserScenarioProgress, SubLesson, UserProgress
-=======
-from apps.models import db, Event, Lesson, UserScenarioProgress, SubLesson, LessonImage
->>>>>>> Stashed changes
+from apps.models import db, Event, Lesson, UserScenarioProgress, UserProgress, LessonImage
 from apps.authentication.models import Users
 from sqlalchemy.sql.expression import func
 from sqlalchemy import and_, case
@@ -23,7 +19,6 @@ from sqlalchemy import and_, case
 def get_daily_index(total_items, start_date=datetime(2024, 1, 1)):
     days_since_start = (datetime.utcnow() - start_date).days
     return days_since_start % total_items
-
 
 @blueprint.route('/index')
 @login_required
@@ -52,7 +47,8 @@ def index():
 @blueprint.route('/test-scores')
 @login_required
 def test_scores():
-    scores_query = UserScenarioProgress.query.order_by(UserScenarioProgress.score.asc()).all()
+    scores_query = UserScenarioProgress.query.order_by(UserScenarioProgress.score.asc()).limit(6).all()    
+
     scores_data = {
         # Generate labels dynamically based on the number of entries in scores_query
         'labels': [f'Test {i+1}' for i in range(len(scores_query))],
@@ -70,55 +66,30 @@ def test_scores():
 @blueprint.route('/user-progress')
 @login_required
 def user_progress():
-    user_id = current_user.get_id()  # Assumes current_user is set up with Flask-Login
+    user_id = current_user.get_id()  
 
-<<<<<<< Updated upstream
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
-    # If user has no user_progress row, we create a new one and we update it.
     if not user_progress:
         UserProgress.create_new_progress(user_id=user_id)
         user_progress = UserProgress.query.filter_by(user_id=user_id).first()
         
-    # Lessons Completed
+
     lessons_completed = user_progress.lessons_completed
     lessons_in_progress = user_progress.lessons_in_progress
     current_level = user_progress.current_level
     level_progress = user_progress.level_progress
+    streak = user_progress.streak  # Fetch the streak from the database
 
-    # current_level, level_progress = calculate_level_progress(user_id)
-=======
-     # Lessons Completed: A lesson is only completed if all of its scenarios are completed
-    lessons_completed = db.session.query(Lesson.id).join(SubLesson) \
-        .outerjoin(UserScenarioProgress, and_(SubLesson.id == UserScenarioProgress.scenario_id,
-                                              UserScenarioProgress.user_id == user_id,
-                                              UserScenarioProgress.completed == True)) \
-        .group_by(Lesson.id) \
-        .having(func.count(SubLesson.id) == func.count(UserScenarioProgress.scenario_id)) \
-        .count()
-    
-    lessons_in_progress = Lesson.query \
-        .join(SubLesson, Lesson.id == SubLesson.lesson_id) \
-        .outerjoin(UserScenarioProgress, and_(SubLesson.id == UserScenarioProgress.scenario_id, UserScenarioProgress.user_id == user_id)) \
-        .group_by(Lesson.id) \
-        .having(
-            and_(
-                func.count(SubLesson.id) > func.count(UserScenarioProgress.scenario_id),
-                func.sum(case((UserScenarioProgress.completed == True, 1), else_=0)) > 0
-            )
-        ) \
-        .count()
-
-    current_level, level_progress = calculate_level_progress(user_id)
->>>>>>> Stashed changes
 
     return jsonify({
         'lessons_completed': lessons_completed,
         'lessons_in_progress': lessons_in_progress,
         'current_level': current_level,
-        'level_progress': level_progress
-    })
+        'level_progress': level_progress,
+        'streak': streak  # Include the streak in the response
 
+    })
 
  
 #leaderboard
