@@ -23,8 +23,10 @@ def upgrade():
     # op.drop_table('Streak')
     # op.drop_table('Profile')
     # op.drop_table('Notifications')
-    op.add_column('user-data', sa.Column('progress_to_next_level', sa.Float(), nullable=True))
-    op.add_column('user_scenario_progress', sa.Column('date', sa.DateTime(), nullable=True))
+    op.add_column('user-data', sa.Column('progress_to_next_level',
+                  sa.Float(), nullable=True))
+    op.add_column('user_scenario_progress', sa.Column(
+        'date', sa.DateTime(), nullable=True))
     # ### end Alembic commands ###
 
 
@@ -33,49 +35,51 @@ def downgrade():
     op.drop_column('user_scenario_progress', 'date')
     op.drop_column('user-data', 'progress_to_next_level')
     op.create_table('Notifications',
-    sa.Column('id', sa.INTEGER(), nullable=True),
-    sa.Column('user_id', sa.INTEGER(), nullable=False),
-    sa.Column('type', sa.INTEGER(), nullable=False),
-    sa.Column('about_user', sa.INTEGER(), nullable=True),
-    sa.Column('content', sa.TEXT(), nullable=False),
-    sa.Column('action', sa.TEXT(), nullable=True),
-    sa.Column('created_at', sa.DATETIME(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['about_user'], ['Users.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
+                    sa.Column('id', sa.INTEGER(), nullable=True),
+                    sa.Column('user_id', sa.INTEGER(), nullable=False),
+                    sa.Column('type', sa.INTEGER(), nullable=False),
+                    sa.Column('about_user', sa.INTEGER(), nullable=True),
+                    sa.Column('content', sa.TEXT(), nullable=False),
+                    sa.Column('action', sa.TEXT(), nullable=True),
+                    sa.Column('created_at', sa.DATETIME(), server_default=sa.text(
+                        '(CURRENT_TIMESTAMP)'), nullable=True),
+                    sa.ForeignKeyConstraint(['about_user'], ['Users.id'], ),
+                    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_table('Profile',
-    sa.Column('id', sa.INTEGER(), nullable=False),
-    sa.Column('user_id', sa.INTEGER(), nullable=False),
-    sa.Column('full_name', sa.TEXT(), nullable=True),
-    sa.Column('bio', sa.INTEGER(), nullable=True),
-    sa.Column('profile_picture', sa.BLOB(), nullable=True),
-    sa.Column('location', sa.TEXT(), nullable=True),
-    sa.Column('last_online', sa.DATETIME(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
+                    sa.Column('id', sa.INTEGER(), nullable=False),
+                    sa.Column('user_id', sa.INTEGER(), nullable=False),
+                    sa.Column('full_name', sa.TEXT(), nullable=True),
+                    sa.Column('bio', sa.INTEGER(), nullable=True),
+                    sa.Column('profile_picture', sa.BLOB(), nullable=True),
+                    sa.Column('location', sa.TEXT(), nullable=True),
+                    sa.Column('last_online', sa.DATETIME(), server_default=sa.text(
+                        '(CURRENT_TIMESTAMP)'), nullable=True),
+                    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_table('Streak',
-    sa.Column('user_id', sa.INTEGER(), nullable=False),
-    sa.Column('streak_start', sa.DATE(), nullable=True),
-    sa.Column('streak_end', sa.DATE(), nullable=True),
-    sa.Column('streak', sa.INTEGER(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
-    sa.PrimaryKeyConstraint('user_id')
-    )
+                    sa.Column('user_id', sa.INTEGER(), nullable=False),
+                    sa.Column('streak_start', sa.DATE(), nullable=True),
+                    sa.Column('streak_end', sa.DATE(), nullable=True),
+                    sa.Column('streak', sa.INTEGER(), nullable=True),
+                    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
+                    sa.PrimaryKeyConstraint('user_id')
+                    )
     op.create_table('Points',
-    sa.Column('id', sa.INTEGER(), nullable=True),
-    sa.Column('user_id', sa.INTEGER(), nullable=False),
-    sa.Column('points', sa.INTEGER(), nullable=True),
-    sa.Column('date', sa.DATE(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
+                    sa.Column('id', sa.INTEGER(), nullable=True),
+                    sa.Column('user_id', sa.INTEGER(), nullable=False),
+                    sa.Column('points', sa.INTEGER(), nullable=True),
+                    sa.Column('date', sa.DATE(), nullable=False),
+                    sa.ForeignKeyConstraint(['user_id'], ['Users.id'], ),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_table('Follows',
-    sa.Column('follower_id', sa.INTEGER(), nullable=False),
-    sa.Column('followed_id', sa.INTEGER(), nullable=False),
-    sa.ForeignKeyConstraint(['followed_id'], ['Users.id'], ),
-    sa.ForeignKeyConstraint(['follower_id'], ['Users.id'], ),
-    sa.PrimaryKeyConstraint('follower_id', 'followed_id')
-    )
+                    sa.Column('follower_id', sa.INTEGER(), nullable=False),
+                    sa.Column('followed_id', sa.INTEGER(), nullable=False),
+                    sa.ForeignKeyConstraint(['followed_id'], ['Users.id'], ),
+                    sa.ForeignKeyConstraint(['follower_id'], ['Users.id'], ),
+                    sa.PrimaryKeyConstraint('follower_id', 'followed_id')
+                    )
     # ### end Alembic commands ###

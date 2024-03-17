@@ -11,4 +11,3 @@ ModelForm = model_form_factory(Form)
 class BookForm(ModelForm):
     class Meta:
         model = Book
-

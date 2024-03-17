@@ -28,11 +28,13 @@ from apps.authentication.util import verify_pass, generate_token
 # Bind API -> Auth BP
 api = Api(blueprint)
 
+
 @blueprint.route('/')
 def route_default():
     return redirect(url_for('authentication_blueprint.login'))
 
 # Login & Registration
+
 
 @blueprint.route("/github")
 def login_github():
@@ -42,6 +44,7 @@ def login_github():
 
     res = github.get("/user")
     return redirect(url_for('home_blueprint.index'))
+
 
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
@@ -53,7 +56,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        #return 'Login: ' + username + ' / ' + password
+        # return 'Login: ' + username + ' / ' + password
 
         # Locate user
         user = Users.query.filter_by(username=username).first()
@@ -72,7 +75,7 @@ def login():
         return redirect(url_for('home.index'))
     else:
         return render_template('accounts/login.html',
-                               form=login_form) 
+                               form=login_form)
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -115,6 +118,7 @@ def register():
     else:
         return render_template('accounts/register.html', form=create_account_form)
 
+
 @api.route('/login/jwt/', methods=['POST'])
 class JWTLogin(Resource):
     def post(self):
@@ -126,10 +130,10 @@ class JWTLogin(Resource):
 
             if not data:
                 return {
-                           'message': 'username or password is missing',
-                           "data": None,
-                           'success': False
-                       }, 400
+                    'message': 'username or password is missing',
+                    "data": None,
+                    'success': False
+                }, 400
             # validate input
             user = Users.query.filter_by(username=data.get('username')).first()
             if user and verify_pass(data.get('password'), user.password):
@@ -149,28 +153,29 @@ class JWTLogin(Resource):
                     }
                 except Exception as e:
                     return {
-                               "error": "Something went wrong",
-                               "success": False,
-                               "message": str(e)
-                           }, 500
+                        "error": "Something went wrong",
+                        "success": False,
+                        "message": str(e)
+                    }, 500
             return {
-                       'message': 'username or password is wrong',
-                       'success': False
-                   }, 403
+                'message': 'username or password is wrong',
+                'success': False
+            }, 403
         except Exception as e:
             return {
-                       "error": "Something went wrong",
-                       "success": False,
-                       "message": str(e)
-                   }, 500
+                "error": "Something went wrong",
+                "success": False,
+                "message": str(e)
+            }, 500
 
 
 @blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('authentication_blueprint.login')) 
+    return redirect(url_for('authentication_blueprint.login'))
 
 # Errors
+
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
