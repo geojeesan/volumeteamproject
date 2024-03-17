@@ -4,7 +4,7 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
 from flask import request, jsonify
-from apps.models import db, Lesson, SubLesson, UserScenarioProgress
+from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress
 from speech_recognition import UnknownValueError
 from apps.config import API_GENERATOR
 import speech_recognition as sr
@@ -285,6 +285,9 @@ def analyze_speech():
         score = calculate_score(scenario_num, lesson, sentiments)
         update_user_scenario_progress(current_user.id, scenario.id, score)
         progress_percentage = calculate_user_progress(current_user.id, lesson.id)
+
+        # Update user's data after scenario completion.
+        UserProgress.update_progress(current_user.id)
 
         return jsonify({
             'user_speech': text,
