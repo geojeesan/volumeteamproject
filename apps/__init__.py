@@ -2,7 +2,8 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-#Relevant imports
+# Relevant imports
+from apps.authentication.oauth import github_blueprint
 import os
 
 from flask import Flask
@@ -17,6 +18,7 @@ login_manager = LoginManager()
 # Initialize Flask-Migrate
 migrate = Migrate()
 
+
 def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
@@ -26,7 +28,7 @@ def register_extensions(app):
 def register_blueprints(app):
     for module_name in ('authentication', 'home', 'api', 'practice', 'lessons', 'feedback', 'resource', 'profilepage', 'privacypolicy', 'acknowledgements'):
         module = import_module('apps.{}.routes'.format(module_name))
-        app.register_blueprint(module.blueprint, name = module_name)
+        app.register_blueprint(module.blueprint, name=module_name)
 
 
 def configure_database(app):
@@ -38,11 +40,12 @@ def configure_database(app):
             db.create_all()
         except Exception as e:
 
-            print('> Error: DBMS Exception: ' + str(e) )
+            print('> Error: DBMS Exception: ' + str(e))
 
             # Fallback to SQLite if there is an exception
             basedir = os.path.abspath(os.path.dirname(__file__))
-            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + \
+                os.path.join(basedir, 'db.sqlite3')
 
             print('> Fallback to SQLite ')
             db.create_all()
@@ -52,7 +55,6 @@ def configure_database(app):
         """ Remove the database session after each request. """
         db.session.remove()
 
-from apps.authentication.oauth import github_blueprint
 
 def create_app(config):
     """ Application factory to create Flask app instances with given configs. """
@@ -61,7 +63,7 @@ def create_app(config):
     register_extensions(app)
     register_blueprints(app)
     # Register the GitHub OAuth blueprint with a URL prefix
-    app.register_blueprint(github_blueprint, url_prefix="/login") 
+    app.register_blueprint(github_blueprint, url_prefix="/login")
     # Configure and initialize the database
     configure_database(app)
     return app

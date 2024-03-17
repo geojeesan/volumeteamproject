@@ -7,10 +7,12 @@ from jinja2 import TemplateNotFound
 
 from apps.config import API_GENERATOR
 
+
 @blueprint.route('/profilepage')
 @login_required
 def profilepage():
     return render_template('profilepage/profilepage.html', segment='profilepage', API_GENERATOR=len(API_GENERATOR))
+
 
 @blueprint.route('/editprofile')
 @login_required
@@ -18,6 +20,8 @@ def editprofile():
     return render_template('profilepage/editprofile.html', segment='editprofile', API_GENERATOR=len(API_GENERATOR))
 
 # Helper - Extract current page name from request
+
+
 def get_segment(request):
 
     try:

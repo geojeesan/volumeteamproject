@@ -46,7 +46,8 @@ def get_lessons_completion():
 
     completed_lessons = 0
     for lesson in Lesson.query.all():
-        total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
+        total_scenarios = SubLesson.query.filter_by(
+            lesson_id=lesson.id).count()
         completed_scenarios = (
             UserScenarioProgress.query.filter_by(
                 user_id=user_id, scenario_id=SubLesson.id, completed=True
@@ -91,7 +92,8 @@ def get_lessons_status():
 
             # Consider the lesson in progress if any progress is made but not 100%
             if progress > 0 and progress < 100:
-                last_accessed_lesson_data = lesson.to_dict(user_id=current_user.id)
+                last_accessed_lesson_data = lesson.to_dict(
+                    user_id=current_user.id)
                 return jsonify({"lastAccessed": last_accessed_lesson_data})
 
         # If no lessons are in progress, return message
@@ -163,7 +165,8 @@ def get_next_scenario_after_last_completed(lesson_id):
         if lesson:
             # If there's a next scenario, return its details along with lesson number
             return jsonify(
-                {"scenario_id": next_scenario.order_in_lesson, "lesson_num": lesson.num}
+                {"scenario_id": next_scenario.order_in_lesson,
+                    "lesson_num": lesson.num}
             )
         else:
             # If lesson is not found, return an error message

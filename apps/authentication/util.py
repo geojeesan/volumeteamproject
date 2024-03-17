@@ -38,6 +38,8 @@ def verify_pass(provided_password, stored_password):
     return pwdhash == stored_password
 
 # Used in API Generator
+
+
 def generate_token(aUserId):
     now = int(datetime.utcnow().timestamp())
     api_token = jwt.encode(

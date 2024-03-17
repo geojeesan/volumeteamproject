@@ -15,10 +15,10 @@ from sqlalchemy.sql.expression import func
 from sqlalchemy import and_, case
 
 
-
 def get_daily_index(total_items, start_date=datetime(2024, 1, 1)):
     days_since_start = (datetime.utcnow() - start_date).days
     return days_since_start % total_items
+
 
 @blueprint.route('/index')
 @login_required
@@ -29,25 +29,29 @@ def index():
     featured_lesson = lessons[lesson_index]
 
     # Fetch the images for the featured lesson from lesson_images table
-    featured_images = LessonImage.query.filter_by(lesson_id=featured_lesson.id).all()
+    featured_images = LessonImage.query.filter_by(
+        lesson_id=featured_lesson.id).all()
 
     # Construct the full URLs for the images
-    featured_image_urls = ['/static/assets/img/' + image.image_path for image in featured_images]
+    featured_image_urls = ['/static/assets/img/' +
+                           image.image_path for image in featured_images]
 
     return render_template(
         'home/index.html',
         segment='index',
         API_GENERATOR=len(API_GENERATOR),
         featured_lesson=featured_lesson,
-        featured_image_urls=featured_image_urls  # Pass the image URLs list to the template
+        # Pass the image URLs list to the template
+        featured_image_urls=featured_image_urls
     )
 
 
-#Test scores chart
+# Test scores chart
 @blueprint.route('/test-scores')
 @login_required
 def test_scores():
-    scores_query = UserScenarioProgress.query.order_by(UserScenarioProgress.score.asc()).limit(6).all()    
+    scores_query = UserScenarioProgress.query.order_by(
+        UserScenarioProgress.score.asc()).limit(6).all()
 
     scores_data = {
         # Generate labels dynamically based on the number of entries in scores_query
@@ -62,25 +66,25 @@ def test_scores():
     }
     return jsonify(scores_data)
 
-#3 cards on top 
+# 3 cards on top
+
+
 @blueprint.route('/user-progress')
 @login_required
 def user_progress():
-    user_id = current_user.get_id()  
+    user_id = current_user.get_id()
 
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
     if not user_progress:
         UserProgress.create_new_progress(user_id=user_id)
         user_progress = UserProgress.query.filter_by(user_id=user_id).first()
-        
 
     lessons_completed = user_progress.lessons_completed
     lessons_in_progress = user_progress.lessons_in_progress
     current_level = user_progress.current_level
     level_progress = user_progress.level_progress
     streak = user_progress.streak  # Fetch the streak from the database
-
 
     return jsonify({
         'lessons_completed': lessons_completed,
@@ -91,8 +95,8 @@ def user_progress():
 
     })
 
- 
-#leaderboard
+
+# leaderboard
 @blueprint.route('/leaderboard')
 @login_required
 def leaderboard():
@@ -105,18 +109,18 @@ def leaderboard():
      .group_by(UserScenarioProgress.user_id) \
      .order_by(func.max(UserScenarioProgress.score).desc()) \
      .limit(6).all()
-    
 
     # Retrieve the level progress for each user
     leaderboard_data = []
     for idx, user in enumerate(top_users):
-        user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
+        user_progress = UserProgress.query.filter_by(
+            user_id=user.user_id).first()
 
         # We create a new progress row for the user if he doesn't have one.
         if not user_progress:
             UserProgress.create_new_progress(user_id=user.user_id)
-            user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
-
+            user_progress = UserProgress.query.filter_by(
+                user_id=user.user_id).first()
 
         current_level = user_progress.current_level
         level_progress = user_progress.level_progress
@@ -130,12 +134,15 @@ def leaderboard():
 
     return jsonify(leaderboard_data)
 
-#upcoming events 
+# upcoming events
+
+
 @blueprint.route('/index/upcoming-events')
 @login_required
 def upcoming_events():
     current_time = datetime.utcnow()
-    events = Event.query.filter(Event.end_utc > current_time).order_by(Event.start_utc.asc()).limit(5).all()
+    events = Event.query.filter(Event.end_utc > current_time).order_by(
+        Event.start_utc.asc()).limit(5).all()
     events_data = [
         {
             'id': event.id,
@@ -184,5 +191,3 @@ def get_segment(request):
 
     except:
         return None
-
-

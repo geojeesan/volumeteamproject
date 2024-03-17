@@ -14,8 +14,10 @@ def generate_forms_file():
     with open('api_generator/forms/base_form', 'r') as base_form_file:
         base_form = base_form_file.read()
 
-    project_imports = base_imports.format(models_name=", ".join(API_GENERATOR.values()))
-    forms = '\n\n'.join(base_form.format(model_name=model_name) for model_name in API_GENERATOR.values())
+    project_imports = base_imports.format(
+        models_name=", ".join(API_GENERATOR.values()))
+    forms = '\n\n'.join(base_form.format(model_name=model_name)
+                        for model_name in API_GENERATOR.values())
     generation = forms_structure.format(
         library_imports=library_imports,
         project_imports=project_imports,
@@ -42,7 +44,8 @@ def generate_routes_file():
         base_routes = base_routes_file.read()
     project_imports = base_imports.format(
         models_name=', '.join(API_GENERATOR.values()),
-        forms_name=', '.join(list(map(lambda model_name: f'{model_name}Form', API_GENERATOR.values())))
+        forms_name=', '.join(
+            list(map(lambda model_name: f'{model_name}Form', API_GENERATOR.values())))
     )
     routes = '\n\n'.join(base_routes.format(
         form_name=f'{model_name}Form',

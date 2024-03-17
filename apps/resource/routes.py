@@ -7,6 +7,7 @@ from jinja2 import TemplateNotFound
 
 from apps.config import API_GENERATOR
 
+
 @blueprint.route('/resource')
 def resource():
     return render_template('resource/resource.html', segment='resource', API_GENERATOR=len(API_GENERATOR))

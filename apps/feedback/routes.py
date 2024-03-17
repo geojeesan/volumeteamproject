@@ -8,6 +8,7 @@ from flask import jsonify
 
 from apps.config import API_GENERATOR
 
+
 @blueprint.route('/feedback')
 def feedback():
     return render_template('feedback/feedback.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
@@ -17,14 +18,12 @@ def get_speech_score(num):
     return num - 10
 
 
-
 def send_to_database(feedback):
     # Some code which sends feedback to database
 
     sent = False
 
     return sent
-
 
 
 @blueprint.route('/send_feedback', methods=['POST'])
@@ -43,11 +42,9 @@ def send_feedback():
     else:
         return jsonify("Failed to send feedback")
 
-
     # to_return = f"Your feedback '{feedback}' has been submitted"
 
     to_return = f"Your feedback has been submitted"
-
 
     return jsonify(to_return)
 
