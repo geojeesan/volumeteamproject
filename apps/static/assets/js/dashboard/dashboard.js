@@ -64,26 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
           .catch(error => console.error('Error loading test scores:', error));
   });
   
-document.addEventListener('DOMContentLoaded', function() {
-  var stickerElement = document.getElementById('dynamicSticker');
-  var images = [
-    'interview.svg',
-    'microphone.svg',
-    'speech-bubble.svg',
-    'agree.svg',
-  ];
-
-  // Calculate the index based on the current day
-  var daysSinceEpoch = Math.floor((new Date() - new Date(2024, 1, 1)) / (1000 * 60 * 60 * 24));
-  var imageIndex = daysSinceEpoch % images.length;
-
-  // Construct the full URL for the image
-  var imageUrl = 'static/assets/img/logos/' + images[imageIndex];
-  stickerElement.src = imageUrl;
-  console.log(imageUrl)
-
-});
-// add to routes.py 
 
 document.addEventListener('DOMContentLoaded', function() {
   // Fetch user progress after DOM content is loaded

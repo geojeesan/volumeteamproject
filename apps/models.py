@@ -66,6 +66,15 @@ class DifficultyLevel(enum.Enum):
     intermediate = "intermediate"
     advanced = "advanced"
 
+class LessonImage(db.Model):
+    __tablename__ = 'lesson_images'
+
+    id = db.Column(db.Integer, primary_key=True)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+    image_path = db.Column(db.String(255), nullable=False)
+
+    # Relationship to the Lesson model
+    lesson = relationship('Lesson', back_populates='images')
 
 class Lesson(db.Model):
     __tablename__ = "lessons"
@@ -77,6 +86,9 @@ class Lesson(db.Model):
     image_path = db.Column(db.String(255), nullable=True)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow)
     difficulty = db.Column(SQLEnum(DifficultyLevel), nullable=False)
+
+    images = relationship('LessonImage', order_by=LessonImage.id, back_populates='lesson')
+
 
     def __init__(
         self, title, description, image_path, difficulty, num, last_accessed=None
@@ -290,3 +302,4 @@ class UserProgress(db.Model):
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
+

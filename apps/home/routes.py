@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import random
 from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
@@ -8,11 +9,14 @@ from flask import jsonify
 from datetime import datetime, timedelta
 
 from apps.config import API_GENERATOR
+<<<<<<< Updated upstream
 from apps.models import db, Event, Lesson, UserScenarioProgress, SubLesson, UserProgress
+=======
+from apps.models import db, Event, Lesson, UserScenarioProgress, SubLesson, LessonImage
+>>>>>>> Stashed changes
 from apps.authentication.models import Users
-import random
 from sqlalchemy.sql.expression import func
-from sqlalchemy import and_, case, func
+from sqlalchemy import and_, case
 
 
 
@@ -24,22 +28,25 @@ def get_daily_index(total_items, start_date=datetime(2024, 1, 1)):
 @blueprint.route('/index')
 @login_required
 def index():
-    # Get a list of all lessons
+    # Get the current day's featured lesson
     lessons = Lesson.query.all()
-    # Calculate index for the featured lesson
     lesson_index = get_daily_index(len(lessons), datetime(2024, 1, 1))
     featured_lesson = lessons[lesson_index]
 
-    # No need to calculate the featured image URL here anymore since JavaScript will handle it
+    # Fetch the images for the featured lesson from lesson_images table
+    featured_images = LessonImage.query.filter_by(lesson_id=featured_lesson.id).all()
+
+    # Construct the full URLs for the images
+    featured_image_urls = ['/static/assets/img/' + image.image_path for image in featured_images]
 
     return render_template(
         'home/index.html',
         segment='index',
         API_GENERATOR=len(API_GENERATOR),
         featured_lesson=featured_lesson,
-
-        # Note that we're not passing featured_image_url to the template anymore
+        featured_image_urls=featured_image_urls  # Pass the image URLs list to the template
     )
+
 
 #Test scores chart
 @blueprint.route('/test-scores')
@@ -65,6 +72,7 @@ def test_scores():
 def user_progress():
     user_id = current_user.get_id()  # Assumes current_user is set up with Flask-Login
 
+<<<<<<< Updated upstream
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
     # If user has no user_progress row, we create a new one and we update it.
@@ -79,6 +87,30 @@ def user_progress():
     level_progress = user_progress.level_progress
 
     # current_level, level_progress = calculate_level_progress(user_id)
+=======
+     # Lessons Completed: A lesson is only completed if all of its scenarios are completed
+    lessons_completed = db.session.query(Lesson.id).join(SubLesson) \
+        .outerjoin(UserScenarioProgress, and_(SubLesson.id == UserScenarioProgress.scenario_id,
+                                              UserScenarioProgress.user_id == user_id,
+                                              UserScenarioProgress.completed == True)) \
+        .group_by(Lesson.id) \
+        .having(func.count(SubLesson.id) == func.count(UserScenarioProgress.scenario_id)) \
+        .count()
+    
+    lessons_in_progress = Lesson.query \
+        .join(SubLesson, Lesson.id == SubLesson.lesson_id) \
+        .outerjoin(UserScenarioProgress, and_(SubLesson.id == UserScenarioProgress.scenario_id, UserScenarioProgress.user_id == user_id)) \
+        .group_by(Lesson.id) \
+        .having(
+            and_(
+                func.count(SubLesson.id) > func.count(UserScenarioProgress.scenario_id),
+                func.sum(case((UserScenarioProgress.completed == True, 1), else_=0)) > 0
+            )
+        ) \
+        .count()
+
+    current_level, level_progress = calculate_level_progress(user_id)
+>>>>>>> Stashed changes
 
     return jsonify({
         'lessons_completed': lessons_completed,
