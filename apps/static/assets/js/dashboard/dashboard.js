@@ -63,76 +63,136 @@ document.addEventListener('DOMContentLoaded', function() {
           })
           .catch(error => console.error('Error loading test scores:', error));
   });
-  
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Fetch user progress after DOM content is loaded
-  fetch('/user-progress')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/user-progress')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
 
-      // Update placeholders with user progress data
-      console.log(data)
+            document.getElementById('lessons-completed').textContent = data.lessons_completed;
+            document.getElementById('lessons-in-progress').textContent = data.lessons_in_progress;
+            document.getElementById('level_progress').textContent = data.level_progress.toFixed(0) + '%';
 
-      document.getElementById('lessons-completed').textContent = data.lessons_completed;
-      document.getElementById('lessons-in-progress').textContent = data.lessons_in_progress;
-      //document.getElementById('current-level').textContent = data.current_level;
-      document.getElementById('level_progress').textContent = data.level_progress.toFixed(0) + '%'; // toFixed(0) for no decimal places
-      // If total practice hours is implemented, update it here
-      // document.getElementById('total-practice-hours').textContent = data.total_practice_hours;
-    })
-    .catch(error => {
-      console.error('Error fetching user progress:', error);
-      // Handle errors by showing user feedback or a placeholder
-    });
+            // Clear previous content and create level badge
+            const levelBadgeContainer = document.getElementById('user-level-badge');
+            levelBadgeContainer.innerHTML = '';
+            const levelBadge = document.createElement('span');
+            levelBadge.className = `badge-card badge-card-${data.current_level}`;
+            levelBadge.textContent = data.current_level.charAt(0).toUpperCase() + data.current_level.slice(1);
+            levelBadgeContainer.appendChild(levelBadge);
+
+            // Clear previous content and create streak badge with icon
+            const streakBadgeContainer = document.getElementById('user-streak-badge');
+            streakBadgeContainer.innerHTML = '';
+            const streakBadge = document.createElement('span');
+            streakBadge.className = 'badge-card badge-card-streak';
+            streakBadgeContainer.appendChild(streakBadge);
+
+          
+
+            // Create and append streak text to streak badge
+            const streakText = document.createTextNode(` Streak: ${data.streak}`);
+            streakBadge.appendChild(streakText);
+
+            const fireIcon = document.createElement('i');
+            fireIcon.className = 'fas fa-fire';
+            streakBadge.appendChild(fireIcon);
+        })
+        .catch(error => {
+            console.error('Error fetching user progress:', error);
+        });
 });
 
 document.addEventListener('DOMContentLoaded', function() {
   fetch('/leaderboard')
-  .then(response => response.json())
-  .then(leaderboardData => {
-    const leaderboardBody = document.getElementById('leaderboard-body');
-    leaderboardBody.innerHTML = ''; // Clear previous content
+    .then(response => response.json())
+    .then(leaderboardData => {
+      console.log(leaderboardData); // Debug: Log the fetched leaderboard data
 
-    const badges = [
-      '/static/assets/img/goldBadge.svg',   // For 1st place
-      '/static/assets/img/silverBadge.svg', // For 2nd place
-      '/static/assets/img/bronzeBadge.svg'  // For 3rd place
-    ];
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      leaderboardBody.innerHTML = ''; // Clear previous content
 
-    // Ensure we always have 6 rows in the leaderboard
-    const numberOfRows = 6;
-    for (let i = 0; i < numberOfRows; i++) {
-      const row = leaderboardBody.insertRow();
-      
-      const rankCell = row.insertCell();
-      // Check if the entry exists and if it's in the top 3 to assign a badge
-      if (leaderboardData[i] && i < 3) {
-        rankCell.innerHTML = `<div class="badge-container">
-                                <img src="${badges[i]}" alt="Badge" class="badge-icon">
-                                <span class="badge-number">${i + 1}</span>
-                              </div>`;
-      } else {
-        rankCell.textContent = leaderboardData[i] ? leaderboardData[i].rank : i + 1;
+      const badges = [
+        '/static/assets/img/goldBadge.svg',   // For 1st place
+        '/static/assets/img/silverBadge.svg', // For 2nd place
+        '/static/assets/img/bronzeBadge.svg'  // For 3rd place
+      ];
+
+      // Ensure we always have 6 rows in the leaderboard
+      const numberOfRows = 6;
+      for (let i = 0; i < numberOfRows; i++) {
+        const row = leaderboardBody.insertRow();
+
+        const rankCell = row.insertCell();
+        // Check if the entry exists and if it's in the top 3 to assign a badge
+        if (leaderboardData[i] && i < 3) {
+          const badgeIndex = i; // Badge index for 1st, 2nd, and 3rd place
+          rankCell.innerHTML = `<div class="badge-container">
+                                  <img src="${badges[badgeIndex]}" alt="Badge" class="badge-icon">
+                                  <span class="badge-number">${i + 1}</span>
+                                </div>`;
+        } else {
+          rankCell.textContent = leaderboardData[i] ? leaderboardData[i].rank : i + 1;
+        }
+
+        const usernameCell = row.insertCell();
+        usernameCell.textContent = leaderboardData[i] ? leaderboardData[i].username : '-';
+
+        const scoreCell = row.insertCell();
+        scoreCell.textContent = leaderboardData[i] ? leaderboardData[i].score : '-';
+
+        const levelCell = row.insertCell();
+        levelCell.textContent = leaderboardData[i] ? leaderboardData[i].level : '-';
+
+        const progressCell = row.insertCell();
+        progressCell.textContent = leaderboardData[i] ? `${leaderboardData[i].level_progress}%` : '-';
       }
+    })
+    .catch(error => {
+      console.error('Error loading leaderboard:', error);
+    });
+});
 
-      const usernameCell = row.insertCell();
-      usernameCell.textContent = leaderboardData[i] ? leaderboardData[i].username : '-';
+document.addEventListener('DOMContentLoaded', function() {
+  // Fetch user progress and leaderboard data simultaneously
+  Promise.all([
+    fetch('/user-progress').then(response => response.json()),
+    fetch('/leaderboard').then(response => response.json())
+  ]).then(([userData, leaderboardData]) => {
+    // ... (handle the userData as before, including level and streak badges)
+    
+    // Process leaderboard data to find the current user's rank
+    const currentUserRankEntry = leaderboardData.find(entry => entry.username === userData.current_username);
+    const currentUserRank = currentUserRankEntry ? currentUserRankEntry.rank : '-';
+    
+    // Display rank badge
+    const rankBadgeContainer = document.getElementById('user-rank-badge');
+    rankBadgeContainer.innerHTML = ''; // Clear previous content
 
-      const scoreCell = row.insertCell();
-      scoreCell.textContent = leaderboardData[i] ? leaderboardData[i].score : '-';
+    const rankBadge = document.createElement('span');
+    rankBadge.className = 'badge-card badge-card-rank';
+    rankBadge.textContent = `Rank: ${currentUserRank}`;
+    rankBadgeContainer.appendChild(rankBadge);
 
-      const levelCell = row.insertCell();
-      levelCell.textContent = leaderboardData[i] ? leaderboardData[i].level : '-';
-
-      const progressCell = row.insertCell();
-      progressCell.textContent = leaderboardData[i] ? leaderboardData[i].level_progress + '%' : '-';
+    // Additional code for displaying 1st and 2nd rank badges, if applicable
+    if (currentUserRankEntry && currentUserRank <= 3) {
+      const rankBadgeImage = document.createElement('img');
+      rankBadgeImage.src = `/static/assets/img/${['gold', 'silver', 'bronze'][currentUserRank - 1]}Badge.svg`;
+      rankBadgeImage.alt = `Rank ${currentUserRank}`;
+      rankBadgeImage.className = 'badge-icon';
+      rankBadgeContainer.insertBefore(rankBadgeImage, rankBadge);
     }
   })
-  .catch(error => console.error('Error loading leaderboard:', error));
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
 });
+
+
+
