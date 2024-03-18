@@ -319,6 +319,12 @@ class UserProgress(db.Model):
     current_level = db.Column(db.Text, nullable=False, default="beginner")
     level_progress = db.Column(db.Float, default=0)
 
+class UserNotes(db.Model):
+    __tablename__ = 'user_notes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=True)
 
 # Book Sample
 class Book(db.Model):

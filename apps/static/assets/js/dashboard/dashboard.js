@@ -32,11 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error('Error loading events:', error));
 });
 
-
-
-    Chart.defaults.font.family = 'Roboto'; // Set the font family globally
-    Chart.defaults.color = '#353B3C'; // Set the global font color
-
     document.addEventListener('DOMContentLoaded', function() {
       var scoresCtx = document.getElementById('testScoresChart').getContext('2d');
       var scoresChart;
@@ -194,5 +189,47 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// dashboard.js
 
+document.addEventListener('DOMContentLoaded', function() {
+  const notesTextarea = document.getElementById('personal-notes');
+  const saveNotesButton = document.getElementById('save-notes-btn');
 
+  // Function to fetch notes and display them
+  function fetchNotes() {
+    fetch('/get-notes')
+      .then(response => response.json())
+      .then(data => {
+        notesTextarea.value = data.content;
+      })
+      .catch(error => console.error('Error fetching notes:', error));
+  }
+
+  // Function to save notes
+  function saveNotes() {
+    const content = notesTextarea.value;
+    fetch('/save-notes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any other necessary headers like authentication tokens
+      },
+      body: JSON.stringify({ content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message);
+      // Show a success message to the user if needed
+    })
+    .catch(error => {
+      console.error('Error saving notes:', error);
+      // Show an error message to the user if needed
+    });
+  }
+
+  // Load the notes when the page is loaded
+  fetchNotes();
+
+  // Add event listener to the save button
+  saveNotesButton.addEventListener('click', saveNotes);
+});

@@ -1470,7 +1470,7 @@ progress {
   }
   .col-lg-4 {
     flex: 0 0 auto;
-    width: 33.33333333%;
+    width: 31.9%;
   }
   .col-lg-5 {
     flex: 0 0 auto;
@@ -20859,6 +20859,7 @@ hr.horizontal.gray-light {
   font-size: 1rem;
   font-weight: 600;
   z-index: 1;
+  top: -35px
 }
 .timeline-step svg, .timeline-step i {
   line-height: 1.4;
@@ -20869,7 +20870,7 @@ hr.horizontal.gray-light {
   margin-left: 45px;
   padding-top: 0.35rem;
   position: relative;
-  top: -6px;
+  top: -35px;
 }
 .timeline-content:after {
   content: "";
