@@ -8,6 +8,8 @@ from apps.config import API_GENERATOR
 from apps.models import Lesson
 from sqlalchemy import desc
 from apps.models import Lesson, UserScenarioProgress, SubLesson
+from apps.models import UserActionLog  # Make sure the import path matches your project structure
+
 
 
 @blueprint.route("/lessons")
@@ -64,7 +66,8 @@ def get_lessons_completion():
 
     # Ensure the response is always a float rounded to two decimal places
     completion_percentage = round(completion_percentage, 2)
-
+    
+    UserActionLog.log_user_action('Lessons completed ')
     return jsonify({"completionPercentage": completion_percentage})
 
 

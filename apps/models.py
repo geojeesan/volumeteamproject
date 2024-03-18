@@ -326,6 +326,28 @@ class UserNotes(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
     content = db.Column(db.Text, nullable=True)
 
+class UserActionLog(db.Model):
+    __tablename__ = 'user_action_log'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    action = db.Column(db.String(256), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def log_user_action(action_description):
+        if not current_user or not current_user.is_authenticated:
+            return  # Optionally, handle the case where the user is not logged in
+
+        action = UserActionLog(
+            user_id=current_user.get_id(),  # Assumes current_user is the logged-in user instance
+            action=action_description,
+            timestamp=datetime.utcnow()  # Automatically sets the timestamp to the current time
+        )
+        db.session.add(action)
+        db.session.commit()
+    def __repr__(self):
+        return f'<UserActionLog {self.user_id} {self.action} {self.timestamp}>'
+    
+
 # Book Sample
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
