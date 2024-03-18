@@ -104,47 +104,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
+
 document.addEventListener('DOMContentLoaded', function() {
   fetch('/leaderboard')
     .then(response => response.json())
     .then(leaderboardData => {
-      console.log(leaderboardData); // Debug: Log the fetched leaderboard data
-
       const leaderboardBody = document.getElementById('leaderboard-body');
       leaderboardBody.innerHTML = ''; // Clear previous content
-
-      const badges = [
-        '/static/assets/img/goldBadge.svg',   // For 1st place
-        '/static/assets/img/silverBadge.svg', // For 2nd place
-        '/static/assets/img/bronzeBadge.svg'  // For 3rd place
-      ];
 
       // Ensure we always have 6 rows in the leaderboard
       const numberOfRows = 6;
       for (let i = 0; i < numberOfRows; i++) {
         const row = leaderboardBody.insertRow();
 
+        // Assign rank to the rankCell
         const rankCell = row.insertCell();
-        // Check if the entry exists and if it's in the top 3 to assign a badge
-        if (leaderboardData[i] && i < 3) {
-          const badgeIndex = i; // Badge index for 1st, 2nd, and 3rd place
-          rankCell.innerHTML = `<div class="badge-container">
-                                  <img src="${badges[badgeIndex]}" alt="Badge" class="badge-icon">
-                                  <span class="badge-number">${i + 1}</span>
-                                </div>`;
-        } else {
-          rankCell.textContent = leaderboardData[i] ? leaderboardData[i].rank : i + 1;
-        }
+        const rankText = leaderboardData[i] ? leaderboardData[i].rank : i + 1;
+        rankCell.textContent = rankText;
 
+        // Assign username to the usernameCell
         const usernameCell = row.insertCell();
         usernameCell.textContent = leaderboardData[i] ? leaderboardData[i].username : '-';
 
+        // Assign score to the scoreCell
         const scoreCell = row.insertCell();
         scoreCell.textContent = leaderboardData[i] ? leaderboardData[i].score : '-';
 
+        // Assign level to the levelCell
         const levelCell = row.insertCell();
         levelCell.textContent = leaderboardData[i] ? leaderboardData[i].level : '-';
 
+        // Assign progress to the progressCell
         const progressCell = row.insertCell();
         progressCell.textContent = leaderboardData[i] ? `${leaderboardData[i].level_progress}%` : '-';
       }
@@ -153,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error loading leaderboard:', error);
     });
 });
+
 
 document.addEventListener('DOMContentLoaded', function() {
   // Fetch user progress and leaderboard data simultaneously
@@ -233,3 +224,37 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add event listener to the save button
   saveNotesButton.addEventListener('click', saveNotes);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetchAndDisplayUserActions();
+});
+
+function fetchAndDisplayUserActions() {
+  fetch('/user-actions') // Adjust the endpoint as necessary
+      .then(response => response.json())
+      .then(actions => {
+          const recentActivityContainer = document.getElementById('recent-activity-container');
+          recentActivityContainer.innerHTML = ''; // Clear previous content
+          actions.forEach(action => {
+              const actionElement = document.createElement('div');
+              actionElement.classList.add('d-flex', 'align-items-start', 'mb-2'); // Add spacing between items
+              actionElement.innerHTML = `
+            <div class="card-body p-3">
+              <div class="timeline timeline-one-side">
+                  <div class="timeline-block mb-0">
+                      <span class="timeline-step">
+                          <i class="fas fa-user-edit text-info"></i> <!-- Adjust icon as necessary -->
+                      </span>
+                      <div class="timeline-content">
+                          <h6 class="text-dark text-sm font-weight-bold mb-0">${action.action}</h6>
+                          <p class="text-secondary text-xs mt-1 mb-0">${action.timestamp}</p>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              `;
+              recentActivityContainer.appendChild(actionElement);
+          });
+      })
+      .catch(error => console.error('Error loading user actions:', error));
+}

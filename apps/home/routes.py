@@ -16,7 +16,8 @@ from apps.models import (
     UserScenarioProgress,
     UserProgress,
     LessonImage,
-    UserNotes
+    UserNotes, 
+    UserActionLog
 )
 from apps.authentication.models import Users
 from sqlalchemy.sql.expression import func
@@ -172,6 +173,21 @@ def get_notes():
     return jsonify({"content": note.content})
 
 
+
+#recent activity 
+@blueprint.route("/user-actions")
+@login_required
+def user_actions():
+    user_id = current_user.get_id()
+    # Limit to the 5 most recent actions
+    actions = UserActionLog.query.filter_by(user_id=user_id).order_by(UserActionLog.timestamp.desc()).limit(5).all()
+
+    actions_data = [
+        {"action": action.action, "timestamp": action.timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+        for action in actions
+    ]
+
+    return jsonify(actions_data)
 
 # upcoming events
 @blueprint.route("/index/upcoming-events")
