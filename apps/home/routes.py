@@ -16,6 +16,7 @@ from apps.models import (
     UserScenarioProgress,
     UserProgress,
     LessonImage,
+    UserNotes
 )
 from apps.authentication.models import Users
 from sqlalchemy.sql.expression import func
@@ -48,7 +49,7 @@ def index():
         segment="index",
         API_GENERATOR=len(API_GENERATOR),
         featured_lesson=featured_lesson,
-        featured_image_urls=featured_image_urls,  # Pass the image URLs list to the template
+        image_url=featured_image_urls[0],  # Pass only the first image URL to the template
     )
 
 
@@ -111,7 +112,6 @@ def user_progress():
 @blueprint.route("/leaderboard")
 @login_required
 def leaderboard():
-    # Query top 6 users with their best scores, usernames, and level progress
     top_users = (
         db.session.query(
             UserScenarioProgress.user_id,
@@ -124,13 +124,9 @@ def leaderboard():
         .limit(6)
         .all()
     )
-
-    # Retrieve the level progress for each user
     leaderboard_data = []
     for idx, user in enumerate(top_users):
         user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
-
-        # We create a new progress row for the user if he doesn't have one.
         if not user_progress:
             UserProgress.create_new_progress(user_id=user.user_id)
             user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
@@ -148,6 +144,33 @@ def leaderboard():
         )
 
     return jsonify(leaderboard_data)
+
+
+#user notes 
+@blueprint.route('/save-notes', methods=['POST'])
+@login_required
+def save_notes():
+    content = request.json.get('content', '')
+    user_id = current_user.get_id()
+    note = UserNotes.query.filter_by(user_id=user_id).first()
+
+    if note:
+        note.content = content
+    else:
+        new_note = UserNotes(user_id=user_id, content=content)
+        db.session.add(new_note)
+
+    db.session.commit()
+    return jsonify({"message": "Notes saved successfully"})
+
+@blueprint.route('/get-notes', methods=['GET'])
+@login_required
+def get_notes():
+    user_id = current_user.get_id()
+    note = UserNotes.query.filter_by(user_id=user_id).first_or_404()
+
+    return jsonify({"content": note.content})
+
 
 
 # upcoming events

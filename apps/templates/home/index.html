@@ -82,7 +82,7 @@
   background: #ACAACC; /* Light grey background, adjust as necessary */
   border-radius: 0.5rem; /* Rounded corners for the icon background */
   align-self: center; /* This will center the container along the cross axis of the flex container */
-margin-top: 18px;
+  margin-top: 18px;
 }
 
 /* The icon itself */
@@ -166,7 +166,7 @@ margin-top: 18px;
 }
 
 #leaderboard-body td {
-  padding-bottom: 30px;
+  padding-bottom: 17px;
 }
 
 .badge-card {
@@ -209,17 +209,58 @@ margin-top: 18px;
 .timeline-event-spacing {
   margin-bottom: -17px; /* Remove bottom margin */
 }
+/* Personalized Cards Row */
+.personalized-card {
+  margin-top: 27px; /* Adds space below each card */
+
+}
+
+/* Style for each card in the row to ensure proper spacing */
+.personalized-card .card {
+  margin-right: 1rem; /* Adds space to the right of the card */
+  
+}
+
+/* Adjustments to ensure the last card in the row doesn't have a margin to the right */
+.personalized-card:last-child .card {
+  margin-right: 0;
+}
+
+/* Adjust the padding inside each card for consistency */
+.personalized-card .card-body {
+  padding: 1.5rem; /* Adjusts padding inside the card */
+}
+
+.personalized-badge-card {
+  display: flex; /* Establish flex container for vertical alignment */
+  flex-direction: column; /* Stack children vertically */
+  height: 92%; /* Full height */
+  margin-top: 27px; /* Adds space below each card */
+
+}
+
+/* Style the card within the .personalized-badge-card to stretch vertically */
+.personalized-badge-card .card {
+  flex: 1; /* Flex grow to fill container */
+  display: flex; /* Establish this card also as a flex container */
+  flex-direction: column; /* Align children of the card in a column */
+}
+
+/* Ensure the body of the card stretches to fill any available space */
+.personalized-badge-card .card-body {
+  flex-grow: 1; /* Grow to fill the available space in the flex container */
+  display: flex; /* Set display to flex to use flexbox properties */
+  align-items: center; /* Center items vertically */
+  justify-content: start; /* Align content to the start */
+}
+
+
 </style> {% endblock stylesheets %} 
 
 {% block content %} 
 <div class="container-fluid py-4">
   <div class="hello-nadir">
     <h1>Hello {{current_user.username}}! </h1>
-    <div class="badges-container">
-      <div id="user-level-badge" class="badge-card"><!-- Level badge will be inserted here by JS --></div>
-      <div id="user-streak-badge" class="badge-card"><!-- Streak badge will be inserted here by JS --></div>
-      <div id="user-rank-badge" class="badge-card"><!-- Rank badge will be inserted here by JS --></div>
-    </div>
   </div>
   <div class="empower-speech">
     <p>Empower your speech with Volume! </p>
@@ -330,6 +371,40 @@ margin-top: 18px;
     </div>
   </div>
 
+<!-- Row for Personalized Cards -->
+<div class="row">
+  <!-- Badges Card -->
+  <div class="col-lg-4 mb-lg-0 mb-4 personalized-badge-card">
+    <div class="card z-index-2">
+      <div class="card-header pb-0">
+        <h5>Badges</h5>
+      </div>
+      <div class="card-body p-3">
+        <div id="badges-display" class="d-flex flex-wrap align-items-center">
+          <div class="badges-container">
+            <div id="user-level-badge" class="badge-card"><!-- Level badge will be inserted here by JS --></div>
+            <div id="user-streak-badge" class="badge-card"><!-- Streak badge will be inserted here by JS --></div>
+            <div id="user-rank-badge" class="badge-card"><!-- Rank badge will be inserted here by JS --></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Personal Notes Card -->
+<div class="col-lg-8 mb-lg-0 mb-4 personalized-card">
+  <div class="card z-index-2">
+    <div class="card-header pb-0">
+      <h5>Personal Notes</h5>
+    </div>
+    <div class="card-body p-3">
+      <textarea id="personal-notes" class="form-control" placeholder="Write your notes or goals here..." rows="6"></textarea>
+      <button class="btn btn-primary btn-sm mt-3" id="save-notes-btn">Save Current Notes</button>
+    </div>
+  </div>
+</div>
+</div>
+
   <!-- Recent Activity -->
   <div class="row mt-4">
     <div class="col-lg-5 mb-lg-0 mb-4">
@@ -358,7 +433,7 @@ margin-top: 18px;
   <!-- Leader Board -->
 <div class="row my-4">
   <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-header pb-0">
         <h6>Leaderboard</h6>
       </div>
