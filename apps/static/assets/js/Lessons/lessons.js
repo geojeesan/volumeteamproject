@@ -1,10 +1,11 @@
 let lastAccessedLessonId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-	fetchLastLesson().then(() => { // We don't use 'data' since 'fetchLastLesson' handles updates internally
-		fetchAllLessons();
-		updateLessonsCompletion();
-		updatePerformanceProgressBars();
+	fetchLastLesson().then(() => {
+		fetchAllLessons().then(() => {
+			updateLessonsCompletion();
+			updatePerformanceProgressBars();
+		});
 	}).catch(error => {
 		console.error('Failed to fetch the last lesson:', error);
 		grayOutLastAccessedLessonCard();
