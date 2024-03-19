@@ -11,15 +11,18 @@ from flask import render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 from apps import db
+from flask_login import login_required, current_user
 
 
 
 @blueprint.route('/resource')
+@login_required
 def resource():
     # Assuming API_GENERATOR is defined and accessible
     return render_template('resource/resource.html', segment='resource', API_GENERATOR=len(API_GENERATOR))
 
 @blueprint.route('/api/articles')
+@login_required
 def get_articles():
     content_level = request.args.get('content_level')
     articles = Article.query.filter(Article.content_level == content_level) if content_level else Article.query.all()
@@ -27,6 +30,7 @@ def get_articles():
     return jsonify(articles_list)
 
 @blueprint.route('/api/videos')
+@login_required
 def get_videos():
     content_level = request.args.get('content_level')
     videos = Video.query.filter(Video.content_level == content_level) if content_level else Video.query.all()
@@ -34,6 +38,7 @@ def get_videos():
     return jsonify(videos_list)
 
 @blueprint.route('/api/expert_insights')
+@login_required
 def get_expert_insights():
     content_type = request.args.get('content_type')
     expert_insights = ExpertInsight.query.filter(ExpertInsight.content_type == content_type) if content_type else ExpertInsight.query.all()
@@ -44,6 +49,7 @@ def get_expert_insights():
 # Function to increment click count
 
 @blueprint.route('/increment_click/<string:resource_type>/<int:item_id>', methods=['POST'])
+@login_required
 def increment_click(resource_type, item_id):
     model_map = {'articles': Article, 'videos': Video, 'expert_insights': ExpertInsight}
     model = model_map.get(resource_type)
@@ -62,6 +68,7 @@ def increment_click(resource_type, item_id):
 
 # Function to update featured items
 @blueprint.route('/api/featured')
+@login_required
 def get_featured_items():
     # Fetch top 2 most-clicked articles
     top_articles = Article.query.order_by(Article.click_count.desc()).limit(2).all()
@@ -134,7 +141,7 @@ class ExpertInsight(db.Model):
 
 # Track user activity
 from flask import redirect, url_for
-from flask_login import login_required, current_user
+
 from datetime import datetime
 from apps.models import UserActionLog
 

@@ -57,7 +57,7 @@
 
     .category-button {
         background-color: #ffffff; /* White background */
-        color: #12174c; /* Black text color */
+        color: #12174c;
         border: 1px solid #12174c; /* Black border */
         border-radius: 5px;
         padding: 20px 30px;
@@ -84,10 +84,9 @@
     }
 
     .featured-section {
-        font-size: 1.5em;
         margin-top: 20px; /* Ensure it's visible below the fixed top bar */
         padding: 20px; /* Increase padding for more space */
-        text-align: center;
+        text-align: left;
     }
 
     .featured-title {
@@ -123,6 +122,7 @@
         /* background-image: linear-gradient(to right, #436aac, #43b7b8); */
         background-image: linear-gradient(to right, #ACAACC, #353b81);
         background-color: #ACAACC;
+        font-size: large;
         border-radius: 10px;
         padding: 40px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -210,6 +210,20 @@
         text-decoration: underline; /* Adds underline on hover for better UX */
     }
 
+    .section-title {
+        background-image: linear-gradient(to right, #ACAACC, #353b81);
+        display: inline-block;
+        font-size: 1.5em;
+        padding: 5px 15px;
+        border-radius: 5px;
+        background-color: #ACAACC; /* Same as top-bar for consistency */
+        color: #12174c;
+        font-weight: bold;
+        margin-bottom: 20px; /* Space between title and content */
+        background-size: 200% 200%; /* Make the gradient large enough to allow movement */
+        animation: gradientAnimation 8s ease infinite; /* Apply the animation */
+    }
+
 
 
 </style>
@@ -236,7 +250,7 @@
 </div>
 
 <div id="featured-section" class="featured-section">
-    <div class="featured-title">Featured</div>
+    <div class="section-title">Featured</div>
     <div class="featured-links-container">
         <div class="featured-link-box">
             <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link" target="_blank">
@@ -253,9 +267,7 @@
 
 <hr>
 <div id="articles-section" class="articles-section">
-    <div class="articles-header">
-      <span class="articles-title">Articles</span>
-    </div>
+    <div class="section-title">Articles</div>
     <div class="category-buttons">
         <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
         <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
@@ -267,9 +279,7 @@
 <hr>
 <!-- Videos Section -->
 <div id="videos-section" class="videos-section">
-    <div class="videos-header">
-      <span class="videos-title">Videos</span>
-    </div>
+    <div class="section-title">Videos</div>
     <div class="category-buttons">
         <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
         <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
@@ -281,9 +291,7 @@
 <hr>
 <!-- Expert Insights Section -->
 <div id="expert-insights-section" class="expert-insights-section">
-    <div class="expert-insights-header">
-        <span class="expert-insights-title">Expert Insights</span>
-    </div>
+    <div class="section-title">Expert Insights</div>
     <div class="category-buttons">
         <button class="category-button" data-content-type="article" onclick="setCategoryActive(this)">Articles</button>
         <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
