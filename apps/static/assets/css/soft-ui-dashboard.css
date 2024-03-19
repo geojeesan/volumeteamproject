@@ -1486,7 +1486,7 @@ progress {
   }
   .col-lg-8 {
     flex: 0 0 auto;
-    width: 66.66666667%;
+    width: 67.5%
   }
   .col-lg-9 {
     flex: 0 0 auto;
@@ -20831,6 +20831,8 @@ hr.horizontal.gray-light {
 
 .timeline-block {
   position: relative;
+  padding-top: 0.25rem; 
+  padding-bottom: 0.25rem; /* Adjust this value as well */
 }
 .timeline-block:after {
   content: "";
@@ -20838,10 +20840,10 @@ hr.horizontal.gray-light {
   clear: both;
 }
 .timeline-block:first-child {
-  margin-top: 0;
+  margin-top: 30px;
 }
 .timeline-block:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0rem;
 }
 
 .timeline-step {
@@ -20849,7 +20851,7 @@ hr.horizontal.gray-light {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  left: 0;
+  left: -5px;
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -20863,13 +20865,13 @@ hr.horizontal.gray-light {
   
 }
 .timeline-step svg, .timeline-step i {
-  line-height: 1.4;
+  line-height: 1.0;
 }
 
 .timeline-content {
   position: relative;
-  margin-left: 45px;
-  padding-top: 0.35rem;
+  margin-left: 2.4rem;
+  padding-top: 0;
   position: relative;
   top: -35px;
 }
@@ -20888,7 +20890,7 @@ hr.horizontal.gray-light {
     left: 50%;
   }
   .timeline-content {
-    width: 38%;
+    width: 30%;
   }
   .timeline-block:nth-child(even) .timeline-content {
     float: right;
