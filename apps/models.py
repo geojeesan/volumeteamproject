@@ -348,6 +348,50 @@ class UserActionLog(db.Model):
     def __repr__(self):
         return f'<UserActionLog {self.user_id} {self.action} {self.timestamp}>'
     
+class Profile(db.Model):
+    __tablename__ = "Profile"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("Users.id"), nullable=False)
+    full_name = db.Column(db.String(150), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    profile_picture = db.Column(db.LargeBinary, nullable=True)
+    location = db.Column(db.String(50), nullable=True)
+    last_online = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, user_id, full_name, bio, profile_picture, location):
+        self.user_id = user_id
+        self.full_name = full_name
+        self.bio = bio
+        self.profile_picture = profile_picture
+        self.location = location
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+
+class Follows(db.Model):
+    __tablename__ = 'Follows'
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+class Notifications(db.Model):
+    __tablename__ = 'Notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    type_ = db.Column(db.Integer, nullable=False)
+    about_user = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    content = db.Column(db.Text, nullable=False)
+    action = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, user_id, type, content, about_user=None, action=None):
+        self.user_id = user_id
+        self.type = type
+        self.about_user = about_user
+        self.content = content
+        self.action = action    
 
 # Book Sample
 class Book(db.Model):
