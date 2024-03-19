@@ -14,12 +14,17 @@
         font-family: "Roboto", sans-serif;
         background-color: #ACAACC;
         color: #12174c;
-        margin: 0;
+
     }
 
     .top-bar {
+        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
+        /* background-image: linear-gradient(to right, #436aac, #43b7b8); */
+        background-image: linear-gradient(to right, #ACAACC, #353b81);
         background-color: #ACAACC;
         border-bottom: 1px solid #12174c;
+        background-size: 200% 200%;
+        animation: gradientAnimation 8s ease infinite;
     }
 
     .resource-menu {
@@ -35,6 +40,7 @@
         padding: 30px;
         cursor: pointer;
         color: #f8f9fa; /* Static Text color */
+        font-weight: bold;
     }
 
     .menu-item:hover, .menu-item.active {
@@ -49,40 +55,103 @@
         color: #12174c; /* Static 'RESOURCES' text color */
     }
 
-    .featured-section {
-        font-size: 1.5em; /* Smaller font size */
-        margin-top: 10px; /* Space above the featured text */
-        padding: 10px; 
-        text-align: justify; /* Center the text */
+    .category-button {
+        background-color: #ffffff; /* White background */
+        color: #12174c; /* Black text color */
+        border: 1px solid #12174c; /* Black border */
+        border-radius: 5px;
+        padding: 20px 30px;
+        margin: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
 
+    .category-button:hover {
+        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
+        background-color: #6661a8; /* Background color changes on hover */
+        color: #12174c; /* Text color changes to white on hover */
+    }
+
+    .category-button.active {
+        /* background-image: linear-gradient(to right, #8929ad, #436aac, #43b7b8); */
+        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
+        background-image: linear-gradient(to right, #ACAACC, #353b81);
+        background-color: #ACAACC;
+        color: #12174c; /* Text color for active state */
+        font-weight: bold; /* Text becomes bold for active state */
+        background-size: 200% 200%;
+        animation: gradientAnimation 8s ease infinite;
+    }
+
+    .featured-section {
+        font-size: 1.5em;
+        margin-top: 20px; /* Ensure it's visible below the fixed top bar */
+        padding: 20px; /* Increase padding for more space */
+        text-align: center;
     }
 
     .featured-title {
-        color: #12174c; /* Adjust based on your theme */
-        text-align: left; /* Center the text */
+        color: #12174c;
+        text-align: left; /* Center the title */
         font-weight: bold;
         font-family: "Alegreya Sans SC", sans-serif;
-
-
+        margin-bottom: 30px; /* Increase bottom margin for more space above the boxes */
     }
 
-    .featured-links {
+    .featured-links-container {
         display: flex;
-        justify-content: space-around; /* Center the items if they don't take up full width */
-        gap: 20px; /* Adds space between the items */
-        padding: 20px; /* Adds space around the items */
-        
+        justify-content: center; /* Center the boxes horizontally */
+        gap: 30px; /* Increase gap between boxes */
+        padding: 20px; /* Add padding around the entire container for more space */
+        flex-wrap: wrap; /* Allows items to wrap as needed */
+        max-width: 100%; /* Use maximum available width */
+    }
+    @keyframes gradientAnimation {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .featured-link-box {
+        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
+        /* background-image: linear-gradient(to right, #436aac, #43b7b8); */
+        background-image: linear-gradient(to right, #ACAACC, #353b81);
+        background-color: #ACAACC;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        flex: 1;
+        min-width: 250px;
+        max-width: 45%;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        /* New styles for animation */
+        background-size: 200% 200%; /* Make the gradient large enough to allow movement */
+        animation: gradientAnimation 8s ease infinite; /* Apply the animation */
     }
 
     .featured-link {
-        color: #6661a8; /* Static text color for featured section and links */
-        
+        color: #12174c;
+        text-decoration: none;
+        font-weight: bold;
+
     }
 
     .featured-link:hover {
-        color: #12174c; /* Text color when hovered */
-        text-decoration: underline; /* Removes underline from links */
+        color: #12174c; /* Lighter shade for hover effect */
+        text-decoration: underline; /* Optional: underline on hover */
     }
+
+
 
     hr {
         border: 0; /* Removes the default border */
@@ -92,7 +161,7 @@
     }
 
     .articles-section {
-        color: #f8f9fa; /* Adjust based on your theme */
+        color: #12174c; /* Adjust based on your theme */
         text-align: left;
         margin-top: 20px;
         padding: 10px;
@@ -104,7 +173,7 @@
         align-items: baseline;
     }
 
-    .articles-title {
+    .articles-title, .videos-title, .expert-insights-title {
         font-size: 1.5em; /* Larger font size for section title */
         color: #12174c; /* Static text color */
         font-weight: bold;
@@ -112,150 +181,126 @@
 
     }
 
-    .category-buttons button {
-        background-color: #ffffff; /* Default button background color */
-        color: #000000; /* Default button text color */
-        border: 1px solid #6661a8; /* Button border */
-        border-radius: 5px; /* Rounded corners for buttons */
-        padding: 20px 30px;
-        margin: 10px;
-        cursor: pointer;
-        outline: none; /* Removes outline */
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
-        font-weight: normal; /* Ensure non-active buttons are not bold */
-    }
-
-        /* Hover effect, placed before the .button-active class to ensure precedence */
-    .category-buttons button:hover {
-        background-color: #6661a8; /* Button hover background color */
-    }
-
-        /* Active button styles */
-    .button-active {
-        background-color: #6661a8; /* Active button background color */
-        color: #000000; /* Active button text color (black) */
-        font-weight: bold; /* Makes text bold */
-    }
-
-    #category-links {
+    #articles-links, #videos-links, #expert-links {
         margin-top: 20px; /* Adds some space above the container */
         padding: 10px; /* Adds some padding inside the container */
-        background-color: #f0f0f0; /* Light background color for the links area */
+        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
+        background-image: linear-gradient(to right, #ACAACC, #353b81);
+        background-color: #ACAACC; /* Light background color for the links area */
         border-radius: 5px; /* Adds rounded corners to the container */
-        color: #000000; /* Text color for the links */
+        color: #12174c; /* Text color for the links */
         text-align: left; /* Aligns text to the left, adjust as needed */
         max-width: 80%; /* Limits the width of the container, adjust as needed */
         margin-left: 0; /* Together with margin-right:auto, centers the container */
-       
+        font-weight: bold;
+        background-size: 200% 200%;
+        animation: gradientAnimation 8s ease infinite;
     }
 
-    #category-links a {
-        color: #6661a8; /* Color of the links to match your theme */
+    #articles-links a, #videos-links a, #expert-links a {
+        color: #12174c; /* Color of the links to match your theme */
         text-decoration: none; /* Removes underline from links */
         display: block; /* Each link on its own line */
         margin-bottom: 5px; /* Adds space between links */
+
     }
 
-    #category-links a:hover {
+    #articles-links a:hover, #videos-links a:hover, #expert-links a:hover {
+        color: #12174c;
         text-decoration: underline; /* Adds underline on hover for better UX */
     }
 
-    .videos-title, .favorites-title, .expert-insights-title {
-        font-size: 1.5em; /* Larger font size for section title */
-        color: #12174c; /* Static text color */
-        font-weight: bold;
-        font-family: "Alegreya Sans SC", sans-serif;
 
-    }
 
 </style>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resource Page</title>
-<script src="resource.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resource_style.css') }}">
+    <script src="{{ url_for('static', filename='js/resource.js') }}" defer></script>
 </head>
 <body>
 
 <div class="top-bar">
-  <ul class="resource-menu">
-    <li class="menu-item static">RESOURCES</li>
-    <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
-    <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
-    <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
-    <li class="menu-item" onclick="setActive(this); scrollToFavorites()">Favorites</li>
-    <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
-  </ul>
+    <ul class="resource-menu">
+        <li class="menu-item static">RESOURCES</li>
+        <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
+        <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
+        <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
+        <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
+    </ul>
 </div>
 
 <div id="featured-section" class="featured-section">
-    <div class="featured-title">
-        <span class="featured-title">Featured</span>
-    </div>
-    <div class="featured-links">
-        <!-- Link 1 -->
-        <a href="https://medium.com/sketchit/visual-tips-for-online-public-speaking-9a24203b3393" class="featured-link">
-            Visual Tips for Online Public Speaking
-        </a>
-        <!-- Link 2 -->
-        <a href="https://www.simplypsychology.org/overcoming-social-anxiety.html" class="featured-link">
-            Overcoming Social Anxiety
-        </a>
+    <div class="featured-title">Featured</div>
+    <div class="featured-links-container">
+        <div class="featured-link-box">
+            <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link" target="_blank">
+                16 Science-Based Public Speaking Tips To Be a Master Speaker
+            </a>
+        </div>
+        <div class="featured-link-box">
+            <a href="https://youtu.be/K0pxo-dS9Hc?si=RmU8oEMQ0pDkQfbR" class="featured-link" target="_blank">
+                The 110 techniques of communication and public speaking | David JP Phillips
+            </a>
+        </div>
     </div>
 </div>
+
 <hr>
 <div id="articles-section" class="articles-section">
     <div class="articles-header">
       <span class="articles-title">Articles</span>
     </div>
     <div class="category-buttons">
-        <button data-category="beginner">Beginner</button>
-        <button data-category="intermediate">Intermediate</button>
-        <button data-category="advanced">Advanced</button>
+        <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
+        <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
+        <button class="category-button" data-content-level="advanced" onclick="setCategoryActive(this)">Advanced</button>
     </div>
-    <div id="category-links"></div>
+    <div id="articles-links"></div>
 </div>
-<hr>
 
+<hr>
 <!-- Videos Section -->
 <div id="videos-section" class="videos-section">
     <div class="videos-header">
       <span class="videos-title">Videos</span>
     </div>
     <div class="category-buttons">
-        <button data-category="beginner-videos">Beginner</button>
-        <button data-category="intermediate-videos">Intermediate</button>
-        <button data-category="advanced-videos">Advanced</button>
+        <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
+        <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
+        <button class="category-button" data-content-level="advanced" onclick="setCategoryActive(this)">Advanced</button>
     </div>
-    <div id="video-links"></div>
+    <div id="videos-links"></div>
 </div>
-<hr>
 
-<!-- Favorites Section -->
-<div class="favorites-section">
-    <div class="favorites-header">
-        <span class="favorites-title">Favorites</span>
-    </div>
-</div>
 <hr>
-
 <!-- Expert Insights Section -->
-<div class="expert-insights-section">
+<div id="expert-insights-section" class="expert-insights-section">
     <div class="expert-insights-header">
         <span class="expert-insights-title">Expert Insights</span>
     </div>
+    <div class="category-buttons">
+        <button class="category-button" data-content-type="article" onclick="setCategoryActive(this)">Articles</button>
+        <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
+    </div>
+    <div id="expert-links"></div>
 </div>
+
 <hr>
-  
-  
 
-
+<div>
+    {% include "includes/footer.html" %}
+</div>
 
 </body>
 </html>
+
+
 
 
 {% endblock %}
