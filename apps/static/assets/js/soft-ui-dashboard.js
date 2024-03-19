@@ -478,3 +478,55 @@ function sidenavTypeOnResize() {
     });
   }
 }
+
+
+
+
+const toggleSpeech = document.getElementById('toggleSpeech');
+let isEnabled;
+// Check if the setting is saved in localStorage
+const savedSetting = localStorage.getItem('textToSpeechEnabled');
+toggleSpeech.checked = savedSetting === 'true'; // Convert the saved setting to boolean
+isEnabled = toggleSpeech.checked
+// Function to update localStorage when the setting is changed
+toggleSpeech.addEventListener('change', () => {
+  isEnabled = toggleSpeech.checked;
+  localStorage.setItem('textToSpeechEnabled', isEnabled); // Save the setting to localStorage
+  toggleTTS()
+});
+
+
+function toggleTTS(){
+if (isEnabled) {
+  document.addEventListener('mouseover', handleMouseOver);
+} else {
+  speechSynthesis.cancel();
+  document.removeEventListener('mouseover', handleMouseOver);
+}
+}
+toggleTTS()
+
+
+function handleMouseOver(event) {
+  const target = event.target;
+  const text = getTextContent(target);
+  if (text.trim() !== '') {
+    speakText(text);
+  }
+}
+
+function getTextContent(element) {
+  const textNodes = Array.from(element.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent.trim())
+    .join(' ');
+  return textNodes;
+}
+
+function speakText(text) {
+  speechSynthesis.cancel(); // Cancel any ongoing speech
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(text); // Create new utterance object
+    speechSynthesis.speak(utterance); // Start speaking the new text
+  }, 500); // Delay in milliseconds (adjust as needed)
+}
