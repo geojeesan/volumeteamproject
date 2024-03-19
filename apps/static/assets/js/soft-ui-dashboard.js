@@ -264,24 +264,43 @@ function sidebarColor(a) {
 }
 
 // Set Navbar Fixed
-function navbarFixed(el) {
+function navbarFixed(el, clicked=true) {
 
-  console.log("test")
+  if(clicked){
+    if(el.getAttribute("checked")){
+      localStorage.setItem("isFixed", "false")
+      el.setAttribute("checked", "true");
+    }else{
+      localStorage.setItem("isFixed", "true")
+      el.removeAttribute("checked");
+    }
+  }
+
+  let isFixed = localStorage.getItem("isFixed") || "true"
+  
+  if(isFixed == "true"){
+    el.setAttribute("checked", "true");
+  }else{
+    el.removeAttribute("checked");
+  }
+
   let classes = ['position-sticky', 'blur', 'shadow-blur', 'mt-4', 'left-auto', 'top-1', 'z-index-sticky'];
   const navbar = document.getElementById('navbarBlur');
 
-  if (!el.getAttribute("checked")) {
+  if (isFixed == "true") {
     navbar.classList.add(...classes);
     navbar.setAttribute('navbar-scroll', 'true');
     navbarBlurOnScroll('navbarBlur');
-    el.setAttribute("checked", "true");
+    
   } else {
     navbar.classList.remove(...classes);
     navbar.setAttribute('navbar-scroll', 'false');
     navbarBlurOnScroll('navbarBlur');
-    el.removeAttribute("checked");
+    
   }
 };
+
+navbarFixed(buttonNavbarFixed, false)
 
 function setFontSize(newSize) {
   document.body.style.zoom = newSize;
@@ -389,6 +408,8 @@ function sidebarType(a) {
   var parent = a.parentElement.children;
   var color = a.getAttribute("data-class");
 
+  localStorage.setItem("sidebar", color)
+
   var colors = [];
 
   for (var i = 0; i < parent.length; i++) {
@@ -410,6 +431,14 @@ function sidebarType(a) {
 
   sidebar.classList.add(color);
 }
+
+if(localStorage.getItem("sidebar") == "bg-transparent"){
+  sidebarType(document.getElementById("transparent"))
+}else if(localStorage.getItem("sidebar") == "bg-white"){
+  sidebarType(document.getElementById("white"))
+}
+
+
 
 
 // Toggle Sidenav
