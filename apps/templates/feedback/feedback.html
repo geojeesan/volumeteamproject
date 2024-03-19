@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+# {% extends 'layouts/base.html' %}
 
 {% block title %}Feedback{% endblock %}
 
@@ -7,6 +7,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+
+.custom-radio {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+.custom-radio:after {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: background-color 0.2s;
+}
+
+.custom-radio:checked:after {
+  background-color: #9162cf;
+}
 
 #feedbackMessage {
             text-align: center;
@@ -105,7 +132,7 @@
   }
 
   /* Styles for the lesson icon */
-  .lesson-icon img {
+  .feedback-icon img {
     width: 64px; /* Adjust as needed */
     height: auto;
     margin-bottom: 1rem;
@@ -200,7 +227,7 @@
     <div class="col-12">
       <h1>Share your Feedback</h1>
       <h4>Your Voice Shapes Our Volume: Elevating Speaking Skills Together!</h4>
-      <p>The Volume feedback page is your platform to voice your opinions, helping us enhance your speaking skills experience through collaboration and continuous improvement.</p>
+      <h6>The Volume feedback page is your platform to voice your opinions, helping us enhance your speaking skills experience through collaboration and continuous improvement.</h6>
     </div>
   </div>
 </div>
@@ -209,418 +236,200 @@
   <div class="col-lg-11">
     <div class="card mb-4">
       <div class="card-body">
+
+        <form id="feedbackForm" action="/submit_feedback" method="POST">
+
         <h5 class="card-title">1. User Experience</h5>
 
-        <p>a) How would you rate your overall experience with the Volume app?</p>
-        <div class="rating">
-          <input type="radio" id="star5" name="rating" value="5"><label for="star5"></label>
-          <input type="radio" id="star4" name="rating" value="4"><label for="star4"></label>
-          <input type="radio" id="star3" name="rating" value="3"><label for="star3"></label>
-          <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
-          <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
-        </div>
+        <h6>a) How would you rate your overall experience with Volume?</h6>
+          <div class="rating">
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3"></label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4"></label>
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5"></label>
+          </div>
 
+        <h6>b) On a typical week, how many times would you say you use Volume?</h6>
+          <div class=“frequency”>
+            <input type="radio" id="daily" name="frequency" value="Daily">
+            <label for="daily">Daily</label><br>
+  
+            <input type="radio" id="several-times-week" name="frequency" value="Several times a week">
+            <label for="several-times-week">Several times a week</label><br>
+  
+            <input type="radio" id="once-a-week" name="frequency" value="Once a week">
+            <label for="once-a-week">Once a week</label><br>
+  
+            <input type="radio" id="occasionally" name="frequency" value="Occasionally">
+            <label for="occasionally">Occasionally</label><br>
+  
+            <input type="radio" id="rarely" name="frequency" value="Rarely">
+            <label for="rarely">Rarely</label><br>
+            </div>
+            
+        <h6>c) How would you rate the clarity of instructions within the app?</h6>
+            <div class=“clarity”>
+              <input type="radio" id="very-clear" name="clarity" value="Very Clear">
+              <label for="very-clear">Very Clear</label><br>
+    
+              <input type="radio" id="clear" name="clarity" value="Clear">
+              <label for="clear">Clear</label><br>
+    
+              <input type="radio" id="instruction-neutral" name="clarity" value="Neutral">
+              <label for="instruction-neutral">Neutral</label><br>
+    
+              <input type="radio" id="unclear" name="clarity" value="Unclear">
+              <label for="unclear">Unclear</label><br>
+    
+              <input type="radio" id="very-unclear" name="clarity" value="Very Unclear">
+              <label for="very-unclear">Very Unclear</label><br>
+              </div>
 
         <div>
+        <h6>d) Have you experienced any technical issues or bugs while using Volume? If so, please describe.</h6>
+            <textarea id="issues" name="issues" rows="4" cols="50"></textarea>
+            </div>      
 
-        <p>b) What do you find most appealing about the Volume app?</p>
-        <textarea id="most-appealing" rows="4" cols="50"></textarea>
-
-        <p>c) Is there anything you find frustrating or challenging about using the Volume app?</p>
-        <textarea id="frustrating-challenging" rows="4" cols="50"></textarea>
-        </div>
-
+        <div>
+            <h6>e) What improvements and new features would you like to see in future Volume updates to improve your learning?</h6>
+                <textarea id="updates" name="updates" rows="4" cols="50"></textarea>
+                </div>
+                
         <br>
 
-        <h5 class="card-title">2. Application Usage</h5>
-
-        <p>a) How long have you been using the Volume app?</p>
-        <div>
-          <input type="radio" id="less-than-month" name="usage-duration" value="Less than a month">
-          <label for="less-than-month">Less than a month</label><br>
-
-          <input type="radio" id="1-3-months" name="usage-duration" value="1-3 months">
-          <label for="1-3-months">1-3 months</label><br>
-
-          <input type="radio" id="3-6-months" name="usage-duration" value="3-6 months">
-          <label for="3-6-months">3-6 months</label><br>
-
-          <input type="radio" id="6-months-1-year" name="usage-duration" value="6 months to 1 year">
-          <label for="6-months-1-year">6 months to 1 year</label><br>
-
-          <input type="radio" id="more-than-1-year" name="usage-duration" value="More than 1 year">
-          <label for="more-than-1-year">More than 1 year</label>
-        </div>
-
-        <p>b) How frequently do you use the Volume app?</p>
-        <div>
-          <input type="radio" id="daily" name="usage-frequency" value="Daily">
-          <label for="daily">Daily</label><br>
-
-          <input type="radio" id="several-times-week" name="usage-frequency" value="Several times a week">
-          <label for="several-times-week">Several times a week</label><br>
-
-          <input type="radio" id="once-a-week" name="usage-frequency" value="Once a week">
-          <label for="once-a-week">Once a week</label><br>
-
-          <input type="radio" id="occasionally" name="usage-frequency" value="Occasionally">
-          <label for="occasionally">Occasionally</label><br>
-
-          <input type="radio" id="rarely" name="usage-frequency" value="Rarely">
-          <label for="rarely">Rarely</label><br>
-          </div>
-
-
-         <br> 
-
-        <h5 class="card-title">3. Ease of Use</h5>
-
-        <p>a) Overall, how easy is it to navigate the Volume app?</p>
-        <div>
-          <input type="radio" id="very-easy" name="navigate-ease" value="Very Easy">
-          <label for="very-easy">Very Easy</label><br>
-
-          <input type="radio" id="easy" name="navigate-ease" value="Easy">
-          <label for="easy">Easy</label><br>
-
-          <input type="radio" id="neutral" name="navigate-ease" value="Neutral">
-          <label for="neutral">Neutral</label><br>
-
-          <input type="radio" id="difficult" name="navigate-ease" value="Difficult">
-          <label for="difficult">Difficult</label><br>
-
-          <input type="radio" id="very-difficult" name="navigate-ease" value="Very Difficult">
-          <label for="very-difficult">Very Difficult</label>
-        </div>
-
-        <p>b) How would you rate the clarity of instructions within the app?</p>
-        <div>
-          <input type="radio" id="very-clear" name="instruction-clarity" value="Very Clear">
-          <label for="very-clear">Very Clear</label><br>
-
-          <input type="radio" id="clear" name="instruction-clarity" value="Clear">
-          <label for="clear">Clear</label><br>
-
-          <input type="radio" id="instruction-neutral" name="instruction-clarity" value="Neutral">
-          <label for="instruction-neutral">Neutral</label><br>
-
-          <input type="radio" id="unclear" name="instruction-clarity" value="Unclear">
-          <label for="unclear">Unclear</label><br>
-
-          <input type="radio" id="very-unclear" name="instruction-clarity" value="Very Unclear">
-          <label for="very-unclear">Very Unclear</label><br>
-          </div>
-
-        <br>  
-
-          <h5 class="card-title">4. Effectiveness</h5>
-
-          <p>a) To what extent has the Volume app helped you improve your speaking skills?</p>
-          <div>
-            <input type="radio" id="significantly" name="effectiveness" value="Significantly">
-            <label for="significantly">Significantly</label><br>
-  
-            <input type="radio" id="moderately" name="effectiveness" value="Moderately">
-            <label for="moderately">Moderately</label><br>
-  
-            <input type="radio" id="slightly" name="effectiveness" value="Slightly">
-            <label for="slightly">Slightly</label><br>
-  
-            <input type="radio" id="not-at-all" name="effectiveness" value="Not at all">
-            <label for="not-at-all">Not at all</label>
-          </div>
-  
-          <p>b) How would you rate the quality of feedback provided by the Volume app?</p>
-          <div>
-            <input type="radio" id="excellent-feedback" name="feedback-quality" value="Excellent">
-            <label for="excellent-feedback">Excellent</label><br>
-  
-            <input type="radio" id="good-feedback" name="feedback-quality" value="Good">
-            <label for="good-feedback">Good</label><br>
-  
-            <input type="radio" id="fair-feedback" name="feedback-quality" value="Fair">
-            <label for="fair-feedback">Fair</label><br>
-  
-            <input type="radio" id="poor-feedback" name="feedback-quality" value="Poor">
-            <label for="poor-feedback">Poor</label>
-            </div>    
-
-           <br> 
-      
-            <h5 class="card-title">5. Dashboard</h5>
-
-        <!-- Dashboard -->
-
-  <div class="btn-group">
-    <p>a) On a scale of 1 to 5, how satisfied are you with the organization and presentation of data on the Dashboard?</p>
-    <button class="btn btn-secondary button-spacing" onclick="selectOption('1')">1</button>
-    <button class="btn btn-secondary button-spacing" onclick="selectOption('2')">2</button>
-    <button class="btn btn-secondary button-spacing" onclick="selectOption('3')">3</button> 
-    <button class="btn btn-secondary button-spacing" onclick="selectOption('4')">4</button>
-    <button class="btn btn-secondary button-spacing" onclick="selectOption('5')">5</button>
-  </div>
-  <div>
-    <p>b) Are there any additional features or metrics you would like to see included on the Dashboard?</p>
-    <textarea id="dashboard" rows="4" cols="50"></textarea>
-  </div>
-
-<br>
-
-
-          <h5>6. Speech Breakdown:</h5>
-          <div class="form-group">
-            <p>a) Have you noticed any improvements in your speaking skills as a result of using the Speech Breakdown feature?</p>
-            <select class="form-control" id="speech_improvement" name="speech_improvement">
-              <option value="Choose">Choose an option</option>
-              <option value="Significant improvement">Yes, significant improvement</option>
-              <option value="Moderate improvement">Yes, moderate improvement</option>
-              <option value="Slight improvement">Yes, slight improvement</option>
-              <option value="No noticeable improvement">No noticeable improvement</option>
-              <option value="Not sure">Not sure</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <p>b) Do you find the feedback provided by the Speech Breakdown feature clear and easy to understand?</p>
-            <select class="form-control" id="speech_feedback" name="speech_feedback">
-              <option value="Choose">Choose an option</option>
-              <option value="Very clear">Yes, very clear</option>
-              <option value="Mostly clear">Mostly clear</option>
-              <option value="Neutral">Neutral</option>
-              <option value="Somewhat unclear">Somewhat unclear</option>
-              <option value="Not clear at all">No, not clear at all</option>
-            </select>
-          </div>
+        <h5 class="card-title">2. Feature Analysis</h5>
+        <h6>a) How satisfied are you with the Dashboard's data organization, presentation, and ease of navigation?</h6>
+        <div class="dashboard">
+          <input type="radio" id="very-satisfied" name="dashboard" value="Very Satisfied">
+          <label for="very-satisfied">Very Satisfied</label><br>
         
-      <br>
-      <!-- Interactive Exercises -->
-      <div class="row">
-        <div class="col-12">
-          <h5>7. Lessons:</h5>
-          <div class="form-group">
-            <p>a) Do you find the lessons engaging and interactive enough to keep you motivated?</p>
-            <button class="btn btn-secondary button-spacing" onclick="selectOption('yes')">Yes</button>
-            <button class="btn btn-secondary button-spacing" onclick="selectOption('maybe')">Maybe</button>
-      <button class="btn btn-secondary button-spacing" onclick="selectOption('no')">No</button>
-      
-          </div>
-          <div class="form-group">
-            <p>b) Have you experienced any technical issues or bugs while accessing or completing lessons?</p>
-            <button class="btn btn-secondary button-spacing" onclick="selectOption('yes')">Yes</button>
-            <button class="btn btn-secondary button-spacing" onclick="selectOption('no')">No</button>
-          </div>
-          <div class="form-group">
-            <p>c) Are there any specific types of interactive exercises you would like to see added to the Volume app?</p>
-            <textarea class="form-control" id="additional_exercises" name="additional_exercises" rows="3"></textarea>
-          </div>
-         <br> 
-
-         <h5>8. Profile and Progress:</h5>
-         <div class="profile-progress">
-          <div class="form-group">
-            <p>a) How helpful do you find the Profile & Progress section in tracking your learning journey?</p>
-            <select class="form-control" id="helpfulness-profile-progress" name="helpfulness-profile-progress">
-              <option value="Choose">Choose an option</option>
-              <option value="Extremely helpful">Extremely helpful</option>
-              <option value="Very helpful">Very helpful</option>
-              <option value="Somewhat helpful">Somewhat helpful</option>
-              <option value="Not very helpful">Not very helpful</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <p>b) Do you feel that the progress tracking features accurately reflect your actual improvement in speaking skills?</p>
-            <select class="form-control" id="accuracy-progress-tracking" name="accuracy-progress-tracking">
-              <option value="Choose">Choose an option</option>
-              <option value="Yes, definitely">Yes, definitely</option>
-              <option value="Mostly">Mostly</option>
-              <option value="Neutral">Neutral</option>
-              <option value="Not really">Not really</option>
-            </select>
-          </div>
+          <input type="radio" id="satisfied" name="dashboard" value="Satisfied">
+          <label for="satisfied">Satisfied</label><br>
+        
+          <input type="radio" id="neutral" name="dashboard" value="Neutral">
+          <label for="neutral">Neutral</label><br>
+        
+          <input type="radio" id="dissatisfied" name="dashboard" value="Dissatisfied">
+          <label for="dissatisfied">Dissatisfied</label><br>
+        
+          <input type="radio" id="very-dissatisfied" name="dashboard" value="Very Dissatisfied">
+          <label for="very-dissatisfied">Very Dissatisfied</label><br>
         </div>
-<br>
-          <!-- Resource Library -->
-<div class="row">
-  <div class="col-12">
-    <h5>9. Resource Library:</h5>
-    <div class="form-group">
-      <p>a) How often do you use the resources (articles, videos, etc.) provided in the Volume app to enhance your speaking skills?</p>
-      <form>
-        <input type="radio" id="daily" name="usage-frequency" value="Daily">
-        <label for="daily">Daily</label><br>
-      
-        <input type="radio" id="weekly" name="usage-frequency" value="Weekly">
-        <label for="weekly">Weekly</label><br>
-      
-        <input type="radio" id="monthly" name="usage-frequency" value="Monthly">
-        <label for="monthly">Monthly</label><br>
-      
-        <input type="radio" id="rarely" name="usage-frequency" value="Rarely">
-        <label for="rarely">Rarely</label>
-      </form>
-    </div>
-    <div class="form-group">
-      <p>b) Do you find the resources in the Volume app valuable and informative?</p>
-      <textarea class="form-control" id="resource_value" name="resource_value" rows="3"></textarea>
-    </div>
-  </div>
+   
+        
+        <h6>b) Have you noticed any improvements in your speaking skills as a result of using the Speech Breakdown feature?</h6>
+<div class="breakdown">
+  <input type="radio" id="significant-improvement" name="breakdown" value="Yes, significant improvement">
+  <label for="significant-improvement">Yes, significant improvement</label><br>
+
+  <input type="radio" id="moderate-improvement" name="breakdown" value="Yes, moderate improvement">
+  <label for="moderate-improvement">Yes, moderate improvement</label><br>
+
+  <input type="radio" id="slight-improvement" name="breakdown" value="Yes, slight improvement">
+  <label for="slight-improvement">Yes, slight improvement</label><br>
+
+  <input type="radio" id="no-improvement" name="breakdown" value="No, noticeable improvement">
+  <label for="no-improvement">No, noticeable improvement</label><br>
+
+  <input type="radio" id="not-sure" name="breakdown" value="Not sure">
+  <label for="not-sure">Not sure</label><br>
 </div>
-<br>
 
 
-
-<!-- Favorites -->
-
-
-<div class="row">
-  <div class="col-12">
-    <h5>10. Favorites:</h5>
-    <div class="form-group">
-      <p>a) Do you use the favorites feature in the Volume app to save content for future reference?</p>
-      <button class="btn btn-secondary button-spacing" onclick="selectOption('yes')">Yes</button>
-      <button class="btn btn-secondary button-spacing" onclick="selectOption('no')">No</button>
+<div>
+    <h6>c) Do you find the lessons engaging and interactive? If so, what interactive exercises would you like added to Volume?</h6>
+    <textarea id="lessons" name="lessons" rows="4" cols="50"></textarea>
     </div>
     
-    <div class="form-group">
-      <p>b) What types of content do you typically save as favorites?</p>
-      <textarea class="form-control" id="favorite_content" name="favorite_content" rows="3"></textarea>
-    </div>
-  </div>
-</div>
-<br>
-<!-- Support and Communication -->
-<div class="row">
-  <div class="col-12">
-    <h5>11. Support and Communication:</h5>
-    <div class="form-group">
-      <p>a) How satisfied are you with the support provided by the Volume app team?</p>
-      <div class="radio-options">
-        <input type="radio" id="support_very_satisfied" name="support_satisfaction" value="Very Satisfied">
-        <label for="support_very_satisfied">Very Satisfied</label><br>
-        
-        <input type="radio" id="support_satisfied" name="support_satisfaction" value="Satisfied">
-        <label for="support_satisfied">Satisfied</label><br>
-        
-        <input type="radio" id="support_neutral" name="support_satisfaction" value="Neutral">
-        <label for="support_neutral">Neutral</label><br>
-        
-        <input type="radio" id="support_dissatisfied" name="support_satisfaction" value="Dissatisfied">
-        <label for="support_dissatisfied">Dissatisfied</label><br>
-        
-        <input type="radio" id="support_very_dissatisfied" name="support_satisfaction" value="Very Dissatisfied">
-        <label for="support_very_dissatisfied">Very Dissatisfied</label>
-      </div>
-    </div>
-  
+    <h6>d) Is the progress tracking system effectively capturing your advancements in speaking skills?</h6>
+        <div class="track">
+          <input type="radio" id="yes-definitely" name="track" value="Yes, definitely">
+          <label for="yes-definitely">Yes, definitely</label><br>
+      
+          <input type="radio" id="yes" name="track" value="Yes">
+          <label for="yes">Yes</label><br>
+      
+          <input type="radio" id="not-sure" name="track" value="Not sure">
+          <label for="not-sure">Not sure</label><br>
+      
+          <input type="radio" id="no" name="track" value="No">
+          <label for="no">No</label><br>
+      
+          <input type="radio" id="not-really" name="track" value="Not really">
+          <label for="not-really">Not really</label><br>
+        </div>
+      
 
-    <div id="form-group" >
-      <p>b) How would you rate the responsiveness of customer support?</p>
-      <div class="radio-options">
-        <input type="radio" id="responsive_very" name="responsive_rating" value="Very Responsive">
-        <label for="responsive_very">Very Responsive</label><br>
+    <h6>e) How responsive has our customer support team been in addressing your concerns?</h6>
+    <div class="support">
+      <input type="radio" id="very-responsive" name="support" value="Very Responsive">
+      <label for="very-responsive">Very Responsive</label><br>
+    
+      <input type="radio" id="responsive" name="support" value="Responsive">
+      <label for="responsive">Responsive</label><br>
+    
+      <input type="radio" id="average" name="support" value="Average">
+      <label for="average">Average</label><br>
+    
+      <input type="radio" id="slow" name="support" value="Slow">
+      <label for="slow">Slow</label><br>
+    
+      <input type="radio" id="very-slow" name="support" value="Very Slow">
+      <label for="very-slow">Very Slow</label><br>
+    </div>
+    
+    <br>
+
+    <table class="likert-table">
+        <h5>3. Likert Scale:</h5>
+        <thead>
+        <tr>
+        <th></th>
+        <th>Strongly Disagree</th>
+        <th>Disagree</th>
+        <th>Neutral</th>
+        <th>Agree</th>
+        <th>Strongly Agree</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>a) Volume impacted your speaking skills in real-life scenarios such as meetings, or everyday conversations</td>
+        <td><input type="radio" id="q1_option1" name="life-impact" value="Strongly Disagree" class="custom-radio" required></td>
+        <td><input type="radio" id="q1_option2" name="life-impact" value="Disagree" class="custom-radio" required></td>
         
-        <input type="radio" id="responsive_responsive" name="responsive_rating" value="Responsive">
-        <label for="responsive_responsive">Responsive</label><br>
+        <td><input type="radio" id="q1_option3" name="life-impact" value="Neutral" class="custom-radio" required></td>
+
+        <td><input type="radio" id="q1_option4" name="life-impact" value="Agree" class="custom-radio" required></td>
+
+        <td><input type="radio" id="q1_option5" name="life-impact" value="Strongly Agree" class="custom-radio" required></td> </tr>
+        <tr>
+        <td>b) Our lessons and resources were instrumental in honing pronunciation nuances for various words</td>
+        <td><input type="radio" id="q2_option1" name="feature-assist" value="Strongly Disagree" class="custom-radio" required></td>
+        <td><input type="radio" id="q2_option2" name="feature-assist" value="Disagree" class="custom-radio" required></td>
+        <td><input type="radio" id="q2_option3" name="feature-assist" value="Neutral" class="custom-radio" required></td>
+        <td><input type="radio" id="q2_option4" name="feature-assist" value="Agree" class="custom-radio" required></td>
+        <td><input type="radio" id="q2_option5" name="feature-assist" value="Strongly Agree" class="custom-radio" required></td>
+        </tr>
+
+        <tr>
+        <td>c) Volume excels in providing user-friendly navigation, an intuitive interface, and a high level of overall accessibility</td>
+        <td><input type="radio" id="q3_option1" name="interface-design" value="Strongly Disagree" class="custom-radio" required></td>
+        <td><input type="radio" id="q3_option2" name="interface-design" value="Disagree" class="custom-radio" required></td>
+        <td><input type="radio" id="q3_option3" name="interface-design" value="Neutral" class="custom-radio" required></td>
+        <td><input type="radio" id="q3_option4" name="interface-design" value="Agree" class="custom-radio" required></td>
+        <td><input type="radio" id="q3_option5" name="interface-design" value="Strongly Agree" class="custom-radio" required></td>
+        </tr>
+        </tbody>
+        </table>
+        <br>
+        <div class="container">
+            <button id="submitBtn" class="btn btn-primary" onclick="validateForm()">Submit Feedback</button>
+            <p id="incompleteMessage" style="display: none; color: red;">Please answer all questions before submitting!</p>
+          </div>
         
-        <input type="radio" id="responsive_neutral" name="responsive_rating" value="Neutral">
-        <label for="responsive_neutral">Neutral</label><br>
-        
-        <input type="radio" id="responsive_slow" name="responsive_rating" value="Slow">
-        <label for="responsive_slow">Slow</label><br>
-        
-        <input type="radio" id="responsive_very_slow" name="responsive_rating" value="Very Slow">
-        <label for="responsive_very_slow">Very Slow</label>
-      </div>
-    </div>
-   <br> 
-<!-- Future Improvements -->
-<div class="row">
-  <div class="col-12">
-    <h5>12. Future Improvements:</h5>
-    <div class="form-group">
-      <p>a) What improvements would you like to see in future updates of the Volume app?</p>
-      <textarea class="form-control" id="improvements" name="improvements" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-      <p>b) Are there any specific features or functionalities you would like to suggest for inclusion in the Volume app?</p>
-      <textarea class="form-control" id="features" name="features" rows="3"></textarea>
-    </div>
-  </div>
-</div>
-<br>
-<!-- Additional Comments -->
-<div class="row">
-  <div class="col-12">
-    <h5>13. Additional Comments:</h5>
-    <div class="form-group">
-      <p>Please use this space to provide any additional comments, suggestions, or feedback you have for the Volume app team:</p>
-      <textarea class="form-control" id="additional_comments" name="additional_comments" rows="3"></textarea>
-    </div>
-  </div>
-</div>
-<br>
-
-<table class="likert-table">
-  <h5>14. Likert Scale:</h5>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Strongly Disagree</th>
-      <th>Disagree</th>
-      <th>Neutral</th>
-      <th>Agree</th>
-      <th>Strongly Agree</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Volume impacted your speaking skills in real-life scenarios such as meetings, or everyday conversations</td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-    </tr>
-    <tr>
-      <td>Our lessons and resources were instrumental in honing pronunciation nuances for various words.</td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-    </tr>
-    <tr>
-      <td>Volume excels in providing user-friendly navigation, an intuitive interface, and a high level of overall accessibility</td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-      <td><div class="likert-dot" onclick="toggleDot(this)"></div></td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<!-- Data Privacy -->
-<div class="row">
-  <div class="col-12">
-    <h5>15. Data Privacy:</h5>
-    <div class="form-group">
-      <p>We value your privacy. Your responses will be kept confidential and will only be used for the purpose of improving the Volume app. Do you consent to your responses being used for this purpose?</p>
-      <button class="btn btn-secondary button-spacing" onclick="selectOption('yes')">Yes</button>
-      <button class="btn btn-secondary button-spacing" onclick="selectOption('no')">No</button>
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-
-<div class="container">
-  <button class="btn btn-primary" onclick="submitFeedback()">Submit Feedback</button>
-</div>
-<p id="feedbackMessage"></p>
-
-
+    </form>
 
 
 
@@ -637,29 +446,25 @@
 <script src="{{ url_for('static', filename='assets/js/feedback/feedback.js') }}"></script>
 
 <script>
-  // JavaScript function to toggle the selected class
-  function toggleDot(dot) {
-      // Remove 'selected' class from all dots within the same row
-      var rowDots = dot.parentNode.parentNode.getElementsByTagName('div');
-      for (var i = 0; i < rowDots.length; i++) {
-          rowDots[i].classList.remove('selected');
-      }
-      // Add 'selected' class to the clicked dot
-      dot.classList.add('selected');
-  }
-</script>
-<script>
-  function submitFeedback() {
-     
-      document.getElementById('feedbackMessage').innerText = "Your feedback has been successfully submitted!";
-  }
-</script>
+    document.querySelector('#feedbackForm').addEventListener('submit', function(event) {
+      const rating = document.querySelector('input[name="rating"]:checked');
+      const frequency = document.querySelector('input[name="frequency"]:checked');
+       const clarity = document.querySelector('input[name="clarity"]:checked');
+       const issues = document.getElementById('issues').value;
+        const updates = document.getElementById('updates').value;
+         const dashboard = document.querySelector('input[name="dashboard"]:checked');
+         const breakdown = document.querySelector('input[name="breakdown"]:checked');
+         const lessons = document.getElementById('lessons').value;
+          const track = document.querySelector('input[name="track"]:checked');
+         const support = document.querySelector('input[name="support"]:checked');
 
-<script>
-  function selectOption(option) {
-    // You can add further functionality here based on the option selected
-    console.log('You selected: ' + option);
-  }
+if (!rating || !frequency || !clarity || !issues || !updates || !dashboard || !breakdown || !lessons || !track || !support) {
+        event.preventDefault();
+        alert('Please complete all questions before submitting.');
+      }
+    });
   </script>
 
 {% endblock %}
+
+
