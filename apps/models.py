@@ -12,6 +12,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import func
 from apps.authentication.models import Users
+from flask_sqlalchemy import SQLAlchemy
 
 
 # Define an enumeration for difficulty levels using Python's built-in enum
@@ -352,3 +353,21 @@ class UserActionLog(db.Model):
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer)
+    frequency = db.Column(db.String(50))
+    clarity = db.Column(db.String(50))
+    issues = db.Column(db.Text)
+    updates = db.Column(db.Text)
+    dashboard = db.Column(db.String(50))
+    breakdown = db.Column(db.String(50))
+    lessons = db.Column(db.Text)
+    track = db.Column(db.String(50))
+    support = db.Column(db.String(50))
+    life_impact = db.Column(db.String(50))
+    feature_assist = db.Column(db.String(50))
+    interface_design = db.Column(db.String(50))
+
+
