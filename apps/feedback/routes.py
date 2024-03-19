@@ -7,7 +7,8 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask import jsonify
 from apps.config import API_GENERATOR
-from apps.models import Feedback
+from apps.models import Feedback, UserActionLog
+
 
 
 @blueprint.route('/thank-you')
@@ -61,7 +62,7 @@ def submit_feedback():
 
     db.session.add(feedback)
     db.session.commit()
-
+    UserActionLog.log_user_action('Feedback submitted')
     return redirect(url_for('feedback.thank_you'))
 
 @blueprint.route('/get_feedback_data')

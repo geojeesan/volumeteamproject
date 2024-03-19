@@ -1,41 +1,266 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %}thank-you{% endblock %}
+
+{% block stylesheets %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+     
+.custom-radio {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+.custom-radio:after {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: background-color 0.2s;
+}
+
+.custom-radio:checked:after {
+  background-color: #9162cf;
+}
+
+#feedbackMessage {
+            text-align: center;
+        }
+ .rating {
+            unicode-bidi: bidi-override;
+            direction: rtl;
+            text-align: left;
+        }
+
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label:before {
+            content: "\2605";
+            font-size: 36px;
+            color: #ccc; /* Hollow star color */
+            cursor: pointer;
+        }
+
+        .rating > input:checked ~ label:before,
+        .rating > input:checked ~ label ~ label:before {
+            color: #9162cf; /* Filled star color */
+        }
+
+  .main-content {
+    flex: 1;
+  }
+
+  .feedback-question {
+    margin-bottom: 1rem;
+  }
+
+  .comment-box {
+    width: 100%;
+    height: 100px;
+  }
+
+  .submit-btn {
+    background-color: #5e72e4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .wave-graph-container {
+  height: 200px; /* Adjust to the desired height */
+  background-color: #f7fafc; /* Adjust the color to match your brand color */
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center; /* Center content if the graph is not as wide as the container */
+}
+
+  .wave-graph {
+    width: 100%;
+    height: auto; /* Adjust as necessary to maintain aspect ratio */
+  }
+
+    /* General page styles */
+    .container-fluid {
+    max-width: 1200px;
+  }
+
+  /* Styles for the lessons and wave graph cards */
+  .card {
+    border: none;
+    border-radius: 15px;
+  }
+
+   /* Add margin to push the card down */
+   .card-container {
+        margin-top: 50px; /* Adjust the value as needed */
+        }
+
+  .card .card-body {
+    text-align: center; /* Center text horizontally */
+    padding: 20px; 
+  }
+
+  /* Styles for the title and content */
+  h1 {
+    color: #7571AD; /* Adjust the color to match your brand color */
+    font-family: "Alegreya Sans SC", sans-serif;  
+    text-align: center;
+    font-weight: bold;
+
+    
+  }
+  
+
+  p {
+    color: #344767; /* Adjust the color to match your brand color */
+    font-family: "Roboto", sans-serif;
+
+  }
+
+  /* Styles for the lesson icon */
+  .feedback-icon img {
+    width: 64px; /* Adjust as needed */
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  /* Styles for the buttons */
+  .btn-primary {
+    background-color: #7571AD; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+   
+  }
+
+  .button-spacing {
+    margin-right: 30px; /* Adjust the value as needed */
+  }
+
+
+  .btn-secondary {
+    background-color: #f4f5f7; /* Light grey background for secondary button */
+    color: #7571AD; /* Adjust the color to match your brand color */
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  /* Styles for the Volume Wave graph container */
+  .wave-graph-container {
+    background-color: #f7fafc; /* Adjust the color to match your brand color */
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center; /* Center content if the graph is not as wide as the container */
+  }
+  
+  /* Make sure the 'Analyze Progress' button is centered below the graph */
+  #analyze-btn {
+    display: block;
+    margin: 1.5rem auto 0; /* Centers the button with top margin */
+  }
+
+  .likert-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .likert-table th,
+  .likert-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .likert-table th {
+    background-color: #f2f2f2;
+  }
+
+  .likert-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: #ACAACC; /* Change color for selected dot */
+        }
+
+    /* Center the card horizontally */
+    .center-card {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100vh; /* Ensure the card is vertically centered on the page */
         }
-        .thank-you-container {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        /* Add margin to push the card down */
+        .card-container {
+            margin-top: 50px; /* Adjust the value as needed */
         }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-            margin-top: 10px;
-        }
+  /* Additional styles for alignment and responsiveness */
+  @media (min-width: 992px) { /* Adjust based on your breakpoints */
+    .col-lg-8, .col-lg-4 {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .col-lg-4 {
+      justify-content: space-between; /* To push the Volume Wave card to the bottom */
+    }
+  }
+
     </style>
 </head>
-<body>
-    <div class="thank-you-container">
-        <h1>Thank You!</h1>
-        <h3>Your feedback is greatly appreciated.</h3>
-        <h4>We will thoroughly review your suggestions and work towards enhancing our app experience.</h>
+{% endblock %}
+
+{% block content %}
+<div class="center-card">
+    <div class="card-container">
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <h1>Thank You {{ current_user.username }}!</h1>
+                            <h3>Your feedback is greatly appreciated.</h3>
+                            <h4>We will thoroughly review your suggestions and work towards enhancing our app experience.</h4>
+                        </div>
+                        <div>
+                            <a href="/index">
+                                <button class="btn-primary"> Go to Dashboard</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
+
+
