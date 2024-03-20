@@ -151,7 +151,7 @@ def access_article(article_id):
     article = Article.query.get(article_id)
     if article:
         UserActionLog.log_user_action(f"Accessed article {article.name}")
-        # the damn logic to handle the article access, i don't get it what exactly i should do.
+        # the damn logic to handle the article access
 
         return redirect(article.link)
     else:
