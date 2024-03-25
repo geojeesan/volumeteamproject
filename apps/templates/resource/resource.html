@@ -9,22 +9,15 @@
 {% block content %}
 
 <style>
-
     body {
         font-family: "Roboto", sans-serif;
         background-color: #ACAACC;
         color: #12174c;
-
     }
 
     .top-bar {
-        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
-        /* background-image: linear-gradient(to right, #436aac, #43b7b8); */
-        /* background-image: linear-gradient(to right, #ACAACC, #353b81); */
         background-color: #ACAACC;
         border-bottom: 1px solid #12174c;
-        /* background-size: 200% 200%;
-        animation: gradientAnimation 8s ease infinite; */
     }
 
     .resource-menu {
@@ -39,88 +32,76 @@
     .menu-item {
         padding: 30px;
         cursor: pointer;
-        color: #f8f9fa; /* Static Text color */
+        color: #f8f9fa;
         font-weight: bold;
     }
 
-    .menu-item:hover, .menu-item.active {
+    .menu-item:hover,
+    .menu-item.active {
         font-weight: bold;
-        color: #12174c; /* Text color when hovered or clicked */
+        color: #12174c;
     }
 
-    /* Additional styling for active menu item */
+
     .menu-item.static {
         cursor: default;
         font-weight: bold;
-        color: #12174c; /* Static 'RESOURCES' text color */
+        color: #12174c;
+        /* Static 'RESOURCES' text color */
     }
 
     .category-button {
-        background-color: #ffffff; /* White background */
+        background-color: #ffffff;
         color: #12174c;
-        border: 1px solid #12174c; /* Black border */
+        border: 1px solid #12174c;
+        /* Black border */
         border-radius: 5px;
         padding: 20px 30px;
         margin: 10px;
         cursor: pointer;
-        /* transition: background-color 0.3s, color 0.3s; */
+
     }
 
     .category-button:hover {
-        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
-        background-color: #6661a8; /* Background color changes on hover */
-        color: #12174c; /* Text color changes to white on hover */
+        background-color: #6661a8;
+        color: #12174c;
     }
 
     .category-button.active {
-        /* background-image: linear-gradient(to right, #8929ad, #436aac, #43b7b8); */
-        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
-        /* background-image: linear-gradient(to right, #ACAACC, #353b81); */
         background-color: #ACAACC;
-        color: #12174c; /* Text color for active state */
-        font-weight: bold; /* Text becomes bold for active state */
-        /* background-size: 200% 200%;
-        animation: gradientAnimation 8s ease infinite; */
+        color: #12174c;
+        font-weight: bold;
     }
 
     .featured-section {
-        margin-top: 20px; /* Ensure it's visible below the fixed top bar */
-        padding: 20px; /* Increase padding for more space */
+        margin-top: 20px;
+        padding: 20px;
         text-align: left;
     }
 
     .featured-title {
         color: #12174c;
-        text-align: left; /* Center the title */
+        text-align: left;
         font-weight: bold;
         font-family: "Alegreya Sans SC", sans-serif;
-        margin-bottom: 30px; /* Increase bottom margin for more space above the boxes */
+        margin-bottom: 30px;
     }
 
     .featured-links-container {
         display: flex;
-        justify-content: center; /* Center the boxes horizontally */
-        gap: 30px; /* Increase gap between boxes */
-        padding: 20px; /* Add padding around the entire container for more space */
-        flex-wrap: wrap; /* Allows items to wrap as needed */
-        max-width: 100%; /* Use maximum available width */
+        justify-content: center;
+        /* Center the boxes horizontally */
+        gap: 30px;
+        /* Increase gap between boxes */
+        padding: 20px;
+        /* Add padding around the entire container for more space */
+        flex-wrap: wrap;
+        /* Allows items to wrap as needed */
+        max-width: 100%;
+        /* Use maximum available width */
     }
-    /* @keyframes gradientAnimation {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    } */
 
     .featured-link-box {
-        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
-        /* background-image: linear-gradient(to right, #436aac, #43b7b8); */
-        /* background-image: linear-gradient(to right, #ACAACC, #353b81); */
         background-color: #ACAACC;
         font-size: large;
         border-radius: 10px;
@@ -134,34 +115,34 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        /* New styles for animation
-        background-size: 200% 200%;
-        animation: gradientAnimation 8s ease infinite;  */
     }
 
     .featured-link {
         color: #12174c;
         text-decoration: none;
         font-weight: bold;
-
     }
 
     .featured-link:hover {
-        color: #12174c; /* Lighter shade for hover effect */
-        text-decoration: underline; /* Optional: underline on hover */
+        color: #12174c;
+        text-decoration: underline;
     }
 
 
 
     hr {
-        border: 0; /* Removes the default border */
-        height: 2px; /* Sets the thickness of the line */
-        background-color: #12174c; /* Sets the color of the line */
-        margin: 20px 0; /* Adds some space above and below the line */
+        border: 0;
+        /* Removes the default border */
+        height: 2px;
+        /* Sets the thickness of the line */
+        background-color: #12174c;
+        /* Sets the color of the line */
+        margin: 20px 0;
+        /* Adds some space above and below the line */
     }
 
-    .articles-section {
-        color: #12174c; /* Adjust based on your theme */
+    .articles-section, .expert-insights-section, .videos-section {
+        color: #12174c;
         text-align: left;
         margin-top: 20px;
         padding: 10px;
@@ -173,63 +154,62 @@
         align-items: baseline;
     }
 
-    .articles-title, .videos-title, .expert-insights-title {
-        font-size: 1.5em; /* Larger font size for section title */
-        color: #12174c; /* Static text color */
+    .articles-title,
+    .videos-title,
+    .expert-insights-title {
+        font-size: 1.5em;
+        color: #12174c;
         font-weight: bold;
         font-family: "Alegreya Sans SC", sans-serif;
 
     }
 
-    #articles-links, #videos-links, #expert-links {
-        margin-top: 20px; /* Adds some space above the container */
-        padding: 10px; /* Adds some padding inside the container */
-        /* background-image: linear-gradient(to right, #ACAACC, #9DB7C4, #8CA6DB); */
-        /* background-image: linear-gradient(to right, #ACAACC, #353b81); */
-        background-color: #ACAACC; /* Light background color for the links area */
-        border-radius: 5px; /* Adds rounded corners to the container */
-        color: #12174c; /* Text color for the links */
-        text-align: left; /* Aligns text to the left, adjust as needed */
-        max-width: 80%; /* Limits the width of the container, adjust as needed */
-        margin-left: 0; /* Together with margin-right:auto, centers the container */
-        font-weight: bold;
-        /* background-size: 200% 200%;
-        animation: gradientAnimation 8s ease infinite; */
-    }
-
-    #articles-links a, #videos-links a, #expert-links a {
-        color: #12174c; /* Color of the links to match your theme */
-        text-decoration: none; /* Removes underline from links */
-        display: block; /* Each link on its own line */
-        margin-bottom: 5px; /* Adds space between links */
-
-    }
-
-    #articles-links a:hover, #videos-links a:hover, #expert-links a:hover {
+    #articles-links,
+    #videos-links,
+    #expert-links {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #ACAACC;
+        border-radius: 5px;
         color: #12174c;
-        text-decoration: underline; /* Adds underline on hover for better UX */
+        text-align: left;
+        max-width: 80%;
+        margin-left: 0;
+        font-weight: bold;
+    }
+
+    #articles-links a,
+    #videos-links a,
+    #expert-links a {
+        color: #12174c;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 5px;
+
+    }
+
+    #articles-links a:hover,
+    #videos-links a:hover,
+    #expert-links a:hover {
+        color: #12174c;
+        text-decoration: underline;
     }
 
     .section-title {
-        /* background-image: linear-gradient(to right, #ACAACC, #353b81); */
         display: inline-block;
         font-size: 1.5em;
         padding: 5px 15px;
         border-radius: 5px;
-        background-color: #ACAACC; /* Same as top-bar for consistency */
+        background-color: #ACAACC;
         color: #12174c;
         font-weight: bold;
-        margin-bottom: 20px; /* Space between title and content */
-        /* background-size: 200% 200%; 
-        animation: gradientAnimation 8s ease infinite;  */
+        margin-bottom: 20px;
     }
-
-
-
 </style>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -237,75 +217,84 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/resource_style.css') }}">
     <script src="{{ url_for('static', filename='js/resource.js') }}" defer></script>
 </head>
+
 <body>
 
-<div class="top-bar">
-    <ul class="resource-menu">
-        <li class="menu-item static">RESOURCES</li>
-        <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
-        <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
-        <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
-        <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
-    </ul>
-</div>
+    <div class="top-bar">
+        <ul class="resource-menu">
+            <li class="menu-item static">RESOURCES</li>
+            <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
+            <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
+            <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
+            <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
+        </ul>
+    </div>
 
-<div id="featured-section" class="featured-section">
-    <div class="section-title">Featured</div>
-    <div class="featured-links-container">
-        <div class="featured-link-box">
-            <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link" target="_blank">
-                16 Science-Based Public Speaking Tips To Be a Master Speaker
-            </a>
+    <div id="featured-section" class="featured-section">
+        <div class="section-title">Featured</div>
+        <div class="featured-links-container">
+            <div class="featured-link-box">
+                <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link" target="_blank">
+                    16 Science-Based Public Speaking Tips To Be a Master Speaker
+                </a>
+            </div>
+            <div class="featured-link-box">
+                <a href="https://youtu.be/K0pxo-dS9Hc?si=RmU8oEMQ0pDkQfbR" class="featured-link" target="_blank">
+                    The 110 techniques of communication and public speaking | David JP Phillips
+                </a>
+            </div>
         </div>
-        <div class="featured-link-box">
-            <a href="https://youtu.be/K0pxo-dS9Hc?si=RmU8oEMQ0pDkQfbR" class="featured-link" target="_blank">
-                The 110 techniques of communication and public speaking | David JP Phillips
-            </a>
+    </div>
+
+    <hr>
+    <div id="articles-section" class="articles-section">
+        <div class="section-title">Articles</div>
+        <div class="category-buttons">
+            <button class="category-button" data-content-level="beginner"
+                onclick="setCategoryActive(this)">Beginner</button>
+            <button class="category-button" data-content-level="intermediate"
+                onclick="setCategoryActive(this)">Intermediate</button>
+            <button class="category-button" data-content-level="advanced"
+                onclick="setCategoryActive(this)">Advanced</button>
         </div>
+        <div id="articles-links"></div>
     </div>
-</div>
 
-<hr>
-<div id="articles-section" class="articles-section">
-    <div class="section-title">Articles</div>
-    <div class="category-buttons">
-        <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
-        <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
-        <button class="category-button" data-content-level="advanced" onclick="setCategoryActive(this)">Advanced</button>
+    <hr>
+    <!-- Videos Section -->
+    <div id="videos-section" class="videos-section">
+        <div class="section-title">Videos</div>
+        <div class="category-buttons">
+            <button class="category-button" data-content-level="beginner"
+                onclick="setCategoryActive(this)">Beginner</button>
+            <button class="category-button" data-content-level="intermediate"
+                onclick="setCategoryActive(this)">Intermediate</button>
+            <button class="category-button" data-content-level="advanced"
+                onclick="setCategoryActive(this)">Advanced</button>
+        </div>
+        <div id="videos-links"></div>
     </div>
-    <div id="articles-links"></div>
-</div>
 
-<hr>
-<!-- Videos Section -->
-<div id="videos-section" class="videos-section">
-    <div class="section-title">Videos</div>
-    <div class="category-buttons">
-        <button class="category-button" data-content-level="beginner" onclick="setCategoryActive(this)">Beginner</button>
-        <button class="category-button" data-content-level="intermediate" onclick="setCategoryActive(this)">Intermediate</button>
-        <button class="category-button" data-content-level="advanced" onclick="setCategoryActive(this)">Advanced</button>
+    <hr>
+    <!-- Expert Insights Section -->
+    <div id="expert-insights-section" class="expert-insights-section">
+        <div class="section-title">Expert Insights</div>
+        <div class="category-buttons">
+            <button class="category-button" data-content-type="article"
+                onclick="setCategoryActive(this)">Articles</button>
+            <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
+        </div>
+        <div id="expert-links"></div>
     </div>
-    <div id="videos-links"></div>
-</div>
 
-<hr>
-<!-- Expert Insights Section -->
-<div id="expert-insights-section" class="expert-insights-section">
-    <div class="section-title">Expert Insights</div>
-    <div class="category-buttons">
-        <button class="category-button" data-content-type="article" onclick="setCategoryActive(this)">Articles</button>
-        <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
+    <hr>
+
+    <div>
+        {% include "includes/footer.html" %}
     </div>
-    <div id="expert-links"></div>
-</div>
-
-<hr>
-
-<div>
-    {% include "includes/footer.html" %}
-</div>
 
 </body>
+
 </html>
 
 
