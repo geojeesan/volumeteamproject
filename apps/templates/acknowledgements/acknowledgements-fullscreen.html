@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base-fullscreen.html' %}
 
 {% block title %} Acknowledgements {% endblock title %}
 
@@ -6,6 +6,16 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
+<div class="container position-sticky z-index-sticky top-1">
+    <div class="row">
+      <div class="col-12">
+
+        {% include "includes/navigation-fullscreen.html" %}
+
+      </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
@@ -27,7 +37,7 @@
 </div>
 
 <div class="container-fluid py-4">
-    {% include "includes/footer.html" %}
+    {% include "includes/footer-fullscreen.html" %}
 </div>
 
 {% endblock content %}
