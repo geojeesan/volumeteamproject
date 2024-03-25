@@ -11,67 +11,79 @@ function setActive(element) {
 }
 
 function setCategoryActive(element) {
-    // Remove 'active' class from all category buttons
-    document.querySelectorAll('.category-button').forEach(item => {
-        item.classList.remove('active');
-    });
+    // Find all buttons in the same subsection
+    const sameSectionButtons = element.closest('.category-buttons').querySelectorAll('.category-button');
 
-    // Add 'active' class to clicked category button
-    element.classList.add('active');
+    // Check if the clicked button is already active
+    const currentlyActive = element.classList.contains('active');
+
+    // Deactivate all buttons in the same subsection
+    sameSectionButtons.forEach(btn => btn.classList.remove('active'));
+
+    // If the clicked button was not already active, activate it
+    if (!currentlyActive) {
+        element.classList.add('active');
+    } else {
+        // If it was active, it has been deactivated. Clear links.
+        clearLinksForSubsection(element);
+    }
 }
 
+function clearLinksForSubsection(button) {
+    const section = button.closest('div[id$="-section"]');
+    const containerId = `${section.id.split('-')[0]}-links`;
+    document.getElementById(containerId).innerHTML = '';
+}
 
-// New function to scroll to the "Featured" section
+//function to scroll to the "Featured" section
 function scrollToFeatured() {
     document.getElementById('featured-section').scrollIntoView({
-      behavior: 'smooth'
+        behavior: 'smooth'
     });
 }
 
-// New function to scroll to the "Article" section
+//function to scroll to the "Article" section
 function scrollToArticle() {
     document.getElementById('articles-section').scrollIntoView({
-      behavior: 'smooth'
+        behavior: 'smooth'
     });
 }
 
 function scrollToVideos() {
     document.getElementById('videos-section').scrollIntoView({
-      behavior: 'smooth'
+        behavior: 'smooth'
     });
 }
 
 function scrollToExpertInsights() {
     document.getElementById('expert-insights-section').scrollIntoView({
-      behavior: 'smooth'
+        behavior: 'smooth'
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    //click event listeners for the category buttons
     const buttons = document.querySelectorAll('.category-buttons button');
     buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            document.querySelectorAll('.category-buttons button').forEach(btn => btn.classList.remove('button-active'));
-            this.classList.add('button-active');
+        button.addEventListener('click', function () {
+            const wasActiveBeforeClick = this.classList.contains('active');
+            // setCategoryActive(this); // removing this solved the problem
 
+            const isActiveAfterClick = this.classList.contains('active');
             const section = this.closest('div[id$="-section"]');
             let resourceType = section.id.split('-')[0]; // 'articles', 'videos', or 'expert'
-
             let containerId = `${resourceType}-links`;
 
-            let filter = this.getAttribute('data-content-level') || this.getAttribute('data-content-type');
-            if (!filter) {
-                filter = this.textContent.toLowerCase().replace(/\s+/g, '-'); // Normalize the filter text
+            // Check if the button is still active after the click
+            if (isActiveAfterClick) {
+                let filter = this.getAttribute('data-content-level') || this.getAttribute('data-content-type') || this.textContent.toLowerCase().replace(/\s+/g, '-');
+                if (resourceType === 'expert') {
+                    resourceType = 'expert_insights';
+                }
+                fetchAndDisplayResources(resourceType, containerId, filter);
+            } else if (wasActiveBeforeClick && !isActiveAfterClick) {
+                // The button was active before and now is not, clear the displayed data
+                clearLinksForSubsection(this);
             }
-
-            // Separate handling for "expert" to match the correct API endpoint "expert_insights"
-            if (resourceType === 'expert') {
-                resourceType = 'expert_insights';
-            }
-
-            fetchAndDisplayResources(resourceType, containerId, filter);
         });
     });
 });
