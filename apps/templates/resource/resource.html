@@ -79,69 +79,81 @@
         text-align: left;
     }
 
-    .featured-title {
-        color: #12174c;
-        text-align: left;
-        font-weight: bold;
-        font-family: "Alegreya Sans SC", sans-serif;
-        margin-bottom: 30px;
-    }
-
     .featured-links-container {
         display: flex;
         justify-content: center;
-        /* Center the boxes horizontally */
         gap: 30px;
-        /* Increase gap between boxes */
         padding: 20px;
-        /* Add padding around the entire container for more space */
         flex-wrap: wrap;
-        /* Allows items to wrap as needed */
-        max-width: 100%;
-        /* Use maximum available width */
     }
 
     .featured-link-box {
         background-color: #ACAACC;
-        font-size: large;
-        border-radius: 10px;
-        padding: 40px;
+        border-radius: 20px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        flex: 1;
-        min-width: 250px;
-        max-width: 45%;
-        min-height: 300px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
     }
 
+    .large-box {
+        flex-basis: 60%;
+        /* Adjust based on desired size */
+        height: auto;
+    }
+
+    .small-boxes-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-basis: 35%;
+        gap: 20px;
+    }
+
+    .small-box {
+        flex: 1;
+        /* Each small box takes up half the height of the container */
+        /* Height will automatically adjust based on the content and the large box height */
+    }
+
+    .featured-image {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        border-radius: 20px;
+        opacity: 0.8;
+    }
+
+
     .featured-link {
-        color: #12174c;
+        position: absolute;
+        /* Position the link absolutely within the box */
+        width: 30%;
+        /* Ensure the link covers the width of the box */
+        text-align: center;
+        color: #ffffff;
         text-decoration: none;
         font-weight: bold;
+        z-index: 2;
     }
 
     .featured-link:hover {
         color: #12174c;
         text-decoration: underline;
+        font-weight: bold;
     }
-
-
 
     hr {
         border: 0;
-        /* Removes the default border */
         height: 2px;
-        /* Sets the thickness of the line */
         background-color: #12174c;
-        /* Sets the color of the line */
         margin: 20px 0;
-        /* Adds some space above and below the line */
     }
 
-    .articles-section, .expert-insights-section, .videos-section {
+    .articles-section,
+    .expert-insights-section,
+    .videos-section {
         color: #12174c;
         text-align: left;
         margin-top: 20px;
@@ -152,16 +164,6 @@
         display: flex;
         justify-content: left;
         align-items: baseline;
-    }
-
-    .articles-title,
-    .videos-title,
-    .expert-insights-title {
-        font-size: 1.5em;
-        color: #12174c;
-        font-weight: bold;
-        font-family: "Alegreya Sans SC", sans-serif;
-
     }
 
     #articles-links,
@@ -230,23 +232,38 @@
         </ul>
     </div>
 
-    <div id="featured-section" class="featured-section">
+    <!-- Featured Section -->
+    <div class="featured-section">
         <div class="section-title">Featured</div>
         <div class="featured-links-container">
-            <div class="featured-link-box">
-                <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link" target="_blank">
-                    16 Science-Based Public Speaking Tips To Be a Master Speaker
-                </a>
-            </div>
-            <div class="featured-link-box">
+            <!-- Large box on the left-->
+            <div class="featured-link-box large-box">
+                <img src="/static/assets/img/pb4.jpg" alt="Description of first Image" class="featured-image">
                 <a href="https://youtu.be/K0pxo-dS9Hc?si=RmU8oEMQ0pDkQfbR" class="featured-link" target="_blank">
                     The 110 techniques of communication and public speaking | David JP Phillips
                 </a>
+            </div>
+            <!-- Wrapper for the two smaller boxes on the right-->
+            <div class="small-boxes-wrapper">
+                <div class="featured-link-box small-box">
+                    <img src="/static/assets/img/pb2.jpg" alt="Description of first Image" class="featured-image">
+                    <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link"
+                        target="_blank">
+                        16 Science-Based Public Speaking Tips To Be a Master Speaker </a>
+                </div>
+                <div class="featured-link-box small-box">
+                    <img src="/static/assets/img/pb3.jpg" alt="Description of first Image" class="featured-image">
+                    <a href="https://www.scienceofpeople.com/stage-fright/" class="featured-link" target="_blank">
+                        Stage Fright: How to Overcome It in 7 Easy Steps
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <hr>
+
+    <!-- Articles Section -->
     <div id="articles-section" class="articles-section">
         <div class="section-title">Articles</div>
         <div class="category-buttons">
