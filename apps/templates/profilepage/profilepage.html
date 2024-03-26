@@ -6,6 +6,14 @@
 {% block stylesheets %}
 
 <style>
+
+  img.emoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.1em;
+  }
+  
 .calendar-table {
     width: 100%;
     border-collapse: collapse;
@@ -58,9 +66,9 @@
   .badge-card-advanced {
     background-color: #ff1500;
   }
-  .badge-card-rank {
+  /*.badge-card-rank {
     background-color: #e37f7f;
-  }
+  }*/
   /* Make sure this is included to use the Font Awesome icons */
   .timeline-event-spacing {
     margin-bottom: -17px; /* Remove bottom margin */
@@ -81,28 +89,37 @@
     <div class="row gx-4">
       <div class="col-auto">
         <div class="avatar avatar-xl position-relative">
+          {% if base64_encoded_image %}
+            <img src="data:image/jpeg;base64,{{ base64_encoded_image }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+          {% else %}
+            <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+          {% endif %}
+          
+          <!-- {% if profile.profile_image %}
+          {% set base64_encoded_image = profile.profile_picture|b64encode %}
+          <img src="data:image/jpeg;base64,{{ base64_encoded_image.decode('utf-8') }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+          {% else %}
           <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg"
             alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-          <!--
-              <img src="{{ config.ASSETS_ROOT }}/img/bruce-mars.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm"> -->
+          {% endif %} -->
         </div>
       </div>
       <div class="col-auto my-auto">
         <div class="h-100">
-          {% if current_user.full_name %}
+          {% if profile.full_name %}
             <h5 class="mb-1">
-              {{ current_user.full_name }}
+              {{ profile.full_name }} {{profile.location}}
             </h5>
             <p class="mb-0 font-weight-bold text-sm">
-              {{ current_user.username | capitalize }} - {{ current_user.email }}
+              @{{ user.username }} | {{ user.email }}
             </p>
           {% else %}
             <h5 class="mb-1">
-              {{ current_user.username | capitalize }}
+              @{{ user.username }}
             </h5>
             <p class="mb-0 font-weight-bold text-sm">
-              {% if current_user.email %}
-                {{ current_user.email }}
+              {% if user.email %}
+                {{ user.email }}
               {% else %}
                 <!-- Authenticated with Github -->
               {% endif %}
@@ -110,21 +127,29 @@
           {% endif %}
             <div class="badges-container"></div>
             <div id="user-level-badge" class="badge-card
-                {% if current_level == 'beginner' %}badge-card-beginner
-                {% elif current_level == 'intermediate' %}badge-card-intermediate
-                {% elif current_level == 'advanced' %}badge-card-advanced
-                {% else %}badge-card-streak
-                {% endif %}">
+              {% if current_level == 'beginner' %}badge-card-beginner
+              {% elif current_level == 'intermediate' %}badge-card-intermediate
+              {% elif current_level == 'advanced' %}badge-card-advanced
+              {% else %}badge-card-streak
+              {% endif %}">
               {{ current_level | capitalize }}
             </div>
-            <div id="user-rank-badge" class="badge-card {% if current_level == 'beginner' %}badge-card-beginner
+            {% if profile.bio %}
+              <div class="text-sm">
+                <p class="mb-0">
+                  <a>{{ profile.bio }}</a>
+                </p>
+              </div>
+            {% endif %}
+            <!--<div id="user-rank-badge" class="badge-card {% if current_level == 'beginner' %}badge-card-beginner
             {% elif current_level == 'intermediate' %}badge-card-intermediate
             {% elif current_level == 'advanced' %}badge-card-advanced
             {% else %}badge-card-streak
-            {% endif %}"><!-- Rank badge will be inserted here by JS -->
-          </div>
+            {% endif %}">--><!-- Rank badge will be inserted here by JS -->
+          <!--</div>-->
         </div>
       </div>
+      {% if current_user.id == user.id %}
       <div class="col-lg-1 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
         <div class="nav-wrapper position-relative end-0">
           <a href="/editprofile">
@@ -133,6 +158,13 @@
           </a>
         </div>
       </div>
+      {% else %}
+      <div class="col-lg-2 col-md-2 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
+        <div class="nav-wrapper position-relative end-0">
+            <button class="btn btn-primary">Follow</button>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 
@@ -198,6 +230,12 @@
                 {% for follow in following %}
                   <li class="list-group-item">{{ follow.username }}</li>
                 {% endfor %}
+                <li class="list-group-item">Peterson</li>
+                <li class="list-group-item">Nick Daniel</li>
+                <li class="list-group-item">Anne Marie</li>
+                <li class="list-group-item">Sophie B.</li>
+                <li class="list-group-item">Anne Marie</li>
+
               </ul>
             </div>
             <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">
@@ -273,7 +311,7 @@
         </div>
       </div>
     </div>
-
+<!--
     <div class="col-12 mt-4">
       <div class="card mb-4">
         <div class="card-header pb-0 p-3">
@@ -313,7 +351,7 @@
         </div>
       </div>
     </div>
-    
+  -->
   
     <div class="col-12 mt-4">
       <div class="card mb-4">
@@ -525,5 +563,12 @@
 <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
 <script src="{{ config.ASSETS_ROOT }}/js/profilepage/profilepage.js"></script>
 <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
+
+<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+<script>
+  twemoji.parse(document.body, {
+    className: 'emoji'
+  });
+</script>
 
 {% endblock javascripts %}
