@@ -29,3 +29,6 @@ transformers
 # librosa
 praat-parselmouth
 numpy
+
+# Pillow for images
+Pillow
