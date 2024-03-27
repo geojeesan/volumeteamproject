@@ -146,13 +146,14 @@
 
     hr {
         border: 0;
-        height: 2px;
-        background-color: #12174c;
-        margin: 20px 0;
+        height: 10px;
+        background-color: #aca9e3;
+        width: 90%;
+        margin: 30px 30px;
     }
 
     .articles-section,
-    .expert-insights-section,
+    .expert-section,
     .videos-section {
         color: #12174c;
         text-align: left;
@@ -166,37 +167,6 @@
         align-items: baseline;
     }
 
-    #articles-links,
-    #videos-links,
-    #expert-links {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #ACAACC;
-        border-radius: 5px;
-        color: #12174c;
-        text-align: left;
-        max-width: 80%;
-        margin-left: 0;
-        font-weight: bold;
-    }
-
-    #articles-links a,
-    #videos-links a,
-    #expert-links a {
-        color: #12174c;
-        text-decoration: none;
-        display: block;
-        margin-bottom: 5px;
-
-    }
-
-    #articles-links a:hover,
-    #videos-links a:hover,
-    #expert-links a:hover {
-        color: #12174c;
-        text-decoration: underline;
-    }
-
     .section-title {
         display: inline-block;
         font-size: 1.5em;
@@ -206,6 +176,94 @@
         color: #12174c;
         font-weight: bold;
         margin-bottom: 20px;
+    }
+
+    .scrollable-section {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        /* Ensure the scrollable section spans the full container width */
+    }
+
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 20px 0;
+        gap: 20px;
+        /* Adds space between scroll items */
+        /* width: 100%; Make sure the container uses the full width available */
+    }
+
+    .scroll-item {
+        position: relative;
+        flex: none;
+        width: 260px;
+        /* Adjust width for bigger boxes */
+        height: 180px;
+        /* Adjust height as needed */
+        background-color: #ACAACC;
+        border-radius: 10px;
+        margin-right: 20px;
+        padding: 15px;
+        /* Adjust padding as needed */
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+
+    /* Applying the provided link styles specifically within the scroll items */
+    .scroll-item a {
+        color: #12174c;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 5px;
+        text-align: center;
+        /* Center align the link text */
+
+        /* Allow the text to wrap instead of truncating */
+        white-space: normal;
+        /* Allows text to wrap */
+        overflow: visible;
+        /* Let the content flow as needed */
+        text-overflow: clip;
+        /* Default behavior, no ellipsis */
+
+        width: calc(100% - 30px);
+        /* Adjust width as needed, considering padding */
+        word-break: break-word;
+        /* Ensures words break to prevent overflow */
+    }
+
+    .scroll-item a:hover {
+        color: #12174c;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .scroll-btn {
+        cursor: pointer;
+        padding: 10px;
+        background-color: #ACAACC;
+        border: none;
+        color: #12174c;
+        font-size: 18px;
+        /* Additional styling to improve visibility */
+        margin: 0 5px;
+        border-radius: 5px;
+    }
+
+    /* Adjust button positioning if necessary */
+    .scroll-btn.left {
+        margin-right: 20px;
+    }
+
+    .scroll-btn.right {
+        margin-left: 15px;
     }
 </style>
 
@@ -263,8 +321,7 @@
 
     <hr>
 
-    <!-- Articles Section -->
-    <div id="articles-section" class="articles-section">
+    <div id="articles-section">
         <div class="section-title">Articles</div>
         <div class="category-buttons">
             <button class="category-button" data-content-level="beginner"
@@ -274,12 +331,19 @@
             <button class="category-button" data-content-level="advanced"
                 onclick="setCategoryActive(this)">Advanced</button>
         </div>
-        <div id="articles-links"></div>
+        <!-- Scrollable Container -->
+        <div class="scrollable-section">
+            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'articles-scroll-container')">‹</button>
+            <div class="scroll-container" id="articles-scroll-container">
+                <!-- Dynamic articles will be injected here -->
+            </div>
+            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'articles-scroll-container')">›</button>
+        </div>
     </div>
 
     <hr>
     <!-- Videos Section -->
-    <div id="videos-section" class="videos-section">
+    <div id="videos-section">
         <div class="section-title">Videos</div>
         <div class="category-buttons">
             <button class="category-button" data-content-level="beginner"
@@ -289,19 +353,31 @@
             <button class="category-button" data-content-level="advanced"
                 onclick="setCategoryActive(this)">Advanced</button>
         </div>
-        <div id="videos-links"></div>
+        <div class="scrollable-section">
+            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'videos-scroll-container')">‹</button>
+            <div class="scroll-container" id="videos-scroll-container">
+                <!-- Dynamic videos will be injected here -->
+            </div>
+            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'videos-scroll-container')">›</button>
+        </div>
     </div>
 
     <hr>
     <!-- Expert Insights Section -->
-    <div id="expert-insights-section" class="expert-insights-section">
+    <div id="expert-section">
         <div class="section-title">Expert Insights</div>
         <div class="category-buttons">
             <button class="category-button" data-content-type="article"
                 onclick="setCategoryActive(this)">Articles</button>
             <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
         </div>
-        <div id="expert-links"></div>
+        <div class="scrollable-section">
+            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'expert-scroll-container')">‹</button>
+            <div class="scroll-container" id="expert-scroll-container">
+                <!-- Dynamic expert insights will be injected here -->
+            </div>
+            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'expert-scroll-container')">›</button>
+        </div>
     </div>
 
     <hr>

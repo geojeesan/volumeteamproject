@@ -11,28 +11,41 @@ function setActive(element) {
 }
 
 function setCategoryActive(element) {
-    // Find all buttons in the same subsection
-    const sameSectionButtons = element.closest('.category-buttons').querySelectorAll('.category-button');
+    const baseSectionId = element.closest('div[id$="-section"]').id;
+    let resourceType = baseSectionId.replace("-section", "");
+    if (baseSectionId === "expert-section") {
+        resourceType = "expert_insights";
+    }
 
-    // Check if the clicked button is already active
-    const currentlyActive = element.classList.contains('active');
+    const category = element.getAttribute('data-content-type') || element.getAttribute('data-content-level');
+    const containerId = `${baseSectionId.replace("-section", "")}-scroll-container`;
 
-    // Deactivate all buttons in the same subsection
-    sameSectionButtons.forEach(btn => btn.classList.remove('active'));
+    const currentlyActiveButton = element.closest('.category-buttons').querySelector('.category-button.active');
+    const isDifferentButton = currentlyActiveButton && currentlyActiveButton !== element;
+    const wasAlreadyActive = element.classList.contains('active');
 
-    // If the clicked button was not already active, activate it
-    if (!currentlyActive) {
-        element.classList.add('active');
-    } else {
-        // If it was active, it has been deactivated. Clear links.
-        clearLinksForSubsection(element);
+    // If clicking a different button or the first time clicking this button
+    if (isDifferentButton || !wasAlreadyActive) {
+        if (currentlyActiveButton) {
+            currentlyActiveButton.classList.remove('active'); // Remove active class from previously active button
+        }
+        element.classList.add('active'); // Set current button as active
+        fetchAndDisplayResources(resourceType, containerId, category);
+    } else if (wasAlreadyActive) {
+        // If the same button is clicked again, clear the data
+        element.classList.remove('active'); // Remove active class as we're toggling off
+        clearLinksForSubsection(containerId);
     }
 }
 
-function clearLinksForSubsection(button) {
-    const section = button.closest('div[id$="-section"]');
-    const containerId = `${section.id.split('-')[0]}-links`;
-    document.getElementById(containerId).innerHTML = '';
+
+function clearLinksForSubsection(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = '';
+    } else {
+        console.error('Container not found:', containerId);
+    }
 }
 
 //function to scroll to the "Featured" section
@@ -56,7 +69,7 @@ function scrollToVideos() {
 }
 
 function scrollToExpertInsights() {
-    document.getElementById('expert-insights-section').scrollIntoView({
+    document.getElementById('expert-section').scrollIntoView({
         behavior: 'smooth'
     });
 }
@@ -91,10 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function fetchAndDisplayResources(resourceType, containerId, filter) {
     let url = `/api/${resourceType}`;
     if (filter) {
-        // to determine the query parameter based on the resource type
         const queryParam = resourceType === 'expert_insights' ? 'content_type' : 'content_level';
         url += `?${queryParam}=${filter}`;
     }
+
+    console.log('Fetching URL:', url);
 
     fetch(url)
         .then(response => response.json())
@@ -103,9 +117,23 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
             container.innerHTML = '';
             data.forEach(item => {
                 const element = document.createElement('div');
-                element.innerHTML = `<a href="${item.link}" target="_blank" class="resource-link">${item.name}</a>`;
+                element.className = 'scroll-item';
+                element.innerHTML = `<a href="${item.link}" target="_blank">${item.name}</a>`;
                 container.appendChild(element);
             });
         })
-        .catch(error => console.error(`Error fetching ${resourceType}:`, error));
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+
+
+function scrollHorizontal(direction, containerId) {
+    const container = document.getElementById(containerId);
+    const scrollAmount = 600; // Adjust this value as needed
+
+    if (direction === 'left') {
+        container.scrollLeft -= scrollAmount;
+    } else if (direction === 'right') {
+        container.scrollLeft += scrollAmount;
+    }
 }
