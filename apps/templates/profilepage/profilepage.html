@@ -108,7 +108,10 @@
         <div class="h-100">
           {% if profile.full_name %}
             <h5 class="mb-1">
-              {{ profile.full_name }} {{profile.location}}
+              {{ profile.full_name }}
+                {% if profile.location %}
+                  {{ profile.location }}
+                {% endif %}
             </h5>
             <p class="mb-0 font-weight-bold text-sm">
               @{{ user.username }} | {{ user.email }}
@@ -161,7 +164,15 @@
       {% else %}
       <div class="col-lg-2 col-md-2 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
         <div class="nav-wrapper position-relative end-0">
-            <button class="btn btn-primary">Follow</button>
+          {% if is_following %}
+          <form action="/unfollow/{{ user.id }}" method="POST" enctype="multipart/form-data">
+            <button class="btn btn-primary">Unfollow</button>
+          </form>
+          {% else %}
+          <form action="/follow/{{ user.id }}" method="POST" enctype="multipart/form-data">
+            <button class="btn btn-primary" id="toggleFollow" onclick="validateForm()">Follow</button>
+          </form>
+          {% endif %}
           </div>
         </div>
       {% endif %}
@@ -200,49 +211,66 @@
     </div>
     <div class="col-12 col-xl-4">
       <div class="card h-100">
-        <div class="card-header pb-0 p-3">
-          <div class="row">
-            <div class="col-md-8 d-flex align-items-center">
-              <h6 class="mb-0">Friends</h6>
-            </div>
-          </div>
-        </div>
         <div class="card-body p-3">
           <!-- Tab navigation -->
-          <div class="input-group mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search for users">
+          <!-- {% if current_user.id == user.id %}
+          <div class="input-group mb-3" style="height:40px;">
+            <input type="text" id="searchInput" style="height:40px;" class="form-control" placeholder="Search for users">
             <button class="btn btn-primary" id="searchButton">Search</button>
           </div>
           <ul id="searchResults" class="list-group mb-3">
             <!-- Search results will be dynamically added here -->
-          </ul>
+          <!--</ul>
+          {% endif %} -->
           <ul class="nav nav-tabs" id="followTabs" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="true">Following</button>
+              <button class="nav-link active" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="true"><strong style="font-size: 20px;">{{ follows|length }}</strong><br> Following</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="followers-tab" data-bs-toggle="tab" data-bs-target="#followers" type="button" role="tab" aria-controls="followers" aria-selected="false">Followers</button>
+              <button class="nav-link" id="followers-tab" data-bs-toggle="tab" data-bs-target="#followers" type="button" role="tab" aria-controls="followers" aria-selected="false"><strong style="font-size: 20px;">{{ followers|length }}</strong><br> {% if followers|length == 1 %}Follower{% else %}Followers{% endif %}</button>
             </li>
+            {% if current_user.id == user.id %}
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">
+                <div style="padding-top: 5px;">
+                  <i class="fas fa-search" style="font-size: 18px;"></i><br>Search
+                </div>
+              </button>
+            </li>
+            {% endif %}
           </ul>
           <div class="tab-content" id="followTabsContent">
             <div class="tab-pane fade show active" id="following" role="tabpanel" aria-labelledby="following-tab">
               <ul id="followingList" class="list-group mt-3">
-                {% for follow in following %}
-                  <li class="list-group-item">{{ follow.username }}</li>
+                {% for name in following_names %}
+                  <li class="list-group-item" style="height:50px;">
+                    <div style="display: flex; justify-content: space-between;">
+                      @{{ name }} {% if name == current_user.username %} (You) {% endif %}
+                      <div><button class="btn btn-secondary btn-sm" onclick="viewProfile('{{ name }}')">View Profile</button></div>
+                    </div>
+                  </li>
                 {% endfor %}
-                <li class="list-group-item">Peterson</li>
-                <li class="list-group-item">Nick Daniel</li>
-                <li class="list-group-item">Anne Marie</li>
-                <li class="list-group-item">Sophie B.</li>
-                <li class="list-group-item">Anne Marie</li>
-
               </ul>
             </div>
             <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">
               <ul id="followersList" class="list-group mt-3">
-                {% for follower in followers %}
-                  <li class="list-group-item">{{ follower.username }}</li>
+                {% for name in followers_names %}
+                  <li class="list-group-item" style="height:50px;">
+                    <div style="display: flex; justify-content: space-between;">
+                      @{{ name }} {% if name == current_user.username %} (You) {% endif %}
+                      <div><button class="btn btn-secondary btn-sm" onclick="viewProfile('{{ name }}')">View Profile</button></div>
+                    </div>
+                  </li>
                 {% endfor %}
+              </ul>
+            </div>
+            <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+              <div class="input-group mb-3" style="height:40px;">
+                <input type="text" id="searchInput" style="height:40px;" class="form-control" placeholder="Search for users">
+                <button class="btn btn-primary" id="searchButton">Search</button>
+              </div>
+              <ul id="searchResults" class="list-group mb-3">
+                <!-- Search results will be dynamically added here -->
               </ul>
             </div>
           </div>
@@ -558,6 +586,40 @@
   levelBadge.textContent = "Beginner";
   userLevelBadge.appendChild(levelBadge);
 </script>-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  // Function to handle search
+  function searchUsers() {
+    var searchInput = document.getElementById('searchInput').value;
+
+    // Send AJAX request to Flask endpoint
+    $.ajax({
+        url: '/profilepage/<user_id>',  // Update with correct user_id
+        method: 'POST',
+        data: {searchTerm: searchInput},
+        success: function(response) {
+            var searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = ''; // Clear previous search results
+
+            // Append search results to the list
+            response.forEach(function(user) {
+                var listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = user.username;
+                searchResults.appendChild(listItem);
+            });
+        }
+    });
+}
+
+// Event listener for search button click
+document.getElementById('searchButton').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    searchUsers();
+});
+</script>
 
 <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
 <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 

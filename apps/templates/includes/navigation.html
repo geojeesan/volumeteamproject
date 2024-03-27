@@ -1,39 +1,44 @@
- <!-- Navbar -->
- <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+<!-- Navbar -->
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
   <div class="container-fluid py-1 px-3">
-     <nav aria-label="breadcrumb">
-       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
-           <i class="fa fa-home me-1"></i> 
-         </li>
-       </ol>
-     </nav>
-     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-       <div class="input-group">
-         <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-         <input type="text" class="form-control" placeholder="Type here...">
-       </div>
-     </div>          
-       <ul class="navbar-nav  justify-content-end">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
+          <i class="fa fa-home me-1"></i> 
+        </li>
+      </ol>
+    </nav>
+    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+      <!--<div class="input-group">
+        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+        <input type="text" class="form-control" placeholder="Type here...">
+      </div>-->
+    </div>   
+    <ul class="navbar-nav  justify-content-end"></ul>
          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-             <div class="sidenav-toggler-inner">
+           <div class="sidenav-toggler-inner">
                <i class="sidenav-toggler-line"></i>
                <i class="sidenav-toggler-line"></i>
                <i class="sidenav-toggler-line"></i>
              </div>
            </a>
          </li>
+         <li class="nav-item d-xl-none ps-3 d-flex align-items-center"></li>
          <!-- Profile dropmenu-->
          <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 20px;">
            <a href="javascript:;" class="nav-link p-0" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-             <img src="{{ config.ASSETS_ROOT }}/img/defaultprofile.png" class="avatar avatar-sm rounded-circle me-2">
+            {% if base64_encoded_image %}
+              <img src="data:image/jpeg;base64,{{ base64_encoded_image }}" alt="profile_image" class="avatar avatar-sm rounded-circle me-2">
+            {% else %}
+              <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg" alt="profile_image" class="avatar avatar-sm rounded-circle me-2">
+            {% endif %}
              <span class="d-none d-md-inline">{{current_user.username}}</span>
              <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- Font Awesome caret icon -->
            </a>
            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-             <li><a class="dropdown-item" href="profilepage">My Profile</a></li>
+             <li><a class="dropdown-item" href="/profilepage/{{ current_user.id }}">My Profile</a></li>
              <li><a class="dropdown-item" href="{{ url_for('authentication_blueprint.logout') }}">Logout</a></li>
              <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
            </ul>

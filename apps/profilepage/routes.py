@@ -13,13 +13,17 @@ from apps.models import (
     db,
     Event,
     Lesson,
+    SubLesson,
     UserScenarioProgress,
     UserProgress,
     LessonImage,
+    Profile,
+    Follows,
+    UserActionLog
 )
 
+from sqlalchemy import join
 from apps.config import API_GENERATOR
-from apps.models import Lesson, Profile, UserScenarioProgress, SubLesson, db, Follows, UserActionLog  
 from apps.authentication.models import Users
 import datetime
 
@@ -49,8 +53,6 @@ def editprofile():
             db.session.add(profile)
         
         db.session.commit()
-
-    UserActionLog.log_user_action(' username edited profile page')
     return render_template('profilepage/editprofile.html', segment='editprofile', API_GENERATOR=len(API_GENERATOR))
 
 @blueprint.route('/update_profile', methods=['POST'])
@@ -112,23 +114,107 @@ def update_profile():
 @login_required
 def profilepage(user_id):
     user = Users.query.filter_by(id=user_id).first()
+    if not user:
+        return render_template("home/page-404.html"), 404
+
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
     if not user_progress:
         UserProgress.create_new_progress(user_id=user_id)
         user_progress = UserProgress.query.filter_by(user_id=user_id).first()
     
+    is_following = Follows.query.filter_by(follower_id=current_user.get_id(), followed_id=user_id).first()
+
+    follows = Follows.query.filter_by(follower_id=user_id).all()
+    followers = Follows.query.filter_by(followed_id=user_id).all()
+
+    # Query to get the names of people the user is following
+    following_names_query = db.session.query(Users.username).\
+                            join(Follows, Follows.followed_id == Users.id).\
+                            filter(Follows.follower_id == user_id).\
+                            all()
+
+    # Extract the names from the query result
+    following_names = [name for (name,) in following_names_query]
+
+    # Query to get the names of people the user is following
+    followers_names_query = db.session.query(Users.username).\
+                            join(Follows, Follows.follower_id == Users.id).\
+                            filter(Follows.followed_id == user_id).\
+                            all()
+
+    # Extract the names from the query result
+    followers_names = [name for (name,) in followers_names_query]
+
     profile = Profile.query.filter_by(user_id=user_id).first()
+
+    # current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    
+    # if current_profile and current_profile.profile_picture:
+    #     current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    # else:
+    #     current_base64_encoded_image = None
 
     if profile and profile.profile_picture:
         base64_encoded_image = base64.b64encode(profile.profile_picture).decode('utf-8')
     else:
         base64_encoded_image = None
 
+    if request.method == 'POST':
+        search_term = request.form.get('searchTerm', '')  # Assuming search term is sent via POST
+        search_results = Users.query.filter(Users.username.ilike(f"%{search_term}%")).all()
+
+        # Format search results to send back to the frontend
+        formatted_results = [{'id': user.id, 'username': user.username} for user in search_results]
+
+        return jsonify(formatted_results)
+
     streak = user_progress.streak
     current_level = user_progress.current_level
-    return render_template('profilepage/profilepage.html', segment='profilepage', API_GENERATOR=len(API_GENERATOR), streak=streak, current_level=current_level, user=user, profile=profile, base64_encoded_image=base64_encoded_image)
+    return render_template('profilepage/profilepage.html', 
+                           segment='profilepage', 
+                           API_GENERATOR=len(API_GENERATOR), 
+                           streak=streak, 
+                           current_level=current_level, 
+                           user=user, 
+                           profile=profile, 
+                           base64_encoded_image=base64_encoded_image, 
+                           is_following=is_following,
+                           follows=follows,
+                           followers=followers,
+                           following_names=following_names,
+                           followers_names=followers_names)
 
+def getUserId():
+    return current_user.get_id()
+
+@blueprint.route('/follow/<int:followed_id>', methods=['POST'])
+def follow(followed_id):
+    follower_id = current_user.get_id()
+    follow = Follows(follower_id=follower_id, followed_id=followed_id)
+    db.session.add(follow)
+    db.session.commit()
+    UserActionLog.log_user_action('Followed '+str(followed_id))
+    return redirect(url_for('profilepage.profilepage', user_id=followed_id))
+
+@blueprint.route('/unfollow/<int:followed_id>', methods=['POST'])
+def unfollow(followed_id):
+    follower_id = current_user.get_id()
+    follow = Follows.query.filter_by(follower_id=follower_id, followed_id=followed_id).first()
+    db.session.delete(follow)
+    db.session.commit()
+    UserActionLog.log_user_action('Unfollowed ' + str(followed_id))
+    return redirect(url_for('profilepage.profilepage', user_id=followed_id))
+
+@blueprint.route('/viewProfile/<string:username>', methods=['POST'])
+def viewProfile(username):
+    user = Users.query.filter_by(username=username).first()
+    if user:
+        user_id = user.id
+        return redirect(url_for('profilepage.profilepage', user_id=user_id))
+    else:
+        return render_template("home/page-404.html"), 404
+    
 
 # Helper - Extract current page name from request
 def get_segment(request):
