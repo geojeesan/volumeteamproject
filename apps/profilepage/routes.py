@@ -148,6 +148,8 @@ def profilepage(user_id):
 
     profile = Profile.query.filter_by(user_id=user_id).first()
 
+    user_progress = UserProgress.query.filter_by(user_id=user_id).first()
+
     # current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     
     # if current_profile and current_profile.profile_picture:
@@ -183,7 +185,8 @@ def profilepage(user_id):
                            follows=follows,
                            followers=followers,
                            following_names=following_names,
-                           followers_names=followers_names)
+                           followers_names=followers_names,
+                           user_progress=user_progress)
 
 def getUserId():
     return current_user.get_id()
@@ -214,7 +217,19 @@ def viewProfile(username):
         return redirect(url_for('profilepage.profilepage', user_id=user_id))
     else:
         return render_template("home/page-404.html"), 404
-    
+
+# @blueprint.route("/profile-user-progress")
+# @login_required
+# def profile_user_progress():
+#     user_id = profilepage.user.user_id
+#     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
+#     return jsonify({
+#         "user_lessons_completed": user_progress.lessons_completed,
+#         "user_lessons_in_progress": user_progress.lessons_in_progress,
+#         "user_current_level": user_progress.current_level,
+#         "user_level_progress": user_progress.level_progress,
+#         "user_streak": user_progress.streak,
+#     })
 
 # Helper - Extract current page name from request
 def get_segment(request):
