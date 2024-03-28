@@ -89,6 +89,20 @@ function searchUsers() {
   });
 }
 
+// document.addEventListener('DOMContentLoaded', function() {
+//   fetch('/profile-user-progress')
+//       .then(response => response.json())
+//       .then(data => {
+        
+//           document.getElementById('user-lessons-completed').textContent = data.user_lessons_completed;
+//           document.getElementById('user-lessons-in-progress').textContent = data.user_lessons_in_progress;
+//           document.getElementById('user-level_progress').textContent = data.user_level_progress.toFixed(0) + '%';
+//       })
+//       .catch(error => {
+//           console.error('Error fetching user progress:', error);
+//       });
+//     });
+    
 // Event handler for viewing user profile
 function viewUserProfile(event) {
   var userId = event.target.dataset.userId; // Get user ID from data attribute
