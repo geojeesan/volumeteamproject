@@ -99,13 +99,17 @@ class Article(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_level = db.Column(db.String(50))
     click_count = db.Column(db.Integer, default=0)
+    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
+    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
     __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, click_count=0):
+    def __init__(self, name, link, content_level, image_url, time_to_complete, click_count=0):
         self.name = name
         self.link = link
         self.content_level = content_level
         self.click_count = click_count
+        self.image_url = image_url
+        self.time_to_complete = time_to_complete
 
 class Video(db.Model):
     __tablename__ = 'videos'
@@ -114,13 +118,17 @@ class Video(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_level = db.Column(db.String(50), nullable=False)
     click_count = db.Column(db.Integer, default=0)
+    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
+    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
     __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, click_count=0):
+    def __init__(self, name, link, content_level, image_url, time_to_complete, click_count=0):
         self.name = name
         self.link = link
         self.content_level = content_level
         self.click_count = click_count
+        self.image_url = image_url
+        self.time_to_complete = time_to_complete
 
 class ExpertInsight(db.Model):
     __tablename__ = 'expert_insights'
@@ -129,14 +137,17 @@ class ExpertInsight(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_type = db.Column(db.String(50), nullable=False)
     click_count = db.Column(db.Integer, default=0)
+    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
+    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
     __table_args__ = (CheckConstraint("content_type IN ('article', 'video')"),)
 
-    def __init__(self, name, link, content_type, click_count=0):
+    def __init__(self, name, link, content_type, image_url, time_to_complete, click_count=0):
         self.name = name
         self.link = link
         self.content_type = content_type
         self.click_count = click_count
-
+        self.image_url = image_url
+        self.time_to_complete = time_to_complete
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Track user activity
