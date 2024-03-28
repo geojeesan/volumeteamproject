@@ -22,7 +22,7 @@ from apps.models import (
     UserActionLog
 )
 
-from sqlalchemy import join
+from sqlalchemy import join, func
 from apps.config import API_GENERATOR
 from apps.authentication.models import Users
 import datetime
@@ -150,6 +150,27 @@ def profilepage(user_id):
 
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
+    completed_lessons = []
+    for lesson in Lesson.query.all():
+        total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
+        completed_scenarios = (
+            UserScenarioProgress.query.filter_by(
+                user_id=user_id, scenario_id=SubLesson.id, completed=True
+            )
+            .join(SubLesson, SubLesson.lesson_id == lesson.id)
+            .count()
+        )
+        scoresum = (
+            UserScenarioProgress.query.with_entities(func.sum(UserScenarioProgress.score))
+            .filter_by(user_id=user_id, completed=True)
+            .join(SubLesson, SubLesson.id == UserScenarioProgress.scenario_id)
+            .filter(SubLesson.lesson_id == lesson.id)
+            .scalar() or 0 
+        )
+
+        if total_scenarios > 0 and total_scenarios == completed_scenarios:
+            completed_lessons.append([lesson.title, lesson.image_path, scoresum])
+
     # current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     
     # if current_profile and current_profile.profile_picture:
@@ -186,7 +207,8 @@ def profilepage(user_id):
                            followers=followers,
                            following_names=following_names,
                            followers_names=followers_names,
-                           user_progress=user_progress)
+                           user_progress=user_progress,
+                           completed_lessons=completed_lessons)
 
 def getUserId():
     return current_user.get_id()
