@@ -151,6 +151,7 @@ def profilepage(user_id):
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
     completed_lessons = []
+    incomplete_lessons = []
     for lesson in Lesson.query.all():
         total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
         completed_scenarios = (
@@ -170,13 +171,8 @@ def profilepage(user_id):
 
         if total_scenarios > 0 and total_scenarios == completed_scenarios:
             completed_lessons.append([lesson.title, lesson.image_path, scoresum])
-
-    # current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
-    
-    # if current_profile and current_profile.profile_picture:
-    #     current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
-    # else:
-    #     current_base64_encoded_image = None
+        elif total_scenarios > 0 and total_scenarios > completed_scenarios > 0:
+            incomplete_lessons.append(scoresum)
 
     if profile and profile.profile_picture:
         base64_encoded_image = base64.b64encode(profile.profile_picture).decode('utf-8')
@@ -208,7 +204,8 @@ def profilepage(user_id):
                            following_names=following_names,
                            followers_names=followers_names,
                            user_progress=user_progress,
-                           completed_lessons=completed_lessons)
+                           completed_lessons=completed_lessons,
+                           incomplete_lessons=incomplete_lessons)
 
 def getUserId():
     return current_user.get_id()
