@@ -7,6 +7,7 @@
 
 <style>
 
+  /* Emoji size */
   img.emoji {
     height: 1em;
     width: 1em;
@@ -14,7 +15,8 @@
     vertical-align: -0.1em;
   }
   
-.calendar-table {
+  /* Streak Calendar */
+  .calendar-table {
     width: 100%;
     border-collapse: collapse;
   }
@@ -27,7 +29,7 @@
   }
 
   .streak-day {
-    background-color: #f9853d; /* Highlight color for streak days */
+    background-color: #f9853d;
     color: white;
   }
 
@@ -40,6 +42,7 @@
     padding: 5px 10px;
   }
 
+  /* Level Badge */
   .badge-card {
     display: inline-block;
     font-size: 0.85em;
@@ -51,10 +54,24 @@
     height: 25px;
     color: #ffffff;
     font-family: "Roboto", sans-serif;
-    margin-right: -20px; /* Adjust the value as needed to bring badges closer */
-    padding: 0.15em 0em; /* Assuming you still want some padding */
+    margin-right: -20px;
+    padding: 0.15em 0em;
   }
 
+  .badge-card-beginner {
+    background-color: #22b538; 
+    padding: 0.2em 1.8em;
+  }
+
+  .badge-card-intermediate {
+    background-color: #ffc107;
+  }
+
+  .badge-card-advanced {
+    background-color: #ff1500;
+  }
+
+  /* Progress Cards */
   .text-container {
     padding-top: 22px;
     padding-bottom: 22px;
@@ -72,7 +89,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    right: 10%; /* Position to the right */
+    right: 10%;
     padding: 1rem;
     width: 50px;
     background: #ACAACC;
@@ -88,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    right: 3%; /* Position to the right */
+    right: 3%;
     padding: 1rem;
     width: 50px;
     background: #ACAACC;
@@ -105,34 +122,14 @@
     color: #ffffff; 
   }
 
-
-  
-  .badge-card-beginner {
-    background-color: #22b538; 
-    padding: 0.2em 1.8em;
-  }
-  .badge-card-intermediate {
-    background-color: #ffc107;
-  }
-  .badge-card-advanced {
-    background-color: #ff1500;
-  }
-  /*.badge-card-rank {
-    background-color: #e37f7f;
-  }*/
-  /* Make sure this is included to use the Font Awesome icons */
-  .timeline-event-spacing {
-    margin-bottom: -17px; /* Remove bottom margin */
-  }
-
+  /* Edit Profile and Follow/Unfollow Buttons */
   .top-buttons {
     position: absolute;
-    top: 35%; /* Adjust as needed */
-    left: 95%; /* Center horizontally */
+    top: 35%;
+    left: 95%;
     transform: translateX(-50%);
   }
   
-  /* Adjust the height and padding of the buttons */
   .top-buttons a {
     display: inline-block;
     padding: 8px 12px;
@@ -151,16 +148,13 @@
   </div>
   <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
     {% if current_user.id == user.id %}
-      <!-- <div class="col-lg-1 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3"> -->
         <div class="nav-wrapper position-absolute end-0 top-buttons">
           <a href="/editprofile">
             <i class="fas fa-user-edit text-secondary text-lg" data-bs-toggle="tooltip" data-bs-placement="top"
               title="Edit Profile"></i>
           </a>
         </div>
-      <!-- </div> -->
       {% else %}
-      <!-- <div class="col-lg-2 col-md-2 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3"> -->
         <div class="nav-wrapper position-absolute end-0 top-buttons" style="left: 88%;">
           {% if is_following %}
           <form action="/unfollow/{{ user.id }}" method="POST" enctype="multipart/form-data">
@@ -172,7 +166,6 @@
           </form>
           {% endif %}
           </div>
-        <!-- </div> -->
       {% endif %}
     <div class="row gx-4">
       <div class="col-auto">
@@ -182,14 +175,6 @@
           {% else %}
             <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
           {% endif %}
-          
-          <!-- {% if profile.profile_image %}
-          {% set base64_encoded_image = profile.profile_picture|b64encode %}
-          <img src="data:image/jpeg;base64,{{ base64_encoded_image.decode('utf-8') }}" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-          {% else %}
-          <img src="{{ config.ASSETS_ROOT }}/img/default-avatar-icon-of-social-media-user-vector.jpeg"
-            alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-          {% endif %} -->
         </div>
       </div>
       <div class="col-auto my-auto">
@@ -241,8 +226,9 @@
 </div>
 
 <div class="container-fluid py-4">
-
   <div class="row">
+
+    <!-- Streak Card -->
     <div class="col-12 col-xl-4">
       <div class="card h-100">
         <div class="text-center">
@@ -256,8 +242,6 @@
         </div>
         <div class="card-body p-3">
           <div class="mt-3 text-center">
-            <!--<button id="prevMonthBtn" onclick="changeMonth(-1)">Previous Month</button>-->
-            <!--<button id="nextMonthBtn" onclick="changeMonth(1)">Next Month</button>-->
             <div class="d-flex justify-content-between align-items-center">
               <button id="prevMonthBtn" onclick="changeMonth(-1)">&lt;</button>
               <h6 class="mb-0" id="currentMonthCaption"></h6>
@@ -268,19 +252,11 @@
           </div>
       </div>
     </div>
+
+    <!-- Following/Followers/Search Card -->
     <div class="col-12 col-xl-4">
       <div class="card h-100">
         <div class="card-body p-3">
-          <!-- Tab navigation -->
-          <!-- {% if current_user.id == user.id %}
-          <div class="input-group mb-3" style="height:40px;">
-            <input type="text" id="searchInput" style="height:40px;" class="form-control" placeholder="Search for users">
-            <button class="btn btn-primary" id="searchButton">Search</button>
-          </div>
-          <ul id="searchResults" class="list-group mb-3">
-            <!-- Search results will be dynamically added here -->
-          <!--</ul>
-          {% endif %} -->
           <ul class="nav nav-tabs" id="followTabs" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="true"><strong style="font-size: 20px;">{{ follows|length }}</strong><br> Following</button>
@@ -336,7 +312,10 @@
         </div>
       </div>
     </div>
+
+    <!-- Progress Card -->
     <div class="col-12 col-xl-4">
+      <!-- Bio & Progress Cards -->
       {% if profile.bio|length > 60 %}
       <div class="card mb-4 ">
         <div class="card-header pb-0 p-3">
@@ -354,12 +333,13 @@
         <div class="card-body p-1">
           <div class="col text-container-mini">
             <div class="card-number">
-              <!-- <h3 id="user-level_progress" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
-                {{ user_progress.lessons_completed }}
+                {{ completed_lessons|length }}
               </h3>
             </div>
-            <div>Lessons Completed</div>
+            {% if completed_lessons|length == 1 %}<div>Lesson Completed</div>
+            {% else %}<div>Lessons Completed</div>
+            {% endif %}
           </div>
           <div class="col-auto">
             <div class="icon-container-mini">
@@ -372,12 +352,13 @@
         <div class="card-body p-1">
           <div class="col text-container-mini">
             <div class="card-number">
-              <!-- <h3 id="user-lessons-in-progress" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
-                {{ user_progress.lessons_completed }}
+                {{ incomplete_lessons|length }}
               </h3>
             </div>
-            <div>Lessons In Progress</div>
+            {% if incomplete_lessons|length == 1 %}<div>Lesson In Progress</div>
+            {% else %}<div>Lessons In Progress</div>
+            {% endif %}
           </div>
           <div class="col-auto">
             <div class="icon-container-mini">
@@ -390,7 +371,6 @@
         <div class="card-body p-1">
           <div class="col text-container-mini">
             <div class="card-number">
-              <!-- <h3 id="user-level_progress" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
                 {{ user_progress.level_progress|round|int }}%
               </h3>
@@ -405,16 +385,18 @@
         </div>
       </div>
       {% else %}
+      <!-- Just Progress Cards -->
       <div class="card mb-4" style="height: 30%;">
         <div class="card-body p-3">
           <div class="col text-container">
             <div class="card-number">
-              <!-- <h3 id="user-lessons-completed" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
-                {{ user_progress.lessons_completed }}
+                {{ completed_lessons|length }}
               </h3>
             </div>
-            <div>Lessons Completed</div>
+            {% if completed_lessons|length == 1 %}<div>Lesson Completed</div>
+            {% else %}<div>Lessons Completed</div>
+            {% endif %}
           </div>
           <div class="col-auto">
             <div class="icon-container">
@@ -427,12 +409,13 @@
         <div class="card-body p-3">
           <div class="col text-container">
             <div class="card-number">
-              <!-- <h3 id="user-lessons-in-progress" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
-                {{ user_progress.lessons_in_progress }}
+                {{ incomplete_lessons|length }}
               </h3>
             </div>
-            <div>Lessons In Progress</div>
+            {% if incomplete_lessons|length == 1 %}<div>Lesson In Progress</div>
+            {% else %}<div>Lessons In Progress</div>
+            {% endif %}
           </div>
           <div class="col-auto">
             <div class="icon-container">
@@ -445,7 +428,6 @@
         <div class="card-body p-3">
           <div class="col text-container">
             <div class="card-number">
-              <!-- <h3 id="user-level_progress" class="font-weight-bolder mb-0"></h3> -->
               <h3 class="font-weight-bolder mb-0">
                 {{ user_progress.level_progress|round|int }}%
               </h3>
@@ -461,47 +443,8 @@
       </div>
       {% endif %}
     </div>
-<!--
-    <div class="col-12 mt-4">
-      <div class="card mb-4">
-        <div class="card-header pb-0 p-3">
-          <h6 class="mb-1">Completed Lessons</h6>
-        </div>
-        <div class="card-body p-3">
-          <div class="row">
-            {% for lesson in completed_lessons %}
-            <div class="col-xl-2 col-md-6 mb-xl-0 mb-4">
-              <div class="card card-blog card-plain">
-                <div class="position-relative">
-                  <a class="d-block shadow-xl border-radius-xl">
-                    <img src="{{ lesson.image_path }}" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg" width="200">
-                  </a>
-                </div>
-                <div class="card-body px-1 pb-0">
-                  <p class="text-gradient text-dark mb-2 text-sm">Lesson #{{ lesson.id }}</p>
-                  <a href="javascript:;">
-                    <h5>{{ lesson.title }}</h5>
-                  </a>
-                  <p class="mb-4 text-sm">{{ lesson.description }}</p>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-            <div class="col-md-6 mb-xl-0 mb-4">
-              <div class="card h-100 card-plain border">
-                <div class="card-body d-flex flex-column justify-content-center text-center">
-                  <a href="/lessons">
-                    <i class="fa fa-plus text-secondary mb-3"></i>
-                    <h5 class="text-secondary">Complete More Lessons</h5>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  -->
+
+    <!-- Completed Lessons Badges Card -->
     {% if completed_lessons|length > 0 %}
     <div class="col-12 mt-4">
       <div class="card mb-4">
@@ -517,7 +460,7 @@
                   <a class="d-block border-radius-xl">
                     {% if lesson[2] < 4 %}
                     <div class="position-relative mx-auto">
-                      <a class="d-block border-radius-xl">
+                      <a class="d-block border-radius-xl"> <!--Bronze Badge-->
                         <img src="{{ config.ASSETS_ROOT }}/img/shield.png" alt="bronze badge"
                           class="img-fluid border-radius-lg" width="200" style="height: 200px; object-fit: cover; filter: contrast(40%) brightness(110%) sepia(100%) hue-rotate(340deg);">
                         <img src="{{ lesson[1] }}" alt="bronze badge"
@@ -526,7 +469,7 @@
                     </div>
                     {% elif lesson[2] < 7 %}
                     <div class="position-relative mx-auto">
-                      <a class="d-block border-radius-xl">
+                      <a class="d-block border-radius-xl"> <!--Silver Badge-->
                         <img src="{{ config.ASSETS_ROOT }}/img/shield.png" alt="silver badge"
                           class="img-fluid border-radius-lg" width="200" style="height: 200px; object-fit: cover; filter: contrast(10%) brightness(110%)">
                         <img src="{{ lesson[1] }}" alt="silver badge"
@@ -535,7 +478,7 @@
                     </div>
                     {% else %}
                     <div class="position-relative mx-auto">
-                      <a class="d-block border-radius-xl">
+                      <a class="d-block border-radius-xl"> <!--Gold Badge-->
                         <img src="{{ config.ASSETS_ROOT }}/img/shield.png" alt="gold badge"
                           class="img-fluid border-radius-lg" width="200" style="height: 200px; object-fit: cover; filter: contrast(10%) brightness(120%) sepia(100%);">
                         <img src="{{ lesson[1] }}" alt="gold badge"
@@ -547,66 +490,13 @@
                 </div>
                 <div class="card-body px-1 pb-0">
                   <h5 class="text-center">
-                    {{ lesson[0] }}
+                    {{ lesson[0] }} <!--Lesson Name-->
                   </h5>
                   <p class="text-center"><i class="fas fa-tachometer-alt"></i>  {{ lesson[2]|round|int  }}</p>
                 </div>
               </div>
             </div>
             {% endfor %}
-            <!-- <div class="col-xl-2 col-md-6 mb-xl-0 mb-4">
-              <div class="card card-blog card-plain">
-                <div class="position-relative">
-                  <a class="d-block shadow-xl border-radius-xl">
-                    <img src="{{ config.ASSETS_ROOT }}/img/defib.png" alt="img-blur-shadow"
-                      class="img-fluid shadow border-radius-lg" width="200">
-                  </a>
-                </div>
-                <div class="card-body px-1 pb-0">
-                  <p class="text-gradient text-dark mb-2 text-sm">Lesson #2</p>
-                  <a href="javascript:;">
-                    <h5>
-                      Pace-O-Matic
-                    </h5>
-                  </a>
-                  <p class="mb-4 text-sm">
-                    Work on your pacing styles and techniques!
-                  </p>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <button type="button" class="btn btn-outline-primary btn-sm mb-0"
-                      onclick="window.location.href = '/lessons';">View Lesson</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
-            <div class="col-xl-2 col-md-6 mb-xl-0 mb-4">
-              <div class="card card-blog card-plain">
-                <div class="position-relative">
-                  <a class="d-block shadow-xl border-radius-xl">
-                    <img src="{{ config.ASSETS_ROOT }}/img/mic-image.png" alt="img-blur-shadow"
-                      class="img-fluid shadow border-radius-xl" width=200">
-                  </a>
-                </div>
-                <div class="card-body px-1 pb-0">
-                  <p class="text-gradient text-dark mb-2 text-sm">Lesson #3</p>
-                  <a href="javascript:;">
-                    <h5>
-                      Pitch Perfect
-                    </h5>
-                  </a>
-                  <p class="mb-4 text-sm">
-                    Embrace the power of utilizing your pitch!
-                  </p>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <button type="button" class="btn btn-outline-primary btn-sm mb-0"
-                      onclick="window.location.href = '/lessons';">View Lesson</button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
             {% if current_user.id == user.id %}
             <div class="col mb-xl-0 mb-4">
               <div class="card h-100 card-plain border">
@@ -640,7 +530,7 @@
 <script src="{{config.ASSETS_ROOT }}/js/profilepage/profilepage.js"> </script>
 
 <script>
-  var streak = {{ streak }};
+  var streak = {{ streak }}; // Not an error. VSCode is just not recognizing the Jinja template
 </script>
 
 <script>
@@ -669,7 +559,6 @@
     var firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
     var html = '<table class="calendar-table">';
-    //html += '<caption id="currentMonthCaption">' + getMonthName(currentMonth) + ' ' + currentYear + '</caption>';
     html += '<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>';
 
     var day = 1;
@@ -718,16 +607,6 @@
   generateCalendar();
 </script>
 
-<!--<script>
-  var userRank = "Beginner";
-  var userLevelBadge = document.getElementById("user-level-badge");
-
-  var levelBadge = document.createElement("div");
-  levelBadge.classList.add("badge-card-beginner");
-  levelBadge.textContent = "Beginner";
-  userLevelBadge.appendChild(levelBadge);
-</script>-->
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
@@ -763,14 +642,15 @@ document.getElementById('searchButton').addEventListener('click', function(event
 </script>
 
 <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
-<script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
 <script src="{{ config.ASSETS_ROOT }}/js/profilepage/profilepage.js"></script>
 <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
 
-<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+<!-- Render emojis on all platforms -->
+<script src="https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" integrity="sha384-ICOlZarapRIX6UjKPcWKEpubjg7lGADN7Y9fYP4DU9zm0aPFhgnP5ef+XFaPyKv+" crossorigin="anonymous"></script>
 <script>
   twemoji.parse(document.body, {
-    className: 'emoji'
+    className: 'emoji',
+    ext: '.svg'
   });
 </script>
 
