@@ -106,6 +106,7 @@ def update_profile():
         db.session.add(profile)
     
     db.session.commit()
+    flash('Changes Saved | You have successfully edited your profile')
     UserActionLog.log_user_action('Profile Edited')
     return redirect(url_for('profilepage.profilepage', user_id=current_user.get_id()))
 
@@ -168,11 +169,14 @@ def profilepage(user_id):
             .filter(SubLesson.lesson_id == lesson.id)
             .scalar() or 0 
         )
+        scoreaverage = scoresum / total_scenarios if total_scenarios > 0 else 1
 
         if total_scenarios > 0 and total_scenarios == completed_scenarios:
-            completed_lessons.append([lesson.title, lesson.image_path, scoresum])
+            completed_lessons.append([lesson.title, lesson.image_path, scoreaverage])
         elif total_scenarios > 0 and total_scenarios > completed_scenarios > 0:
-            incomplete_lessons.append(scoresum)
+            incomplete_lessons.append(scoreaverage)
+    
+    completed_lessons.sort(key=lambda x: x[2], reverse=True)
 
     if profile and profile.profile_picture:
         base64_encoded_image = base64.b64encode(profile.profile_picture).decode('utf-8')
@@ -216,6 +220,8 @@ def follow(followed_id):
     follow = Follows(follower_id=follower_id, followed_id=followed_id)
     db.session.add(follow)
     db.session.commit()
+    followed_name = Users.query.filter_by(id=followed_id).first().username
+    flash('You have successfully followed @'+str(followed_name))
     UserActionLog.log_user_action('Followed '+str(followed_id))
     return redirect(url_for('profilepage.profilepage', user_id=followed_id))
 
@@ -225,6 +231,8 @@ def unfollow(followed_id):
     follow = Follows.query.filter_by(follower_id=follower_id, followed_id=followed_id).first()
     db.session.delete(follow)
     db.session.commit()
+    followed_name = Users.query.filter_by(id=followed_id).first().username
+    flash('You have successfully unfollowed @'+str(followed_name))
     UserActionLog.log_user_action('Unfollowed ' + str(followed_id))
     return redirect(url_for('profilepage.profilepage', user_id=followed_id))
 
