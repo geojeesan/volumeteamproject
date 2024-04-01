@@ -1,10 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-
-# from flask_login import login_required
-# from jinja2 import TemplateNotFound
-# from sqlalchemy.exc import SQLAlchemyError
-# from apps.models import Article, Video, ExpertInsight
 from apps.home import blueprint
 from apps.config import API_GENERATOR
 from flask import render_template, request, jsonify
@@ -12,13 +7,15 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 from apps import db
 from flask_login import login_required, current_user
-
+from flask import redirect, url_for
+from datetime import datetime
+from apps.models import UserActionLog
 
 
 @blueprint.route('/resource')
 @login_required
 def resource():
-    # Assuming API_GENERATOR is defined and accessible
+    UserActionLog.log_user_action(f'Viewed Resources')  # Logging action
     return render_template('resource/resource.html', segment='resource', API_GENERATOR=len(API_GENERATOR))
 
 @blueprint.route('/api/articles')
@@ -26,7 +23,18 @@ def resource():
 def get_articles():
     content_level = request.args.get('content_level')
     articles = Article.query.filter(Article.content_level == content_level) if content_level else Article.query.all()
-    articles_list = [{'id': article.id, 'name': article.name, 'link': article.link, 'content_level': article.content_level} for article in articles]
+    articles_list = [
+        {
+            'id': article.id, 
+            'name': article.name, 
+            'link': article.link, 
+            'content_level': article.content_level,
+            'click_count': article.click_count,
+            'image_url': article.image_url,
+            'time_to_completion': article.time_to_complete  # Adjusted field name
+        } 
+        for article in articles
+    ]
     return jsonify(articles_list)
 
 @blueprint.route('/api/videos')
@@ -34,16 +42,40 @@ def get_articles():
 def get_videos():
     content_level = request.args.get('content_level')
     videos = Video.query.filter(Video.content_level == content_level) if content_level else Video.query.all()
-    videos_list = [{'id': video.id, 'name': video.name, 'link': video.link, 'content_level': video.content_level} for video in videos]
+    videos_list = [
+        {
+            'id': video.id, 
+            'name': video.name, 
+            'link': video.link, 
+            'content_level': video.content_level,
+            'click_count': video.click_count,
+            'image_url': video.image_url,
+            'time_to_completion': video.time_to_complete  # Adjusted field name
+        } 
+        for video in videos
+    ]
     return jsonify(videos_list)
+
 
 @blueprint.route('/api/expert_insights')
 @login_required
 def get_expert_insights():
     content_type = request.args.get('content_type')
     expert_insights = ExpertInsight.query.filter(ExpertInsight.content_type == content_type) if content_type else ExpertInsight.query.all()
-    expert_insights_list = [{'id': insight.id, 'name': insight.name, 'link': insight.link, 'content_type': insight.content_type} for insight in expert_insights]
+    expert_insights_list = [
+        {
+            'id': insight.id, 
+            'name': insight.name, 
+            'link': insight.link, 
+            'content_type': insight.content_type,
+            'click_count': insight.click_count,
+            'image_url': insight.image_url,
+            'time_to_completion': insight.time_to_complete  # Adjusted field name
+        } 
+        for insight in expert_insights
+    ]
     return jsonify(expert_insights_list)
+
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to increment click count
@@ -63,6 +95,7 @@ def increment_click(resource_type, item_id):
 
     item.click_count += 1
     db.session.commit()
+    # UserActionLog.log_user_action(f'User {current_user.get_id()} clicked on {resource_type} ID {item_id}')  # Logging action
     return jsonify({'success': True, 'new_click_count': item.click_count})
 
 
@@ -150,56 +183,4 @@ class ExpertInsight(db.Model):
         self.time_to_complete = time_to_complete
 # ----------------------------------------------------------------------------------------------------------------------
 
-# Track user activity
-from flask import redirect, url_for
 
-from datetime import datetime
-from apps.models import UserActionLog
-
-@blueprint.route('/access_article/<int:article_id>')
-@login_required
-def access_article(article_id):
-    article = Article.query.get(article_id)
-    if article:
-        UserActionLog.log_user_action(f"Accessed article {article.name}")
-        # the damn logic to handle the article access
-
-        return redirect(article.link)
-    else:
-        return jsonify({"error": "Article not found"}), 404
-
-@blueprint.route('/access_video/<int:video_id>')
-@login_required
-def access_video(video_id):
-    video = Video.query.get(video_id)
-    if video:
-        UserActionLog.log_user_action(f"Accessed video {video.name}")
-        # the damn logic to handle the video access
-        return redirect(video.link)
-    else:
-        return jsonify({"error": "Video not found"}), 404
-
-@blueprint.route('/access_expert_insight/<int:insight_id>')
-@login_required
-def access_expert_insight(insight_id):
-    insight = ExpertInsight.query.get(insight_id)
-    if insight:
-        UserActionLog.log_user_action(f"Accessed expert insight {insight.name}")
-        # logiiiiic to handle the expert insight access
-        return redirect(insight.link)
-    else:
-        return jsonify({"error": "Expert insight not found"}), 404
-
-# Update the log_user_action method in the UserActionLog class to be a static method
-@staticmethod
-def log_user_action(action_description):
-    if not current_user or not current_user.is_authenticated:
-        return  # Optionally, maybe handle the case where the user is not logged in. idk maybe.
-
-    action = UserActionLog(
-        user_id=current_user.get_id(),  # Assuming current_user is the logged-in user instance
-        action=action_description,
-        timestamp=datetime.utcnow()  # Automatically sets the timestamp to the current time
-    )
-    db.session.add(action)
-    db.session.commit()

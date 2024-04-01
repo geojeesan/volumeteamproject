@@ -14,27 +14,26 @@ function setCategoryActive(element) {
     const baseSectionId = element.closest('div[id$="-section"]').id;
     let resourceType = baseSectionId.replace("-section", "");
     if (baseSectionId === "expert-section") {
-        resourceType = "expert_insights";
+        resourceType = "expert_insights"; // Ensure correct endpoint
     }
-
     const category = element.getAttribute('data-content-type') || element.getAttribute('data-content-level');
-    const containerId = `${baseSectionId.replace("-section", "")}-scroll-container`;
+    const containerIdMap = {
+        'articles-section': 'articles-scroll-container',
+        'videos-section': 'videos-scroll-container',
+        'expert-section': 'expert-scroll-container' // Ensure this matches your HTML ID
+    };
+    const containerId = containerIdMap[baseSectionId];
 
-    const currentlyActiveButton = element.closest('.category-buttons').querySelector('.category-button.active');
-    const isDifferentButton = currentlyActiveButton && currentlyActiveButton !== element;
-    const wasAlreadyActive = element.classList.contains('active');
+    const sameSectionButtons = element.closest('.category-buttons').querySelectorAll('.category-button');
+    sameSectionButtons.forEach(btn => btn.classList.remove('active'));
 
-    // If clicking a different button or the first time clicking this button
-    if (isDifferentButton || !wasAlreadyActive) {
-        if (currentlyActiveButton) {
-            currentlyActiveButton.classList.remove('active'); // Remove active class from previously active button
-        }
-        element.classList.add('active'); // Set current button as active
+    element.classList.toggle('active');
+    const isActive = element.classList.contains('active');
+
+    if (isActive) {
         fetchAndDisplayResources(resourceType, containerId, category);
-    } else if (wasAlreadyActive) {
-        // If the same button is clicked again, clear the data
-        element.classList.remove('active'); // Remove active class as we're toggling off
-        clearLinksForSubsection(containerId);
+    } else {
+        clearLinksForSubsection(containerId); // Adjust to use containerId directly
     }
 }
 
@@ -48,58 +47,60 @@ function clearLinksForSubsection(containerId) {
     }
 }
 
-//function to scroll to the "Featured" section
-function scrollToFeatured() {
-    document.getElementById('featured-section').scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
-//function to scroll to the "Article" section
-function scrollToArticle() {
-    document.getElementById('articles-section').scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
-function scrollToVideos() {
-    document.getElementById('videos-section').scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
-function scrollToExpertInsights() {
-    document.getElementById('expert-section').scrollIntoView({
-        behavior: 'smooth'
-    });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+    // Define default categories for each section
+    const defaultCategories = [
+        { section: 'articles', category: 'beginner', type: 'data-content-level' },
+        { section: 'videos', category: 'beginner', type: 'data-content-level' },
+        { section: 'expert', category: 'article', type: 'data-content-type' }
+    ];
+
+    // Load and highlight default categories for each section
+    defaultCategories.forEach(({ section, category, type }) => {
+        const resourceType = section === 'expert' ? 'expert_insights' : section;
+        const containerId = `${section}-scroll-container`;
+        const selector = `[${type}="${category}"][data-section="${section}"]`;
+        const defaultButton = document.querySelector(selector);
+
+        if (defaultButton) {
+            defaultButton.classList.add('active');
+            fetchAndDisplayResources(resourceType, containerId, category);
+        } else {
+            console.error('Default button not found:', selector);
+        }
+    });
+
+    // Setup event listeners for buttons
+    setupButtonListeners();
+});
+
+function setupButtonListeners() {
     const buttons = document.querySelectorAll('.category-buttons button');
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const wasActiveBeforeClick = this.classList.contains('active');
-            // setCategoryActive(this); // removing this solved the problem
-
-            const isActiveAfterClick = this.classList.contains('active');
-            const section = this.closest('div[id$="-section"]');
-            let resourceType = section.id.split('-')[0]; // 'articles', 'videos', or 'expert'
-            let containerId = `${resourceType}-links`;
-
-            // Check if the button is still active after the click
-            if (isActiveAfterClick) {
-                let filter = this.getAttribute('data-content-level') || this.getAttribute('data-content-type') || this.textContent.toLowerCase().replace(/\s+/g, '-');
-                if (resourceType === 'expert') {
-                    resourceType = 'expert_insights';
-                }
-                fetchAndDisplayResources(resourceType, containerId, filter);
-            } else if (wasActiveBeforeClick && !isActiveAfterClick) {
-                // The button was active before and now is not, clear the displayed data
-                clearLinksForSubsection(this);
+            // Do not proceed if the button is already active
+            if (this.classList.contains('active')) {
+                return;
             }
+
+            const section = this.getAttribute('data-section');
+            const resourceType = section === 'expert' ? 'expert_insights' : section;
+            const containerId = `${section}-scroll-container`;
+            const category = this.getAttribute('data-content-level') || this.getAttribute('data-content-type');
+
+            // Clear active states and set current button as active
+            const currentActiveButton = this.closest('.category-buttons').querySelector('.category-button.active');
+            if (currentActiveButton) {
+                currentActiveButton.classList.remove('active');
+            }
+            this.classList.add('active');
+
+            // Fetch and display the content
+            fetchAndDisplayResources(resourceType, containerId, category);
         });
     });
-});
+}
+
 
 function fetchAndDisplayResources(resourceType, containerId, filter) {
     let url = `/api/${resourceType}`;
@@ -118,14 +119,27 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
             data.forEach(item => {
                 const element = document.createElement('div');
                 element.className = 'scroll-item';
-                element.innerHTML = `<a href="${item.link}" target="_blank">${item.name}</a>`;
+                
+                // Creating and appending the image element
+                const img = document.createElement('img');
+                img.src = item.image_url;
+                img.alt = item.name;
+                img.style.width = '100%'; // Ensure the image fits the container
+                img.style.height = 'auto';
+                element.appendChild(img);
+
+                // Creating and appending the link element
+                const link = document.createElement('a');
+                link.href = item.link;
+                link.target = "_blank";
+                link.textContent = item.name;
+                element.appendChild(link);
+
                 container.appendChild(element);
             });
         })
         .catch(error => console.error('Error fetching data:', error));
 }
-
-
 
 function scrollHorizontal(direction, containerId) {
     const container = document.getElementById(containerId);
@@ -137,3 +151,4 @@ function scrollHorizontal(direction, containerId) {
         container.scrollLeft += scrollAmount;
     }
 }
+
