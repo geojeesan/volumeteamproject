@@ -15,41 +15,6 @@
         color: #12174c;
     }
 
-    .top-bar {
-        background-color: #ACAACC;
-        border-bottom: 1px solid #12174c;
-    }
-
-    .resource-menu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: start;
-        font-size: 1em;
-    }
-
-    .menu-item {
-        padding: 30px;
-        cursor: pointer;
-        color: #f8f9fa;
-        font-weight: bold;
-    }
-
-    .menu-item:hover,
-    .menu-item.active {
-        font-weight: bold;
-        color: #12174c;
-    }
-
-
-    .menu-item.static {
-        cursor: default;
-        font-weight: bold;
-        color: #12174c;
-        /* Static 'RESOURCES' text color */
-    }
-
     .category-button {
         background-color: #ffffff;
         color: #12174c;
@@ -139,9 +104,9 @@
     }
 
     .featured-link:hover {
-        color: #12174c;
+        color: #ffffff;
         text-decoration: underline;
-        font-weight: bold;
+        font-weight: bolder;
     }
 
     hr {
@@ -152,35 +117,20 @@
         margin: 30px 30px;
     }
 
-    .articles-section,
-    .expert-section,
-    .videos-section {
-        color: #12174c;
-        text-align: left;
-        margin-top: 20px;
-        padding: 20px;
-    }
-
-    .articles-header {
-        display: flex;
-        justify-content: left;
-        align-items: baseline;
-    }
-
-    .section-title {
-        display: inline-block;
+    .subsection-title {
         font-size: 1.5em;
-        padding: 5px 15px;
-        border-radius: 5px;
-        background-color: #ACAACC;
-        color: #12174c;
-        font-weight: bold;
-        margin-bottom: 20px;
+        /* Smaller than the main section title */
+        color: inherit;
+        /* Keeping the color consistent with your theme */
+        font-weight: bolder;
+        /* Optional: if you want the title to be bold */
+        margin-bottom: 15px;
+        /* Adds some space below the title */
     }
 
     .scrollable-section {
         display: flex;
-        align-items: center;
+        align-items: top;
         width: 100%;
         /* Ensure the scrollable section spans the full container width */
     }
@@ -191,53 +141,52 @@
         scroll-behavior: smooth;
         padding: 20px 0;
         gap: 20px;
-        /* Adds space between scroll items */
-        /* width: 100%; Make sure the container uses the full width available */
+        min-width: 190px;
+        /* Set a minimum width */
+        min-height: 140px;
+        /* Set a minimum height */
+    }
+
+    .scroll-box {
+        background-color: #aca9e3;
+        border-radius: 10px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        align-items: center;
+        justify-content: center;
     }
 
     .scroll-item {
-        position: relative;
-        flex: none;
-        width: 260px;
-        /* Adjust width for bigger boxes */
-        height: 180px;
-        /* Adjust height as needed */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: 200px;
+        /* Set a minimum width */
+        min-height: 150px;
+        /* Set a minimum height */
         background-color: #ACAACC;
         border-radius: 10px;
-        margin-right: 20px;
-        padding: 15px;
-        /* Adjust padding as needed */
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        margin-right: 10px;
         overflow: hidden;
     }
 
+    .scroll-item img {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        border-radius: 10px;
+        object-fit: contain;
+    }
 
-    /* Applying the provided link styles specifically within the scroll items */
     .scroll-item a {
+        margin-bottom: auto;
         color: #12174c;
         text-decoration: none;
-        display: block;
-        margin-bottom: 5px;
-        text-align: center;
-        /* Center align the link text */
-
-        /* Allow the text to wrap instead of truncating */
-        white-space: normal;
-        /* Allows text to wrap */
-        overflow: visible;
-        /* Let the content flow as needed */
-        text-overflow: clip;
-        /* Default behavior, no ellipsis */
-
-        width: calc(100% - 30px);
-        /* Adjust width as needed, considering padding */
-        word-break: break-word;
-        /* Ensures words break to prevent overflow */
+        font-weight: bold;
+        padding: 10px;
+        z-index: 10;
     }
+
 
     .scroll-item a:hover {
         color: #12174c;
@@ -274,123 +223,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resource Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/resource_style.css') }}">
-    <script src="{{ url_for('static', filename='js/resource.js') }}" defer></script>
+    <script src="/static/assets/js/resource/resource.js" defer></script>
 </head>
 
 <body>
 
-    <div class="top-bar">
-        <ul class="resource-menu">
-            <li class="menu-item static">RESOURCES</li>
-            <li class="menu-item" onclick="setActive(this); scrollToFeatured();">All</li>
-            <li class="menu-item" onclick="setActive(this); scrollToArticle();">Articles</li>
-            <li class="menu-item" onclick="setActive(this); scrollToVideos()">Videos</li>
-            <li class="menu-item" onclick="setActive(this); scrollToExpertInsights()">Expert-Insights</li>
-        </ul>
-    </div>
-
-    <!-- Featured Section -->
-    <div class="featured-section">
-        <div class="section-title">Featured</div>
-        <div class="featured-links-container">
-            <!-- Large box on the left-->
-            <div class="featured-link-box large-box">
-                <img src="/static/assets/img/pb-images/pb4.jpg" alt="Description of first Image" class="featured-image">
-                <a href="https://icebreakerspeech.com/public-speaking-quotes/" class="featured-link" target="_blank">
-                    50 Inspiring Public Speaking Quotes to Help You Conquer Your Fear
-                </a>
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold">Resources</h1>
+                <p>Explore our vast collection of resources to improve your public speaking and communication skills.
+                </p>
             </div>
-            <!-- Wrapper for the two smaller boxes on the right-->
-            <div class="small-boxes-wrapper">
-                <div class="featured-link-box small-box">
-                    <img src="/static/assets/img/pb-images/pb27.jpg" alt="Description of first Image" class="featured-image">
-                    <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link"
+        </div>
+
+        <!-- Featured Section -->
+        <div class="featured-section">
+            <div class="subsection-title">Featured</div>
+            <div class="featured-links-container">
+                <!-- Large box on the left-->
+                <div class="featured-link-box large-box">
+                    <img src="/static/assets/img/pb-images/pb4.jpg" alt="Description of first Image"
+                        class="featured-image">
+                    <a href="https://icebreakerspeech.com/public-speaking-quotes/" class="featured-link"
                         target="_blank">
-                        16 Science-Based Public Speaking Tips To Be a Master Speaker </a>
-                </div>
-                <div class="featured-link-box small-box">
-                    <img src="/static/assets/img/pb-images/pb3.jpg" alt="Description of first Image" class="featured-image">
-                    <a href="https://www.scienceofpeople.com/stage-fright/" class="featured-link" target="_blank">
-                        Stage Fright: How to Overcome It in 7 Easy Steps
+                        50 Inspiring Public Speaking Quotes to Help You Conquer Your Fear
                     </a>
                 </div>
+                <!-- Wrapper for the two smaller boxes on the right-->
+                <div class="small-boxes-wrapper">
+                    <div class="featured-link-box small-box">
+                        <img src="/static/assets/img/pb-images/pb1.jpg" alt="Description of first Image"
+                            class="featured-image">
+                        <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link"
+                            target="_blank">
+                            16 Science-Based Public Speaking Tips To Be a Master Speaker </a>
+                    </div>
+                    <div class="featured-link-box small-box">
+                        <img src="/static/assets/img/pb-images/pb3.jpg" alt="Description of first Image"
+                            class="featured-image">
+                        <a href="https://www.scienceofpeople.com/stage-fright/" class="featured-link" target="_blank">
+                            Stage Fright: How to Overcome It in 7 Easy Steps
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <hr>
+        <hr>
 
-    <div id="articles-section">
-        <div class="section-title">Articles</div>
-        <div class="category-buttons">
-            <button class="category-button" data-content-level="beginner"
-                onclick="setCategoryActive(this)">Beginner</button>
-            <button class="category-button" data-content-level="intermediate"
-                onclick="setCategoryActive(this)">Intermediate</button>
-            <button class="category-button" data-content-level="advanced"
-                onclick="setCategoryActive(this)">Advanced</button>
-        </div>
-        <!-- Scrollable Container -->
-        <div class="scrollable-section">
-            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'articles-scroll-container')">‹</button>
-            <div class="scroll-container" id="articles-scroll-container">
-                <!-- Dynamic articles will be injected here -->
+        <!-- Articles Section -->
+        <div id="articles-section" class="articles-section">
+            <div class="subsection-title">Articles</div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-level="beginner" data-section="articles"
+                    onclick="setCategoryActive(this)">Beginner</button>
+                <button class="category-button" data-content-level="intermediate" data-section="articles"
+                    onclick="setCategoryActive(this)">Intermediate</button>
+                <button class="category-button" data-content-level="advanced" data-section="articles"
+                    onclick="setCategoryActive(this)">Advanced</button>
             </div>
-            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'articles-scroll-container')">›</button>
-        </div>
-    </div>
-
-    <hr>
-    <!-- Videos Section -->
-    <div id="videos-section">
-        <div class="section-title">Videos</div>
-        <div class="category-buttons">
-            <button class="category-button" data-content-level="beginner"
-                onclick="setCategoryActive(this)">Beginner</button>
-            <button class="category-button" data-content-level="intermediate"
-                onclick="setCategoryActive(this)">Intermediate</button>
-            <button class="category-button" data-content-level="advanced"
-                onclick="setCategoryActive(this)">Advanced</button>
-        </div>
-        <div class="scrollable-section">
-            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'videos-scroll-container')">‹</button>
-            <div class="scroll-container" id="videos-scroll-container">
-                <!-- Dynamic videos will be injected here -->
+            <!-- Scrollable Container -->
+            <div class="scrollable-section">
+                <button class="scroll-btn left"
+                    onclick="scrollHorizontal('left', 'articles-scroll-container')">‹</button>
+                <div class="scroll-container" id="articles-scroll-container">
+                    <!-- Dynamic articles will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'articles-scroll-container')">›</button>
             </div>
-            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'videos-scroll-container')">›</button>
         </div>
-    </div>
 
-    <hr>
-    <!-- Expert Insights Section -->
-    <div id="expert-section">
-        <div class="section-title">Expert Insights</div>
-        <div class="category-buttons">
-            <button class="category-button" data-content-type="article"
-                onclick="setCategoryActive(this)">Articles</button>
-            <button class="category-button" data-content-type="video" onclick="setCategoryActive(this)">Videos</button>
-        </div>
-        <div class="scrollable-section">
-            <button class="scroll-btn left" onclick="scrollHorizontal('left', 'expert-scroll-container')">‹</button>
-            <div class="scroll-container" id="expert-scroll-container">
-                <!-- Dynamic expert insights will be injected here -->
+        <hr>
+
+        <!-- Videos Section -->
+        <div id="videos-section" class="videos-section">
+            <div class="subsection-title">Videos</div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-level="beginner" data-section="videos"
+                    onclick="setCategoryActive(this)">Beginner</button>
+                <button class="category-button" data-content-level="intermediate" data-section="videos"
+                    onclick="setCategoryActive(this)">Intermediate</button>
+                <button class="category-button" data-content-level="advanced" data-section="videos"
+                    onclick="setCategoryActive(this)">Advanced</button>
             </div>
-            <button class="scroll-btn right" onclick="scrollHorizontal('right', 'expert-scroll-container')">›</button>
+            <div class="scrollable-section">
+                <button class="scroll-btn left" onclick="scrollHorizontal('left', 'videos-scroll-container')">‹</button>
+                <div class="scroll-container" id="videos-scroll-container">
+                    <!-- Dynamic videos will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'videos-scroll-container')">›</button>
+            </div>
         </div>
+
+        <hr>
+
+        <!-- Expert Insights Section -->
+        <div id="expert-section" class="expert-insights-section">
+            <div class="subsection-title">Expert Insights</div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-type="article" data-section="expert"
+                    onclick="setCategoryActive(this)">Articles</button>
+                <button class="category-button" data-content-type="video" data-section="expert"
+                    onclick="setCategoryActive(this)">Videos</button>
+            </div>
+            <div class="scrollable-section">
+                <button class="scroll-btn left" onclick="scrollHorizontal('left', 'expert-scroll-container')">‹</button>
+                <div class="scroll-container" id="expert-scroll-container">
+                    <!-- Dynamic expert insights will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'expert-scroll-container')">›</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div>
+            {% include "includes/footer.html" %}
+        </div>
+
     </div>
 
-    <hr>
-
-    <div>
-        {% include "includes/footer.html" %}
-    </div>
 
 </body>
 
 </html>
-
-
 
 
 {% endblock %}
