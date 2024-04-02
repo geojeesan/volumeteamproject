@@ -1,0 +1,95 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+
+    .container {
+        margin: auto;
+        text-align: left; 
+    }
+
+    h1 {
+        text-align: left;
+    }
+
+    .list-container {
+        margin-top: 20px;
+    }
+
+    .link-container {
+        display: flex;
+        align-items: flex-start; 
+        background-color: #ACAACC;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .article-image img {
+        width: 200px; 
+        height: auto; 
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 15px; 
+    }
+
+    .article-info h2 {
+        font-size: 1em; 
+        margin: 0;
+        padding: 0;
+        text-align: left; 
+    }
+
+    .article-info p {
+        font-size: 0.9em; 
+        margin: 5px 0px 0 0;
+        font-weight: bold;
+        text-align: left; 
+    }
+
+    .article-info a {
+        color: inherit; 
+        text-decoration: none; 
+    }
+
+    .article-info a:hover {
+        color: #12174c;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+
+</style>
+
+{% endblock stylesheets %}
+
+
+
+{% block content %}
+
+<div class="container">
+    <h1>Articles</h1>
+    <div class="list-container">
+        {% for article in articles %}
+        <div class="link-container">
+            {% if article.image_url %}
+            <div class="article-image">
+                <img src="{{ article.image_url }}" alt="{{ article.name }}">
+            </div>
+            {% endif %}
+            <div class="article-info">
+                <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
+                <p>Content Level: {{ article.content_level }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p>No articles found.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+

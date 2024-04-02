@@ -1,0 +1,90 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Videos{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+
+    .container {
+        margin: auto;
+        text-align: left; 
+    }
+
+    h1 {
+        text-align: left;
+    }
+
+    .list-container {
+        margin-top: 20px;
+    }
+
+    .link-container {
+        display: flex;
+        align-items: flex-start; 
+        background-color: #ACAACC;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .article-image img {
+        width: 200px; 
+        height: auto; 
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 15px; 
+    }
+
+    .article-info h2 {
+        font-size: 1em; 
+        margin: 0;
+        padding: 0;
+        text-align: left; 
+    }
+
+    .article-info p {
+        font-size: 0.9em; 
+        margin: 5px 0px 0 0;
+        font-weight: bold;
+        text-align: left; 
+    }
+
+    .article-info a {
+        color: inherit; 
+        text-decoration: none; 
+    }
+
+    .article-info a:hover {
+        color: #12174c;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+    <h1>Videos</h1>
+    <div class="list-container">
+        {% for video in videos %}
+        <div class="link-container">
+            {% if video.image_url %}
+            <div class="article-image">
+                <img src="{{ video.image_url }}" alt="{{ video.name }}">
+            </div>
+            {% endif %}
+            <div class="article-info">
+                <h2><a href="{{ video.link }}" target="_blank">{{ video.name }}</a></h2>
+                <p>Content Level: {{ video.content_level }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p>No videos found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
