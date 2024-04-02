@@ -31,7 +31,7 @@ def get_articles():
             'content_level': article.content_level,
             'click_count': article.click_count,
             'image_url': article.image_url,
-            'time_to_completion': article.time_to_complete  # Adjusted field name
+            'time_to_completion': article.time_to_complete 
         } 
         for article in articles
     ]
@@ -50,7 +50,7 @@ def get_videos():
             'content_level': video.content_level,
             'click_count': video.click_count,
             'image_url': video.image_url,
-            'time_to_completion': video.time_to_complete  # Adjusted field name
+            'time_to_completion': video.time_to_complete  
         } 
         for video in videos
     ]
@@ -70,12 +70,29 @@ def get_expert_insights():
             'content_type': insight.content_type,
             'click_count': insight.click_count,
             'image_url': insight.image_url,
-            'time_to_completion': insight.time_to_complete  # Adjusted field name
+            'time_to_completion': insight.time_to_complete  
         } 
         for insight in expert_insights
     ]
     return jsonify(expert_insights_list)
 
+@blueprint.route('/articles/all')
+@login_required
+def all_articles():
+    articles = Article.query.all() 
+    return render_template('resource/articles_all.html', articles=articles, segment='articles_all', API_GENERATOR=len(API_GENERATOR))
+
+@blueprint.route('/videos/all')
+@login_required
+def all_videos():
+    videos = Video.query.all()
+    return render_template('resource/videos_all.html', videos=videos, segment='videos_all', API_GENERATOR=len(API_GENERATOR))
+
+@blueprint.route('/expert/all')
+@login_required
+def all_expert_insights():
+    expert_insights = ExpertInsight.query.all() 
+    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights, segment='expert_insights_all', API_GENERATOR=len(API_GENERATOR))
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to increment click count

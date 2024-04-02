@@ -4,10 +4,6 @@
 
 {% block stylesheets %}
 
-{% endblock %}
-
-{% block content %}
-
 <style>
     body {
         font-family: "Roboto", sans-serif;
@@ -117,22 +113,38 @@
         margin: 30px 30px;
     }
 
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-bottom: 15px;
+    }
+
     .subsection-title {
         font-size: 1.5em;
-        /* Smaller than the main section title */
         color: inherit;
-        /* Keeping the color consistent with your theme */
         font-weight: bolder;
-        /* Optional: if you want the title to be bold */
-        margin-bottom: 15px;
-        /* Adds some space below the title */
+        margin-right: 50px;
+    }
+
+    .view-all-btn {
+        font-size: 1em;
+        color: inherit;
+        text-decoration: underline;
+        padding: 5px 10px;
+        text-align: right;
+    }
+
+    .view-all-btn:hover {
+        color: inherit;
+        font-weight: bold;
+        text-decoration: underline;
     }
 
     .scrollable-section {
         display: flex;
         align-items: top;
         width: 100%;
-        /* Ensure the scrollable section spans the full container width */
     }
 
     .scroll-container {
@@ -142,9 +154,7 @@
         padding: 20px 0;
         gap: 20px;
         min-width: 190px;
-        /* Set a minimum width */
         min-height: 140px;
-        /* Set a minimum height */
     }
 
     .scroll-box {
@@ -161,9 +171,7 @@
         align-items: center;
         justify-content: flex-start;
         min-width: 200px;
-        /* Set a minimum width */
         min-height: 150px;
-        /* Set a minimum height */
         background-color: #ACAACC;
         border-radius: 10px;
         margin-right: 10px;
@@ -201,12 +209,10 @@
         border: none;
         color: #12174c;
         font-size: 18px;
-        /* Additional styling to improve visibility */
         margin: 0 5px;
         border-radius: 5px;
     }
 
-    /* Adjust button positioning if necessary */
     .scroll-btn.left {
         margin-right: 20px;
     }
@@ -215,6 +221,12 @@
         margin-left: 15px;
     }
 </style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -239,7 +251,7 @@
 
         <!-- Featured Section -->
         <div class="featured-section">
-            <div class="subsection-title">Featured</div>
+            <div class="subsection-title">FEATURED</div>
             <div class="featured-links-container">
                 <!-- Large box on the left-->
                 <div class="featured-link-box large-box">
@@ -274,7 +286,10 @@
 
         <!-- Articles Section -->
         <div id="articles-section" class="articles-section">
-            <div class="subsection-title">Articles</div>
+            <div class="section-header">
+                <span class="subsection-title">ARTICLES</span>
+                <a href="/articles/all" class="view-all-btn">VIEW ALL</a>
+            </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-level="beginner" data-section="articles"
                     onclick="setCategoryActive(this)">Beginner</button>
@@ -299,7 +314,10 @@
 
         <!-- Videos Section -->
         <div id="videos-section" class="videos-section">
-            <div class="subsection-title">Videos</div>
+            <div class="section-header">
+                <span class="subsection-title">VIDEOS</span>
+                <a href="/videos/all" class="view-all-btn">VIEW ALL</a>
+            </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-level="beginner" data-section="videos"
                     onclick="setCategoryActive(this)">Beginner</button>
@@ -322,7 +340,10 @@
 
         <!-- Expert Insights Section -->
         <div id="expert-section" class="expert-insights-section">
-            <div class="subsection-title">Expert Insights</div>
+            <div class="section-header">
+                <span class="subsection-title">EXPERT INSIGHTS</span>
+                <a href="/expert/all" class="view-all-btn">VIEW ALL</a>
+            </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-type="article" data-section="expert"
                     onclick="setCategoryActive(this)">Articles</button>
