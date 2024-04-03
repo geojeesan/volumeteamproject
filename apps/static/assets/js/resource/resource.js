@@ -109,8 +109,6 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
         url += `?${queryParam}=${filter}`;
     }
 
-    console.log('Fetching URL:', url);
-
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -119,7 +117,7 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
             data.forEach(item => {
                 const element = document.createElement('div');
                 element.className = 'scroll-item';
-                
+
                 // Creating and appending the image element
                 const img = document.createElement('img');
                 img.src = item.image_url;
@@ -134,6 +132,15 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                 link.target = "_blank";
                 link.textContent = item.name;
                 element.appendChild(link);
+
+                // Time to complete element
+                if (item.time_to_completion) {
+                    const timeElement = document.createElement('div');
+                    timeElement.className = 'time-to-complete'; // Add a class for styling
+                    timeElement.textContent = `${item.time_to_completion}`;
+                    element.appendChild(timeElement);
+                }
+
 
                 container.appendChild(element);
             });

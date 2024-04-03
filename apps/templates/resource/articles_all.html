@@ -5,10 +5,9 @@
 {% block stylesheets %}
 
 <style>
-
     .container {
         margin: auto;
-        text-align: left; 
+        text-align: left;
     }
 
     h1 {
@@ -21,7 +20,7 @@
 
     .link-container {
         display: flex;
-        align-items: flex-start; 
+        align-items: flex-start;
         background-color: #ACAACC;
         margin-bottom: 10px;
         padding: 10px;
@@ -29,44 +28,39 @@
     }
 
     .article-image img {
-        width: 200px; 
-        height: auto; 
+        width: 200px;
+        height: auto;
         object-fit: cover;
         border-radius: 5px;
-        margin-right: 15px; 
+        margin-right: 15px;
     }
 
     .article-info h2 {
-        font-size: 1em; 
+        font-size: 1em;
         margin: 0;
         padding: 0;
-        text-align: left; 
+        text-align: left;
     }
 
     .article-info p {
-        font-size: 0.9em; 
+        font-size: 0.9em;
         margin: 5px 0px 0 0;
-        font-weight: bold;
-        text-align: left; 
+        text-align: left;
     }
 
     .article-info a {
-        color: inherit; 
-        text-decoration: none; 
+        color: inherit;
+        text-decoration: none;
     }
 
     .article-info a:hover {
-        color: #12174c;
+        color: inherit;
         text-decoration: underline;
         font-weight: bold;
     }
-
-
 </style>
 
 {% endblock stylesheets %}
-
-
 
 {% block content %}
 
@@ -75,13 +69,15 @@
     <div class="list-container">
         {% for article in articles %}
         <div class="link-container">
-            {% if article.image_url %}
             <div class="article-image">
+                {% if article.image_url %}
                 <img src="{{ article.image_url }}" alt="{{ article.name }}">
+                {% endif %}
             </div>
-            {% endif %}
             <div class="article-info">
                 <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
+                <p>{{ article.description }}</p>
+                <p>Time to Complete: {{ article.time_to_complete }}utes</p>
                 <p>Content Level: {{ article.content_level }}</p>
             </div>
         </div>
@@ -92,4 +88,3 @@
 </div>
 
 {% endblock %}
-
