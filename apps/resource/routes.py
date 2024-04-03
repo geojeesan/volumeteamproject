@@ -31,7 +31,8 @@ def get_articles():
             'content_level': article.content_level,
             'click_count': article.click_count,
             'image_url': article.image_url,
-            'time_to_completion': article.time_to_complete 
+            'time_to_completion': article.time_to_complete,
+            'description': article.description
         } 
         for article in articles
     ]
@@ -50,7 +51,8 @@ def get_videos():
             'content_level': video.content_level,
             'click_count': video.click_count,
             'image_url': video.image_url,
-            'time_to_completion': video.time_to_complete  
+            'time_to_completion': video.time_to_complete, 
+            'description': video.description 
         } 
         for video in videos
     ]
@@ -70,7 +72,8 @@ def get_expert_insights():
             'content_type': insight.content_type,
             'click_count': insight.click_count,
             'image_url': insight.image_url,
-            'time_to_completion': insight.time_to_complete  
+            'time_to_completion': insight.time_to_complete,
+            'description': insight.description
         } 
         for insight in expert_insights
     ]
@@ -151,15 +154,17 @@ class Article(db.Model):
     click_count = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
     time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
+    description = db.Column(db.Text, nullable=True)  # New column for description
     __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, image_url, time_to_complete, click_count=0):
+    def __init__(self, name, link, content_level, image_url, time_to_complete, description, click_count=0):
         self.name = name
         self.link = link
         self.content_level = content_level
         self.click_count = click_count
         self.image_url = image_url
         self.time_to_complete = time_to_complete
+        self.description = description
 
 class Video(db.Model):
     __tablename__ = 'videos'
@@ -170,15 +175,17 @@ class Video(db.Model):
     click_count = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
     time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
+    description = db.Column(db.Text, nullable=True)  # New column for description
     __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, image_url, time_to_complete, click_count=0):
+    def __init__(self, name, link, content_level, image_url, time_to_complete, description, click_count=0):
         self.name = name
         self.link = link
         self.content_level = content_level
         self.click_count = click_count
         self.image_url = image_url
         self.time_to_complete = time_to_complete
+        self.description = description
 
 class ExpertInsight(db.Model):
     __tablename__ = 'expert_insights'
@@ -189,15 +196,17 @@ class ExpertInsight(db.Model):
     click_count = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
     time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
+    description = db.Column(db.Text, nullable=True)  # New column for description
     __table_args__ = (CheckConstraint("content_type IN ('article', 'video')"),)
 
-    def __init__(self, name, link, content_type, image_url, time_to_complete, click_count=0):
+    def __init__(self, name, link, content_type, image_url, time_to_complete, description, click_count=0):
         self.name = name
         self.link = link
         self.content_type = content_type
         self.click_count = click_count
         self.image_url = image_url
         self.time_to_complete = time_to_complete
+        self.description = description
 # ----------------------------------------------------------------------------------------------------------------------
 
 
