@@ -1,0 +1,176 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block stylesheets %}
+     
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px; /* Ensuring consistent font size */
+        }
+
+        textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .faq {
+            margin-bottom: 20px;
+        }
+
+        .faq h5 {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .faq p {
+            display: none;
+        }
+
+        .faq p.active {
+            display: block;
+        }
+
+        .faq li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <h3>Contact Us</h3>
+        <h6>Let's get this conversation started. Tell us a bit about yourself, and we'll get in touch pretty soon!</h6>
+        <form id="contactForm" action="/submit_contact" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button id="contactbtn" class="btn btn-primary" onclick="validateForm()">Submit Input</button>
+        </form>
+
+        <div class="faq">
+            <h4>Frequently Asked Questions</h4>
+            <ul>
+                <li>
+                    <h5>What is Volume? <span>&#9660;</span></h5>
+                    <p>Volume is a website designed to help individuals improve their speaking skills.</p>
+                </li>
+                <li>
+                    <h5>How can I sign up for Volume? <span>&#9660;</span></h5>
+                    <p>You can sign up for Volume by visiting our registration page and following the instructions.</p>
+                </li>
+                <li>
+                    <h5>Is Volume accessible? <span>&#9660;</span></h5>
+                    <p>Yes, Volume offers both dark and light themes, as well as three different font sizes for accessibility.</p>
+                </li>
+                <li>
+                    <h5>Are there any fees for using Volume? <span>&#9660;</span></h5>
+                    <p>No, Volume is completely free to use for all users.</p>
+                </li>
+                <li>
+                    <h5>Can I customize my profile on Volume? <span>&#9660;</span></h5>
+                    <p>Yes, Volume allows users to customize their profiles with personal information, profile pictures, and preferences.</p>
+                </li>
+                <li>
+                    <h5>How can I reset my password on Volume? <span>&#9660;</span></h5>
+                    <p>You can reset your password on Volume by clicking on the "Forgot Password" link on the login page and following the instructions provided.</p>
+                </li>
+            </ul>
+        </div>
+
+        <h4>Contact Information</h4>
+        <p>If you have any further questions or concerns, please don't hesitate to contact us:</p>
+        <ul>
+            <li>Ameer Firas Alhashemi: <a href="mailto:afa192@student.bham.ac.uk">afa192@student.bham.ac.uk</a></li>
+            <br>
+            <li>Geo Noel Jeesan: <a href="mailto:gnj224@student.bham.ac.uk">gnj224@student.bham.ac.uk</a></li>
+            <br>
+            <li>Jovin Joseph: <a href="mailto:jxj243@student.bham.ac.uk">jxj243@student.bham.ac.uk</a></li>
+            <br>
+            <li>Hassan AlJuboori: <a href="mailto:hga101@student.bham.ac.uk">hga101@student.bham.ac.uk</a></li>
+            <br>
+            <li>Maha F.M Adwan: <a href="mailto:mfa147@student.bham.ac.uk">mfa147@student.bham.ac.uk</a></li>
+            <br>
+            <li>Sajia Balkees Sayed: <a href="mailto:sbs255@student.bham.ac.uk">sbs255@student.bham.ac.uk</a></li>
+            <br>
+            <li>Adnan Alfatouhi Aljundi: <a href="mailto:axa1888@student.bham.ac.uk">axa1888@student.bham.ac.uk</a></li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqQuestions = document.querySelectorAll('.faq h5');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function () {
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

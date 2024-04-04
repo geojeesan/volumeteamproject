@@ -384,6 +384,13 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
 
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    subject = db.Column(db.String(200))
+    message = db.Column(db.Text)
+
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer)
