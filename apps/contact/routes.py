@@ -1,0 +1,60 @@
+# -*- encoding: utf-8 -*-
+
+from apps.home import blueprint
+from apps import db
+from flask import request, redirect, url_for, jsonify, flash, render_template
+from flask_login import login_required
+from jinja2 import TemplateNotFound
+from apps.config import API_GENERATOR
+from apps.models import Contact, UserActionLog
+
+
+@blueprint.route('/thank-you2')
+def thank_you2():
+    return render_template('contact/thank-you2.html', segment='contact', API_GENERATOR=len(API_GENERATOR))
+
+
+@blueprint.route('/contact')
+def contact():
+    return render_template('contact/contact.html', segment='contact', API_GENERATOR=len(API_GENERATOR))
+
+@blueprint.route('/submit_contact', methods=['POST'])
+def submit_contact():
+    try:
+        name = request.form.get('name')
+        email = request.form.get('email')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+
+        contact = Contact(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        )
+
+        db.session.add(contact)
+        db.session.commit()
+
+        flash('Contact submitted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error submitting contact: {}'.format(str(e)), 'error')
+
+    return redirect(url_for('contact.thank_you2'))
+
+@blueprint.route('/get_contact_data')
+def get_contact():
+    contact_data = Contact.query.all()
+    contact_list = []
+
+    for contact in contact_data:
+        contact_list.append({
+            'id': contact.id,
+            'name': contact.name,
+            'email': contact.email,
+            'subject': contact.subject,
+            'message': contact.message
+        })
+
+    return jsonify({'contact': contact_list})
