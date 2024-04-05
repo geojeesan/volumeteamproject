@@ -26,29 +26,7 @@ function viewProfile(username) {
   });
 }
 
-// function searchUsers() {
-//   var searchInput = document.getElementById('searchInput').value;
-//   var userId = 5; // Function to get the user ID, you need to implement this
 
-//   // Send AJAX request to Flask endpoint
-//   $.ajax({
-//       url: '/profilepage/' + userId,  // Dynamically generate URL with the correct user ID
-//       method: 'POST',
-//       data: {searchTerm: searchInput},
-//       success: function(response) {
-//           var searchResults = document.getElementById('searchResults');
-//           searchResults.innerHTML = ''; // Clear previous search results
-
-//           // Append search results to the list
-//           response.forEach(function(user) {
-//               var listItem = document.createElement('li');
-//               listItem.className = 'list-group-item';
-//               listItem.textContent = user.username;
-//               searchResults.appendChild(listItem);
-//           });
-//       }
-//   });
-// }
 
 // Function to handle search
 function searchUsers() {

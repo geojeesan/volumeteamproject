@@ -2,21 +2,15 @@
 
 from apps.home import blueprint
 from apps import db
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import flash, render_template, request, redirect, url_for, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask import jsonify
 from apps.config import API_GENERATOR
 from apps.models import Feedback, UserActionLog
 
-
-
-@blueprint.route('/thank-you')
-def thank_you():
-    return render_template('feedback/thank-you.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
-
-
 @blueprint.route('/feedback')
+@login_required
 def feedback():
     return render_template('feedback/feedback.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
 
@@ -62,8 +56,10 @@ def submit_feedback():
 
     db.session.add(feedback)
     db.session.commit()
-    UserActionLog.log_user_action('Feedback submitted')
-    return redirect(url_for('feedback.thank_you'))
+    flash('Feedback submitted successfully!')
+    flash('We will thoroughly review your suggestions and work towards enhancing our app experience.')
+    UserActionLog.log_user_action('Feedback submitted successfully!')
+    return redirect(url_for('feedback.feedback'))
 
 @blueprint.route('/get_feedback_data')
 def get_feedback():

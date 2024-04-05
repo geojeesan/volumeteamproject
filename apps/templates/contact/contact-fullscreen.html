@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base-fullscreen.html' %}
 
 {% block title %}Contact Us{% endblock %}
 
@@ -96,19 +96,28 @@
 {% endblock %}
 
 {% block content %}
-<body>
+
+<div class="container position-sticky z-index-sticky top-1">
+    <div class="row">
+      <div class="col-12">
+
+        {% include "includes/navigation-fullscreen.html" %}
+
+      </div>
+    </div>
+  </div>
     <div class="container">
         {% with messages = get_flashed_messages() %}
     {% if messages %}
-      <div class="alert alert-secondary mt-4" style="background-color: purple; color: white;">
+      <div class="alert alert-secondary mt-5" style="background-color: purple; color: white;">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; right: 2%; top: 35%;"></button>
         {% for message in messages %}
           <p style="top: 35%;">{{ message }}</p>
         {% endfor %}
-    </div>
+      </div>
     {% endif %}
   {% endwith %}
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
         <div class="row mb-4">
           <div class="col-12">
             <h1 class="fw-bold">Contact Us</h1>
@@ -195,10 +204,9 @@
 </div>
 </section>
 
-
 <div class="container-fluid py-4">
 
-    {% include "includes/footer.html" %}
+    {% include "includes/footer-fullscreen.html" %}
 
   </div>
 

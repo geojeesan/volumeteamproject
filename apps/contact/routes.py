@@ -3,20 +3,25 @@
 from apps.home import blueprint
 from apps import db
 from flask import request, redirect, url_for, jsonify, flash, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from apps.config import API_GENERATOR
 from apps.models import Contact, UserActionLog
 
-
-@blueprint.route('/thank-you2')
-def thank_you2():
-    return render_template('contact/thank-you2.html', segment='contact', API_GENERATOR=len(API_GENERATOR))
-
-
 @blueprint.route('/contact')
 def contact():
-    return render_template('contact/contact.html', segment='contact', API_GENERATOR=len(API_GENERATOR))
+    if current_user.is_authenticated:
+        return render_template(
+            "contact/contact.html",
+            segment="contact",
+            API_GENERATOR=len(API_GENERATOR),
+        )
+    else:
+        return render_template(
+            "contact/contact-fullscreen.html",
+            segment="contact",
+            API_GENERATOR=len(API_GENERATOR),
+        )
 
 @blueprint.route('/submit_contact', methods=['POST'])
 def submit_contact():
@@ -36,12 +41,13 @@ def submit_contact():
         db.session.add(contact)
         db.session.commit()
 
-        flash('Contact submitted successfully!', 'success')
+        flash('Your message has been submitted successfully!', 'success')
+        flash('We will get back to you as soon as possible.')
     except Exception as e:
         db.session.rollback()
-        flash('Error submitting contact: {}'.format(str(e)), 'error')
+        flash('Error submitting message: {}'.format(str(e)), 'error')
 
-    return redirect(url_for('contact.thank_you2'))
+    return redirect(url_for('contact.contact'))
 
 @blueprint.route('/get_contact_data')
 def get_contact():
