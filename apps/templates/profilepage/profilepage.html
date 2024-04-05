@@ -132,7 +132,7 @@
   .top-buttons {
     position: absolute;
     top: 35%;
-    left: 95%;
+    right: 5%;
     transform: translateX(-50%);
   }
   
@@ -161,10 +161,18 @@
     {% endif %}
   {% endwith %}
   
+  {% if current_user.id != user.id %}
+  <div class="page-header min-height-300 border-radius-xl mt-4"
+    style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved6.jpg'); background-position-y: 50%;">
+    <span class="mask bg-gradient-primary opacity-6"></span>
+    <button class="btn btn-secondary blur shadow-blur" style="position: absolute; left: 0.5%; top: 2%; border-radius: 0.8rem; color: #3b416c;" onclick="window.location.href='/profilepage/{{ current_user.id }}'">◀ Your Profile</button>
+  </div>
+  {% else %}
   <div class="page-header min-height-300 border-radius-xl mt-4"
     style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved0.jpg'); background-position-y: 50%;">
     <span class="mask bg-gradient-primary opacity-6"></span>
   </div>
+  {% endif %}
   <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
     {% if current_user.id == user.id %}
         <div class="nav-wrapper position-absolute end-0 top-buttons">
@@ -174,10 +182,10 @@
           </a>
         </div>
       {% else %}
-        <div class="nav-wrapper position-absolute end-0 top-buttons" style="left: 88%; top: 20%; bottom: 50%">
+        <div class="nav-wrapper position-absolute end-0 top-buttons" >
           {% if is_following %}
           <form action="/unfollow/{{ user.id }}" method="POST" enctype="multipart/form-data">
-            <a>‎ ‎ ‎Following </a>
+            <a>‎ ‎ ‎Following </a> <br>
             <button class="btn btn-primary" style="background-color: #781963;">Unfollow</button>
           </form>
           {% else %}
@@ -535,9 +543,9 @@
       </div>
     </div>
   </div>
-
+  <div class="container-fluid py-4">
   {% include "includes/footer.html" %}
-
+</div>
 </div>
 
 {% endblock content %}

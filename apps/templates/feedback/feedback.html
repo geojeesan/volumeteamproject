@@ -223,6 +223,16 @@
 
 {% block content %}
 <div class="container-fluid py-4">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-secondary mt-4" style="color: white;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; right: 2%; top: 35%;"></button>
+        {% for message in messages %}
+          <p style="top: 35%;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
   <div class="row mb-30">
     <div class="col-12">
       <h1>Share your Feedback</h1>
@@ -232,8 +242,8 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-lg-11">
+<div class="container-fluid py-4">
+  <div class="col-12">
     <div class="card mb-4">
       <div class="card-body">
 
@@ -288,12 +298,12 @@
 
         <div>
         <h6>d) Have you experienced any technical issues or bugs while using Volume? If so, please describe.</h6>
-            <textarea id="issues" name="issues" rows="4" cols="50"></textarea>
+            <textarea class="form-control" id="issues" name="issues" rows="4" cols="50"></textarea>
             </div>      
 
         <div>
             <h6>e) What improvements and new features would you like to see in future Volume updates to improve your learning?</h6>
-                <textarea id="updates" name="updates" rows="4" cols="50"></textarea>
+                <textarea class="form-control" id="updates" name="updates" rows="4" cols="50"></textarea>
                 </div>
                 
         <br>
@@ -339,7 +349,7 @@
 
 <div>
     <h6>c) Do you find the lessons engaging and interactive? If so, what interactive exercises would you like added to Volume?</h6>
-    <textarea id="lessons" name="lessons" rows="4" cols="50"></textarea>
+    <textarea class="form-control" id="lessons" name="lessons" rows="4" cols="50"></textarea>
     </div>
     
     <h6>d) Is the progress tracking system effectively capturing your advancements in speaking skills?</h6>
@@ -386,11 +396,11 @@
         <thead>
         <tr>
         <th></th>
-        <th>Strongly Disagree</th>
-        <th>Disagree</th>
-        <th>Neutral</th>
-        <th>Agree</th>
-        <th>Strongly Agree</th>
+        <th style="color: #384664;">Strongly Disagree</th>
+        <th style="color: #384664;">Disagree</th>
+        <th style="color: #384664;">Neutral</th>
+        <th style="color: #384664;">Agree</th>
+        <th style="color: #384664;">Strongly Agree</th>
         </tr>
         </thead>
         <tbody>
@@ -432,13 +442,16 @@
     </form>
 
 
-
       </div>
     </div>
   </div>
 </div>
 
+<div class="container-fluid py-4">
 
+  {% include "includes/footer.html" %}
+
+</div>
 
 {% endblock %}
 
