@@ -6,6 +6,14 @@ const themeStates = ["light", "dark"]
 const pageClass = ["bg-gray-100", "dark-page"]
 let currentTheme = localStorage.getItem("theme");
 
+
+function setFontSize(newSize) {
+    document.body.style.zoom = newSize;
+    localStorage.setItem('fontSize', newSize); // Store the selected font size
+  }
+
+
+
 function setPage(theme) {
     page.classList.remove(pageClass[0])
     page.classList.remove(pageClass[1])
@@ -23,4 +31,10 @@ if (currentTheme === themeStates[0]) {
 }
 if (currentTheme === themeStates[1]) {
     setPage(1)
+}
+
+
+var storedFontSize = localStorage.getItem('fontSize');
+if (storedFontSize) {
+    setFontSize(storedFontSize); // Apply the stored font size
 }

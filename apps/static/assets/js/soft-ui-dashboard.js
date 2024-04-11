@@ -302,20 +302,6 @@ function navbarFixed(el, clicked=true) {
 
 navbarFixed(buttonNavbarFixed, false)
 
-function setFontSize(newSize) {
-  document.body.style.zoom = newSize;
-  localStorage.setItem('fontSize', newSize); // Store the selected font size
-}
-
-// Function to retrieve the font size from localStorage and apply it on page load
-window.onload = function() {
-  var storedFontSize = localStorage.getItem('fontSize');
-  if (storedFontSize) {
-      setFontSize(storedFontSize); // Apply the stored font size
-  }
-}
-
-
 
 
 // Navbar blur on scroll
