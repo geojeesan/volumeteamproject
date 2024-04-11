@@ -1,6 +1,6 @@
-body {
+/* body {
   transition: background-color 200ms ease-in;
-}
+} */
 
 body.dark-page {
   background-color: #283149;
