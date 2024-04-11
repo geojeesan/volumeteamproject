@@ -12,14 +12,17 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ config.ASSETS_ROOT }}/img/apple-icon.png">
   <link rel="icon" type="image/png" href="{{ config.ASSETS_ROOT }}/img/audio-waves-light.svg">
+  
 
   <title>
     Volume {% block title %}{% endblock %}
@@ -34,27 +37,41 @@
   <!-- Nucleo Icons -->
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+  
   <!-- Font Awesome Icons -->
+  
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/soft-ui-dashboard.css?v=1.0.6" rel="stylesheet" />
-  
-  <link id="pagestyle_dark" href="{{ config.ASSETS_ROOT }}/css/dark-theme-core.css" rel="stylesheet" />
 
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/soft-ui-dashboard.css?v=1.0.6" rel="stylesheet" />
+  <link id="pagestyle_dark" href="{{ config.ASSETS_ROOT }}/css/dark-theme-core.css" rel="stylesheet" />
+  
+
+  
   <!-- Specific CSS goes HERE -->
   {% block stylesheets %}{% endblock stylesheets %}  
+
+  
 
 </head>
 <body class="g-sidenav-show  bg-gray-100">
   
+  <script src="{{ config.ASSETS_ROOT }}/js/switch-dark-mode.js"></script>
+
   {% include "includes/sidebar.html" %} 
+
 
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 
+    
     {% include "includes/navigation.html" %} 
 
-    {% block content %}{% endblock content %}
+    
+    {% block content %}
+    {% endblock content %}
+
 
   </main>
 
