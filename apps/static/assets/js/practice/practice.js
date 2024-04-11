@@ -13,6 +13,15 @@ let attitudeChart
 let audio_length
 
 
+// Tutorial related elements
+var tutContent
+var tutTextElement
+var tutNextElement
+var tutPrevElement
+var dialogueCount = 1
+var tutData;
+
+
 document.addEventListener('DOMContentLoaded', function () {
 resultElement = document.getElementById("result");
 inputElement = document.getElementById("score");
@@ -28,6 +37,23 @@ detailsTextElement = document.getElementById("details")
 errorTextElement = document.getElementById("error")
 preRecordedElement = document.getElementById("pre-recorded")
 preRecordedButton = document.getElementById("pre-recorded-button")
+scenarioDescElement = document.getElementById("scenario-desc")
+
+// Tutorial related elements 
+tutContent = document.getElementById("tut-content")
+tutTextElement = document.getElementById("tut-text")
+tutNextElement = document.getElementById("tut-next")
+tutPrevElement = document.getElementById("tut-prev")
+
+tutData = {1:["Hi, I'm Speeko! I'm going to teach you how to use Volume.", scenarioDescElement, 0.5, 0.9], 
+2:["This part shows you the specific scenario's details.", scenarioDescElement, 0.8, 0.9],
+3:["When recording your voice, you must attempt to respond in the most fitting way you can depending on the scenario.", null],
+4:["To record your voice, click this button. Make sure your device allows Volume to record your voice!", recordButton, 1.1, 0.6],
+5:["Once clicked, the button will start flashing like so. Click it again to stop and submit your response!", null],
+6:["Volume will then process your recording and give you your results!", scenarioDescElement, 0.7, 0.9],
+7:["Okay! That's all. You can retry the tutorial again in the lessons page!", null]
+}
+
 
 recordButton.addEventListener('click', handleRecording);
 toggleBlinking(recordButton)
@@ -303,6 +329,13 @@ function getLesson(lessonNum){
 
       // Update the pre-recorded voice files based on the scenario
       getPreRecorded()
+
+      
+      // Lesson 0 is tutorial
+      if (lessonNum == 0){
+        startTutorialSequence()
+      }
+
       }
   })
   .catch(error => {
@@ -333,6 +366,9 @@ function endScenario(){
   scenarioResultsElement.style.display = "block";
   scenarioScoreElement.innerText = "Score: " + scenario_score.toFixed(1).toString() + "/10";
   
+console.log(user_sentiments)
+console.log(tone_data)
+
   // These functions should create new chart instances with the latest data
   populateAttitudeChart(user_sentiments);
   populateToneChart(tone_data); // Make sure this function is updated to use the latest data
@@ -502,6 +538,12 @@ function populateToneChart(tone_data){
 
   console.log("AUDIO LENGTH:", audio_length)
 
+  // for tutorial
+  if (audio_length === null || audio_length === undefined){
+    console.log("here")
+    audio_length = 25
+  }
+
 
 // Calculate the interval length between segments
 let interval_length = audio_length / values.length;
@@ -661,4 +703,211 @@ Array.from(small_buttons).forEach(function(button) {
 });
     
 }
+
+
+
+
+
+
+function checkScrollTopChange(initialScrollTop) {
+  return new Promise((resolve, reject) => {
+      // Check scrollTop in an interval
+      var intervalId = setInterval(() => {
+          if (document.documentElement.scrollTop !== 1234) {
+            setTimeout(function() {
+              clearInterval(intervalId); // Clear the interval
+              resolve(); // Resolve the promise when scrollTop changes
+          }, 500); // 1000 milliseconds = 1 second
+    
+          }
+      }, 100); // Interval time in milliseconds
+  });
+}
+
+
+
+
+var overlay
+function startTutorialSequence() {
+  // Set document background to black with 50% opacity
+  // document.body.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+
+    // Create overlay element
+    overlay = document.createElement('div');
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor =  "rgba(0, 0, 0, 0.5)";
+    overlay.style.zIndex = "9999";
+    
+    document.body.appendChild(overlay);
+
+
+  tutContent.style.position = "fixed";
+  tutContent.style.top = "50%" //targetRect.top + 50 + 'px';
+  tutContent.style.left = "50%"
+  tutContent.style.width = 300 + "px";
+  tutContent.style.height = 200 + "px";
+  tutContent.style.backgroundColor = "white";
+  tutContent.style.zIndex = "9999";
+  tutContent.style.visibility = "visible"
+  tutContent.style.transform = "translateY(-50%)"; // Move the element up by 50% of its own height
+  tutContent.style.transform += "translateX(-50%)"; // Move the element left by 50% of its own width
+
+  
+  document.body.appendChild(tutContent);
+  updateTutData(1)
+
+  initialScroll = document.documentElement.scrollTop
+  document.documentElement.scrollTop = 1234;
+
+  
+
+//   checkScrollTopChange(initialScroll).then(() => {
+
+// });
+
+}
+
+
+function simulateBlink() {
+
+  let opacity = 0.5;
+  let intervalId;
+  let increment = 0.1;
+
+  intervalId = setInterval(function() {
+    opacity += increment;
+    if (opacity >= 1 || opacity <= 0.5) {
+      increment *= -1;
+    }
+    recordButton.style.opacity = opacity;
+  }, 100);
+
+  return intervalId
+}
+
+
+  function simulateStopBlink(intervalId) {
+    clearInterval(intervalId);
+    recordButton.style.opacity = 1;
+  }
+
+  function requestMicAccess(){
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Request access to the user's microphone
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function(stream) {
+          // Access granted, do something with the stream (e.g., record audio)
+          console.log("Microphone access granted");
+      })
+      .catch(function(error) {
+          // Access denied or error occurred
+          console.error("Error accessing microphone:", error);
+      });
+  } else {
+      console.error("getUserMedia is not supported in this browser");
+  }
+  }
+
+let intervalIdSimulate
+function updateTutData(num){
+
+    tutTextElement.textContent = tutData[num][0]
+    
+    if(tutData[num][1] !== null){
+      targetElem = tutData[num][1]
+      targetElemPos = targetElem.getBoundingClientRect()
+      offsetWidthFactor = tutData[num][2]
+      offsetHeightFactor = tutData[num][3]
+      tutContent.style.top = targetElemPos.top + (targetElem.offsetHeight * offsetHeightFactor) + "px"
+      tutContent.style.left = targetElemPos.left + (targetElem.offsetWidth * offsetWidthFactor) + "px"
+    }
+  
+    
+
+    tutDataLength = Object.keys(tutData).length;
+
+
+    // if (dialogueCount == tutDataLength){
+    //   tutNextElement.style.opacity = 0.5
+    //   tutNextElement.style.pointerEvents = "none"
+    // }else{
+    //   tutNextElement.style.opacity = 1
+    //   tutNextElement.style.pointerEvents = "all"
+    // }
+
+    if (dialogueCount - 1== 0){
+      tutPrevElement.style.opacity = 0.5
+      tutPrevElement.style.pointerEvents = "none"
+    }else{
+      tutPrevElement.style.opacity = 1
+      tutPrevElement.style.pointerEvents = "all"
+    }
+
+
+    if (dialogueCount == 4){
+      requestMicAccess()
+    }
+
+    if (dialogueCount == 5){
+      intervalIdSimulate = simulateBlink()
+    }
+    else{
+      simulateStopBlink(intervalIdSimulate);
+    }
+
+    if (dialogueCount == 6){
+      exampleResults()
+      scenarioViewElement.style.display = 'none'
+      scenarioResultsElement.style.display = 'block'
+    }
+
+    if (dialogueCount == tutDataLength){
+
+
+// Get the button element
+var button = tutNextElement
+
+button.textContent = "Super!"
+
+// Clone the button without its event listeners
+var newButton = button.cloneNode(true);
+
+// Replace the original button with the cloned one
+button.parentNode.replaceChild(newButton, button);
+
+// Add a new event listener to the button
+newButton.addEventListener('click', function() {
+    scenarioResultsElement.style.display = "none"
+    scenarioViewElement.style.display = 'block'
+    tutContent.style.display = 'none'
+    overlay.style.display = "none"
+});
+
+
+        tutNextElement.style.display = "none"
+        tutPrevElement.style.display = "none"
+    }
+
+}
+
+function exampleResults(){
+  populateAttitudeChart(example_sentiments);
+  populateToneChart(example_tone_data);
+}
+
+
+function nextTut(){
+    dialogueCount += 1
+    updateTutData(dialogueCount)
+}
+
+function prevTut(){
+  dialogueCount -= 1
+  updateTutData(dialogueCount)
+}
+
 
