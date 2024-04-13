@@ -50,10 +50,11 @@ def user_persona():
 
     # Integrate the user_rank logic here
     leaderboard = db.session.query(
-        UserScenarioProgress.user_id,
-        func.max(UserScenarioProgress.score).label("best_score"),
+        UserProgress.user_id,
+        UserProgress.total_score.label("best_score"),
         Users.username,
-    ).join(Users, UserScenarioProgress.user_id == Users.id).group_by(UserScenarioProgress.user_id).order_by(func.max(UserScenarioProgress.score).desc()).all()
+    ).join(Users, UserProgress.user_id == Users.id).order_by(UserProgress.total_score.desc()).all()
+
     
     rank = None
     for idx, user in enumerate(leaderboard):
@@ -132,12 +133,24 @@ def test_scores():
 @login_required
 def leaderboard():
     top_users = db.session.query(
-        UserScenarioProgress.user_id,
-        func.max(UserScenarioProgress.score).label("best_score"),
+        UserProgress.user_id,
+        UserProgress.total_score.label("best_score"),
         Users.username,
-    ).join(Users, UserScenarioProgress.user_id == Users.id).group_by(UserScenarioProgress.user_id).order_by(func.max(UserScenarioProgress.score).desc()).limit(10).all()
-    leaderboard_data = [{"rank": idx + 1, "username": user.username, "score": user.best_score, "level": UserProgress.query.filter_by(user_id=user.user_id).first().current_level, "level_progress": UserProgress.query.filter_by(user_id=user.user_id).first().level_progress} for idx, user in enumerate(top_users)]
+    ).join(Users, UserProgress.user_id == Users.id).order_by(UserProgress.total_score.desc()).limit(10).all()
+
+    leaderboard_data = []
+    for idx, user in enumerate(top_users):
+        user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
+        leaderboard_data.append({
+            "rank": idx + 1,
+            "username": user.username,
+            "score": user.best_score,
+            "level": user_progress.current_level,
+            "level_progress": user_progress.level_progress
+        })
+
     return jsonify(leaderboard_data)
+
 
 # Upcoming Events Endpoint
 @blueprint.route("/index/upcoming-events")
@@ -148,10 +161,19 @@ def upcoming_events():
     events_data = [{"id": event.id, "name": event.name, "description": event.description, "start_utc": event.start_utc.strftime("%Y-%m-%d %H:%M:%S"), "end_utc": event.end_utc.strftime("%Y-%m-%d %H:%M:%S")} for event in events]
     return jsonify(events_data)
 
+
 # Featured Lesson Endpoint
 @blueprint.route("/index")
 @login_required
 def index():
+        
+    # Update user's progress if he has registered progress
+    if UserProgress(user_id=current_user.id):
+        UserProgress.update_progress(current_user.id)
+    # Otherwise create new user progress for the user
+    else:
+        UserProgress.create_new_progress(current_user.id)
+    
     lessons = Lesson.query.all()
     lesson_index = get_daily_index(len(lessons))
     featured_lesson = lessons[lesson_index]
