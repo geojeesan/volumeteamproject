@@ -80,15 +80,26 @@ def get_notes():
 @blueprint.route('/save-notes', methods=['POST'])
 @login_required
 def save_notes():
-    content = request.json.get('content', '')
+    content = request.json.get('content', '') # Get the content from JSON
     user_id = current_user.get_id()
     note = UserNotes.query.filter_by(user_id=user_id).first()
+    
     if note:
-        note.content = content
+        note.content = content # Update existing note content
     else:
-        db.session.add(UserNotes(user_id=user_id, content=content))
+        db.session.add(UserNotes(user_id=user_id, content=content)) # Create a new note
+    
     db.session.commit()
+    UserActionLog.log_user_action('Notes saved successfully!')
     return jsonify({"message": "Notes saved successfully"})
+
+
+@blueprint.route("/view-full-notes")
+@login_required
+def view_full_notes():
+    user_id = current_user.get_id()
+    note = UserNotes.query.filter_by(user_id=user_id).first_or_404()
+    return render_template("home/view-full-notes.html", note_content=note.content)
 
 # Recent Activity Endpoint
 @blueprint.route("/user-actions")
@@ -133,7 +144,7 @@ def leaderboard():
 @login_required
 def upcoming_events():
     current_time = datetime.utcnow()
-    events = Event.query.filter(Event.end_utc > current_time).order_by(Event.start_utc.asc()).limit(4).all()
+    events = Event.query.filter(Event.end_utc > current_time).order_by(Event.start_utc.asc()).limit(5).all()
     events_data = [{"id": event.id, "name": event.name, "description": event.description, "start_utc": event.start_utc.strftime("%Y-%m-%d %H:%M:%S"), "end_utc": event.end_utc.strftime("%Y-%m-%d %H:%M:%S")} for event in events]
     return jsonify(events_data)
 
@@ -184,3 +195,4 @@ def get_segment(request):
 
     except:
         return None
+
