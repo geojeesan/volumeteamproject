@@ -47,6 +47,8 @@ def get_lessons_completion():
     user_id = current_user.id
 
     completed_lessons = 0
+    completed_lessons_names = []  # List to store names of completed lessons
+
     for lesson in Lesson.query.all():
         total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
         completed_scenarios = (
@@ -59,6 +61,8 @@ def get_lessons_completion():
 
         if total_scenarios > 0 and total_scenarios == completed_scenarios:
             completed_lessons += 1
+            completed_lessons_names.append(lesson.title)  # Add the lesson title to the list
+
 
     completion_percentage = (
         (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
@@ -67,7 +71,7 @@ def get_lessons_completion():
     # Ensure the response is always a float rounded to two decimal places
     completion_percentage = round(completion_percentage, 2)
     
-    UserActionLog.log_user_action('Lessons completed ')
+    UserActionLog.log_user_action(f"Lessons completed: {', '.join(completed_lessons_names)}")
     return jsonify({"completionPercentage": completion_percentage})
 
 
