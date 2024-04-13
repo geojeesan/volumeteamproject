@@ -6,6 +6,8 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 
 <style>
   /* Fonts */
@@ -106,7 +108,6 @@
   height: 45px; /* Icon container height */
   margin-right: 14px; /* Space between icon and text */
   border-radius: 50%; /* Makes it circular */
-  background-color: #ccb5d7; /* Background color of the icon container */
   color: #ffffff; /* Icon color */
   
 }
@@ -156,42 +157,212 @@
   justify-content: start; 
 }
 
+/* Base structure for the activity timeline */
 .activity-item {
-  left: 20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px; /* Adjust spacing between activities */
   position: relative;
-  margin-bottom: 10px;
-  padding-left: 30px;
-  border-left: 2px solid #dee2e6;
+  padding-left: 10px; /* Make room for the time indicator */
 }
 
+/* Time indicator circle */
 .activity-time-indicator {
-  position: absolute;
-  left: 20px; 
-  top: 0;
-  width: 10px;
-  height: 10px;
-  background: #fff;
-  border: 2px solid #dee2e6;
+  width: 12px; /* Match the size of your design */
+  height: 12px;
+  background-color: #ba9cc9; /* Adjust the color to match the circle */
   border-radius: 50%;
-  transform: translateX(-50%);
-  
+  position: absolute;
+  left: 22px; /* Half of the width to center it */
+  top: 10px;
 }
 
+/* The vertical bar of the timeline */
+.activity-item::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: -20px; /* Extend beyond the last item */
+  border-left: 2px solid #dee2e6; /* Adjust the color to match the design */
+}
+
+/* First item does not need the vertical bar above */
+.activity-item:first-child::before {
+  top: 12px; /* Align with the center of the time indicator */
+}
+
+/* Content including the activity title and timestamp */
 .activity-content {
-  padding-top: 5px;
+  flex-grow: 1;
+  padding-left: 37px; /* Space between indicator and content */
 }
 
+/* The actual text for the activity title */
 .activity-title {
-  font-weight: normal;
-  font-size: 14px; 
-  padding-left: 20px; 
-  margin-top: -12px;
+  font-size: 14px; /* Adjust to match your design */
+  color: #495057; /* A darker grey for text */
+  margin: 0; /* Remove default margins */
 }
 
+/* Timestamp text styling */
 .activity-time {
-  font-size: 0.85rem;
-  padding-left: 20px; 
-  color: #6c757d;
+  font-size: 12px; /* Smaller font size for timestamp */
+  color: #c4c9cd; /* A lighter grey for the timestamp */
+}
+
+.badge-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.leaderboard-badge-icon {
+  width: 35px; /* Set width of the badge icon */
+  height: auto; /* Keep the aspect ratio */
+}
+
+.badge-number {
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust the exact position if needed */
+  font-size: 1rem; /* Set the font size of the number */
+  color: #ffffff; /* Set the color of the number */
+  font-weight: bold;
+}
+
+.leaderboard-badge {
+  width: 20px; /* or the size you prefer */
+  height: auto; /* maintain aspect ratio */
+  vertical-align: middle; /* align with the text */
+  margin-right: 5px; /* space between the badge and the rank number */
+}
+
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.table th, .table td {
+  text-align: center; /* Center-align the content for all th and td elements */
+  vertical-align: middle; /* Vertically center-align the content within th and td */
+  overflow-x: auto;
+}
+
+.badge-level-beginner {
+  background-color: #97D700; /* Green */
+}
+
+.badge-level-intermediate {
+  background-color: #FFC107; /* Yellow */
+}
+
+.badge-level-advanced {
+  background-color: #ed5d5d; /* Red/Orange */
+}
+
+
+.badge-level {
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+  padding: 0.25em 0.6em;
+  font-size: 0.875rem; /* Adjust size as needed */
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  margin-right: 5px; /* space between badge and text */
+  color: #ffffff; /* White text color */
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.progress-chart-container {
+  position: relative;
+  width: 35px; /* Width of the canvas container */
+  height: 35px; /* Height of the canvas container */
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  margin-left: 30px
+
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #344767;
+  font-size: 0.9rem; /* Adjust the font size to match the design */
+  margin-left: 40px; /* Space between the chart and the number */
+  margin-top: 4px;
+  white-space: nowrap; /* Ensure the text stays on the same line */
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-progress-chart {
+  width: 35px !important; /* Set the width of the doughnut chart */
+  height: 35px !important; /* Set the height of the doughnut chart */
+}
+
+.level-beginner { background-color: #97D700; } /* Green for beginner */
+.level-intermediate { background-color: #FFC107; } /* Yellow for intermediate */
+.level-advanced { background-color: #ED5D5D; } /* Red/Orange for advanced */
+.streak-orange { background-color: #ff8000; } /* Orange for streak */
+.rank-gold { background-color: #FFD700; } /* Gold for 1st rank */
+.rank-silver { background-color: #C0C0C0; } /* Silver for 2nd rank */
+.rank-bronze { background-color: #CD7F32; } /* Bronze for 3rd rank */
+.rank-normal { background-color: #CCB5D7; } /* Purple for other ranks */
+
+/* Ensure that the toolbar has readable colors */
+.ql-toolbar {
+  background: #CCB5D7; /* Dark background for the toolbar */
+  color: white;
+}
+
+.ql-snow .ql-toolbar button .ql-icon,
+.ql-snow .ql-toolbar button svg,
+.ql-snow .ql-toolbar button svg path {
+  fill: white !important; /* Use !important to override other styles */
+}
+
+
+/* Additional styles for better visibility of the active toolbar buttons and dropdowns */
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow .ql-toolbar button.ql-active:hover,
+.ql-snow .ql-toolbar button.ql-active:focus,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:focus,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected:hover {
+  color: white; /* Ensures text and icons are white */
+  background-color: #4a5c7d; /* Slightly lighter navy for contrast */
+}
+
+
+/* Style the snow theme's tooltip */
+.ql-snow .ql-tooltip {
+  background: #344767; /* Dark background for tooltip */
+  color: white; /* Tooltip text color */
+}
+
+
+
+.ql-toolbar + .ql-container {
+  margin-top: 2px; /* Adjust this value as needed */
 }
 
 </style> {% endblock stylesheets %} 
@@ -204,6 +375,7 @@
   <div class="empower-speech">
     <p>Empower your speech with Volume! </p>
   </div>
+  
 
  <!-- 3 cards on top -->
 <div class="row">
@@ -289,7 +461,6 @@
             <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-0">
               <div class="bg-gradient-primary border-radius-lg h-100">
                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-
                   <img id="dynamicSticker" src="{{ image_url }}" alt="Featured Lesson Image" class="img-fluid"/>
                 </div>
               </div>
@@ -321,47 +492,48 @@
   <div class="col-lg-4 mb-lg-0 mb-2 personalized-card">
     <div class="card z-index-2">
       <div class="card-header pb-0">
-        <h5 class="hello">Volume™ Persona</h5>
+        <h6>Volume™ Persona</h6>
       </div>
       <div class="card-body p-3">
         <div class="badges-container">
         <!-- Current Level Badge -->
         <div class="badge-card d-flex align-items-center mb-2">
-          <span class="badge-icon"><i class="fas fa-layer-group"></i></span>
-          <span id="user-level-text" class="badge-text">Level: </span>
+          <span id="user-level-icon" class="badge-icon"><i class="fas fa-layer-group"></i></span>
+          <strong class="badge-text" style="margin-right: 7px;">Level: </strong> <span id="user-level-text"></span>
         </div>
         </div>
         <!-- Streak Badge -->
         <div class="badges-container">
         <div class="badge-card d-flex align-items-center mb-2">
-          <span class="badge-icon"><i class="fas fa-fire"></i></span>
-          <span id="user-streak-text" class="badge-text">Streak: </span>
+          <span id="user-streak-icon" class="badge-icon"><i class="fas fa-fire"></i></span>
+          <strong class="badge-text" style="margin-right: 7px;">Streak: </strong> <span id="user-streak-text"></span>
         </div>
         </div>
         <!-- Rank Badge -->
         <div class="badges-container">
         <div class="badge-card d-flex align-items-center mb-2">
-          <span class="badge-icon"><i class="fas fa-medal"></i></span>
-          <span id="user-rank-text" class="badge-text">Rank: </span>
+          <span id="user-rank-icon" class="badge-icon"><i class="fas fa-medal"></i></span>
+          <strong class="badge-text" style="margin-right: 7px;">Rank: </strong> <span id="user-rank-text"></span>
         </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Personal Notes Card -->
+<!-- Personal Notes Card -->
 <div class="col-lg-8 mb-lg-0 mb-4 personalized-card">
   <div class="card z-index-2">
     <div class="card-header pb-0">
-      <h5>Personal Notes</h5>
+      <h6>Personal Notes</h6>
     </div>
     <div class="card-body p-3">
-      <textarea id="personal-notes" class="form-control" placeholder="Write your notes or goals here..." rows="6"></textarea>
+      <div id="editor-container" class="form-control" style="height: 107px;"></div>
       <button class="btn btn-primary btn-sm mt-3" id="save-notes-btn">Save Current Notes</button>
+      <button class="btn btn-secondary btn-sm mt-3" onclick="window.location.href='/view-full-notes';">View Full Page</button>
     </div>
   </div>
 </div>
-</div>
+
 
   <!-- Row for recent activities and test scores charts -->
   <div class="row mt-4">
@@ -369,7 +541,7 @@
     <div class="col-lg-5 mb-lg-0 mb-4">
       <div class="card z-index-2 h-100">
         <div class="card-header pb-0">
-          <h5>Recent Activity</h5>
+          <h6>Recent Activity</h6>
         </div>
         <div id="recent-activity-container">
   
@@ -381,7 +553,7 @@
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h5>Test Scores Over Time</h5>
+          <h6>Test Scores Over Time</h6>
         </div>
         <div class="card-body p-3">
           <canvas id="testScoresChart" class="chart-canvas" height="320"></canvas>
@@ -392,31 +564,33 @@
 
 <!-- Row for Leaderboard and upcoming events -->
 <div class="row my-4">
-  <!-- Leader Board -->
-  <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-    <div class="card h-100">
-      <div class="card-header pb-0">
-        <h6>Leaderboard</h6>
-      </div>
-      <div class="card-body px-0 pb-2">
-        <div class="table-responsive">
-          <table class="table align-items-center mb-0">
-            <thead>
-              <tr>
-                <th class="leaderboard-header">Rank</th>
-                <th class="leaderboard-header">Username</th>
-                <th class="leaderboard-header">Score</th>
-                <th class="leaderboard-header">Level</th>
-                <th class="leaderboard-header">Progress</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-            </tbody>
-          </table>
-        </div>
+ <!-- Leader Board -->
+<div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+  <div class="card h-100">
+    <div class="card-header pb-0">
+      <h6>Leaderboard</h6>
+    </div>
+    <div class="card-body px-0 pb-2">
+      <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr>
+              <th class="leaderboard-header">Rank</th>
+              <th class="leaderboard-header">Username</th>
+              <th class="leaderboard-header">Score</th>
+              <th class="leaderboard-header">Level</th>
+              <th class="leaderboard-header">Progress</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <!-- JavaScript will populate this area with leaderboard data including progress charts -->
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
+
 
     <!-- Upcoming events -->
     <div class="col-lg-4 col-md-6">
@@ -437,5 +611,7 @@
   <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
   <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script> 
   <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
-  {% endblock javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
+  {% endblock javascripts %}
