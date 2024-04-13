@@ -41,6 +41,7 @@ def user_progress():
         "streak": user_progress.streak,
     })
 
+
 # Volume persona
 @blueprint.route("/user-persona")
 @login_required
@@ -146,7 +147,9 @@ def leaderboard():
             "username": user.username,
             "score": user.best_score,
             "level": user_progress.current_level,
-            "level_progress": user_progress.level_progress
+            "level_progress": user_progress.level_progress,
+            "user_id": user.user_id  
+
         })
 
     return jsonify(leaderboard_data)
