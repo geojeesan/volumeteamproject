@@ -169,11 +169,8 @@ def upcoming_events():
 @blueprint.route("/index")
 @login_required
 def index():
-        
-    # Update user's progress if he has registered progress
     if UserProgress(user_id=current_user.id):
         UserProgress.update_progress(current_user.id)
-    # Otherwise create new user progress for the user
     else:
         UserProgress.create_new_progress(current_user.id)
     
@@ -182,7 +179,15 @@ def index():
     featured_lesson = lessons[lesson_index]
     featured_images = LessonImage.query.filter_by(lesson_id=featured_lesson.id).all()
     featured_image_urls = ["/static/assets/img/" + image.image_path for image in featured_images]
-    return render_template("home/index.html", segment="index", API_GENERATOR=len(API_GENERATOR), featured_lesson=featured_lesson, image_url=featured_image_urls[0])
+    
+    # Check if there are any images available, otherwise use the default image
+    if featured_image_urls:
+        image_url = featured_image_urls[0]
+    else:
+        # Use the provided default image path
+        image_url = "/static/assets/img/lessonsPictures/speech.png"
+
+    return render_template("home/index.html", segment="index", API_GENERATOR=len(API_GENERATOR), featured_lesson=featured_lesson, image_url=image_url)
 
 @blueprint.route("/<template>")
 def route_template(template):
