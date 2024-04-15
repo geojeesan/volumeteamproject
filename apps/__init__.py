@@ -28,7 +28,6 @@ def register_blueprints(app):
     for module_name in (
         "authentication",
         "home",
-        "api",
         "practice",
         "lessons",
         "feedback",

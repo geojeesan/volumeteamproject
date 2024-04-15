@@ -11,9 +11,6 @@ from flask_restx import Resource, Api
 import flask
 from flask import render_template, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user
-
-from flask_dance.contrib.github import github
-
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
@@ -31,16 +28,6 @@ def route_default():
 
 
 # Login & Registration
-
-
-@blueprint.route("/github")
-def login_github():
-    """Github login"""
-    if not github.authorized:
-        return redirect(url_for("github.login"))
-
-    res = github.get("/user")
-    return redirect(url_for("home_blueprint.index"))
 
 
 @blueprint.route("/login", methods=["GET", "POST"])

@@ -4,7 +4,6 @@ from apps.home import blueprint
 from flask import Flask, render_template, request, jsonify
 from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
-from apps.config import API_GENERATOR
 from apps.models import Lesson
 from sqlalchemy import desc
 from apps.models import Lesson, UserScenarioProgress, SubLesson
@@ -15,7 +14,7 @@ from apps.models import UserActionLog  # Make sure the import path matches your 
 @blueprint.route("/lessons")
 def lessons():
     return render_template(
-        "lessons/lessons.html", segment="lessons", API_GENERATOR=len(API_GENERATOR)
+        "lessons/lessons.html", segment="lessons"
     )
 
 

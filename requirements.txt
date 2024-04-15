@@ -21,14 +21,10 @@ PyJWT==2.4.0
 
 
 # New requirements
-SpeechRecognition
-ffmpeg-python
-pydub
-# tensorflow
-transformers
-# librosa
-praat-parselmouth
-numpy
-
-# Pillow for images
-Pillow
+SpeechRecognition==3.10.1
+ffmpeg-python==0.2.0
+pydub==0.25.1
+transformers==4.38.2
+praat-parselmouth==0.4.3
+numpy==1.26.4
+Pillow==10.1.0

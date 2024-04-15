@@ -5,7 +5,6 @@ from flask import render_template, request
 from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 
-from apps.config import API_GENERATOR
 
 
 @blueprint.route("/acknowledgements")
@@ -14,13 +13,11 @@ def acknowledgements():
         return render_template(
             "acknowledgements/acknowledgements.html",
             segment="privacypolicy",
-            API_GENERATOR=len(API_GENERATOR),
         )
     else:
         return render_template(
             "acknowledgements/acknowledgements-fullscreen.html",
             segment="privacypolicy",
-            API_GENERATOR=len(API_GENERATOR),
         )
 
 
