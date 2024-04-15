@@ -6,13 +6,12 @@ from flask import flash, render_template, request, redirect, url_for, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 from flask import jsonify
-from apps.config import API_GENERATOR
 from apps.models import Feedback, UserActionLog
 
 @blueprint.route('/feedback')
 @login_required
 def feedback():
-    return render_template('feedback/feedback.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
+    return render_template('feedback/feedback.html', segment='feedback')
 
 
 @blueprint.route('/submit_feedback', methods=['POST'])

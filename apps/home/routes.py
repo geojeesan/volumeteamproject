@@ -7,7 +7,6 @@ from jinja2 import TemplateNotFound
 from flask import jsonify
 from datetime import datetime, timedelta
 
-from apps.config import API_GENERATOR
 from apps.models import (
     db,
     Event,
@@ -187,7 +186,7 @@ def index():
         # Use the provided default image path
         image_url = "/static/assets/img/lessonsPictures/speech.png"
 
-    return render_template("home/index.html", segment="index", API_GENERATOR=len(API_GENERATOR), featured_lesson=featured_lesson, image_url=image_url)
+    return render_template("home/index.html", segment="index", featured_lesson=featured_lesson, image_url=image_url)
 
 @blueprint.route("/<template>")
 def route_template(template):
@@ -201,7 +200,7 @@ def route_template(template):
 
         # Serve the file (if exists) from app/templates/home/FILE.html
         return render_template(
-            "home/" + template, segment=segment, API_GENERATOR=len(API_GENERATOR)
+            "home/" + template, segment=segment
         )
 
     except TemplateNotFound:

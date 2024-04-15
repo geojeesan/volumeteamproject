@@ -5,8 +5,6 @@ from flask import render_template, request
 from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 
-from apps.config import API_GENERATOR
-
 
 @blueprint.route("/privacypolicy")
 def privacypolicy():
@@ -14,13 +12,11 @@ def privacypolicy():
         return render_template(
             "privacypolicy/privacypolicy.html",
             segment="privacypolicy",
-            API_GENERATOR=len(API_GENERATOR),
         )
     else:
         return render_template(
             "privacypolicy/privacypolicy-fullscreen.html",
             segment="privacypolicy",
-            API_GENERATOR=len(API_GENERATOR),
         )
 
 

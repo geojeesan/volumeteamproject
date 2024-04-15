@@ -6,7 +6,6 @@ from flask_login import login_required, current_user
 from flask import request, jsonify
 from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress
 from speech_recognition import UnknownValueError
-from apps.config import API_GENERATOR
 import speech_recognition as sr
 import traceback
 from pydub import AudioSegment
@@ -28,7 +27,6 @@ def practice(lesson_num, scenario_num):
         segment="practice",
         lesson_number=lesson_num,
         scenario_number=scenario_num,
-        API_GENERATOR=len(API_GENERATOR),
     )
 
 

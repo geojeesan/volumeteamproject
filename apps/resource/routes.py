@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
 from apps.home import blueprint
-from apps.config import API_GENERATOR
 from flask import render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
@@ -17,7 +16,7 @@ from apps.authentication.models import Users
 @login_required
 def resource():
     UserActionLog.log_user_action(f'Viewed Resources')  # Logging action
-    return render_template('resource/resource.html', segment='resource', API_GENERATOR=len(API_GENERATOR))
+    return render_template('resource/resource.html', segment='resource')
 
 @blueprint.route('/api/articles')
 @login_required
@@ -87,19 +86,19 @@ def get_expert_insights():
 @login_required
 def all_articles():
     articles = Article.query.all() 
-    return render_template('resource/articles_all.html', articles=articles, segment='articles_all', API_GENERATOR=len(API_GENERATOR))
+    return render_template('resource/articles_all.html', articles=articles, segment='articles_all')
 
 @blueprint.route('/videos/all')
 @login_required
 def all_videos():
     videos = Video.query.all()
-    return render_template('resource/videos_all.html', videos=videos, segment='videos_all', API_GENERATOR=len(API_GENERATOR))
+    return render_template('resource/videos_all.html', videos=videos, segment='videos_all')
 
 @blueprint.route('/expert/all')
 @login_required
 def all_expert_insights():
     expert_insights = ExpertInsight.query.all() 
-    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights, segment='expert_insights_all', API_GENERATOR=len(API_GENERATOR))
+    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights, segment='expert_insights_all')
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to increment click count

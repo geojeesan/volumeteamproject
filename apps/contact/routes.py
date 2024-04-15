@@ -5,7 +5,6 @@ from apps import db
 from flask import request, redirect, url_for, jsonify, flash, render_template
 from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
-from apps.config import API_GENERATOR
 from apps.models import Contact, UserActionLog
 
 @blueprint.route('/contact')
@@ -14,13 +13,11 @@ def contact():
         return render_template(
             "contact/contact.html",
             segment="contact",
-            API_GENERATOR=len(API_GENERATOR),
         )
     else:
         return render_template(
             "contact/contact-fullscreen.html",
             segment="contact",
-            API_GENERATOR=len(API_GENERATOR),
         )
 
 @blueprint.route('/submit_contact', methods=['POST'])

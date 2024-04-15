@@ -23,7 +23,6 @@ from apps.models import (
 )
 
 from sqlalchemy import join, func
-from apps.config import API_GENERATOR
 from apps.authentication.models import Users
 import datetime
 
@@ -53,7 +52,7 @@ def editprofile():
             db.session.add(profile)
         
         db.session.commit()
-    return render_template('profilepage/editprofile.html', segment='editprofile', API_GENERATOR=len(API_GENERATOR))
+    return render_template('profilepage/editprofile.html', segment='editprofile')
 
 @blueprint.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -195,8 +194,7 @@ def profilepage(user_id):
     streak = user_progress.streak
     current_level = user_progress.current_level
     return render_template('profilepage/profilepage.html', 
-                           segment='profilepage', 
-                           API_GENERATOR=len(API_GENERATOR), 
+                           segment='profilepage',  
                            streak=streak, 
                            current_level=current_level, 
                            user=user, 
