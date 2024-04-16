@@ -22,19 +22,24 @@ def resource():
 @login_required
 def get_articles():
     content_level = request.args.get('content_level')
+    user_id = current_user.id  # Get the current logged-in user's ID
+
     articles = Article.query.filter(Article.content_level == content_level) if content_level else Article.query.all()
+    articles = articles.outerjoin(UserFavorite, (UserFavorite.resource_id == Article.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'articles')).add_columns(UserFavorite.id.label('favorited'))
+
     articles_list = [
         {
-            'id': article.id, 
-            'name': article.name, 
-            'link': article.link, 
-            'content_level': article.content_level,
-            'click_count': article.click_count,
-            'image_url': article.image_url,
-            'time_to_completion': article.time_to_complete,
-            'description': article.description,
-            'favorite_count': article.favorite_count 
-        } 
+            'id': article.Article.id,
+            'name': article.Article.name,
+            'link': article.Article.link,
+            'content_level': article.Article.content_level,
+            'click_count': article.Article.click_count,
+            'image_url': article.Article.image_url,
+            'time_to_completion': article.Article.time_to_complete,
+            'description': article.Article.description,
+            'favorite_count': article.Article.favorite_count,
+            'is_favorited': article.favorited is not None
+        }
         for article in articles
     ]
     return jsonify(articles_list)
@@ -43,41 +48,50 @@ def get_articles():
 @login_required
 def get_videos():
     content_level = request.args.get('content_level')
+    user_id = current_user.id
+
     videos = Video.query.filter(Video.content_level == content_level) if content_level else Video.query.all()
+    videos = videos.outerjoin(UserFavorite, (UserFavorite.resource_id == Video.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'videos')).add_columns(UserFavorite.id.label('favorited'))
+
     videos_list = [
         {
-            'id': video.id, 
-            'name': video.name, 
-            'link': video.link, 
-            'content_level': video.content_level,
-            'click_count': video.click_count,
-            'image_url': video.image_url,
-            'time_to_completion': video.time_to_complete, 
-            'description': video.description,
-            'favorite_count': video.favorite_count 
-        } 
+            'id': video.Video.id,
+            'name': video.Video.name,
+            'link': video.Video.link,
+            'content_level': video.Video.content_level,
+            'click_count': video.Video.click_count,
+            'image_url': video.Video.image_url,
+            'time_to_completion': video.Video.time_to_complete,
+            'description': video.Video.description,
+            'favorite_count': video.Video.favorite_count,
+            'is_favorited': video.favorited is not None
+        }
         for video in videos
     ]
     return jsonify(videos_list)
-
 
 @blueprint.route('/api/expert_insights')
 @login_required
 def get_expert_insights():
     content_type = request.args.get('content_type')
+    user_id = current_user.id
+
     expert_insights = ExpertInsight.query.filter(ExpertInsight.content_type == content_type) if content_type else ExpertInsight.query.all()
+    expert_insights = expert_insights.outerjoin(UserFavorite, (UserFavorite.resource_id == ExpertInsight.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'expert_insights')).add_columns(UserFavorite.id.label('favorited'))
+
     expert_insights_list = [
         {
-            'id': insight.id, 
-            'name': insight.name, 
-            'link': insight.link, 
-            'content_type': insight.content_type,
-            'click_count': insight.click_count,
-            'image_url': insight.image_url,
-            'time_to_completion': insight.time_to_complete,
-            'description': insight.description,
-            'favorite_count': insight.favorite_count
-        } 
+            'id': insight.ExpertInsight.id,
+            'name': insight.ExpertInsight.name,
+            'link': insight.ExpertInsight.link,
+            'content_type': insight.ExpertInsight.content_type,
+            'click_count': insight.ExpertInsight.click_count,
+            'image_url': insight.ExpertInsight.image_url,
+            'time_to_completion': insight.ExpertInsight.time_to_complete,
+            'description': insight.ExpertInsight.description,
+            'favorite_count': insight.ExpertInsight.favorite_count,
+            'is_favorited': insight.favorited is not None
+        }
         for insight in expert_insights
     ]
     return jsonify(expert_insights_list)
@@ -99,6 +113,59 @@ def all_videos():
 def all_expert_insights():
     expert_insights = ExpertInsight.query.all() 
     return render_template('resource/expert_insights_all.html', expert_insights=expert_insights, segment='expert_insights_all')
+
+#----------------------------------------------------------------------------------------------------------------------
+# Function to toggle favorite
+
+@blueprint.route('/api/toggle_favorite/<int:resource_id>', methods=['POST'])
+@login_required
+def toggle_favorite(resource_id):
+    resource_type = request.json.get('resource_type')
+
+    # Map resource type to model
+    model_map = {
+        'articles': Article,
+        'videos': Video,
+        'expert_insights': ExpertInsight
+    }
+    resource_model = model_map.get(resource_type)
+
+    if not resource_model:
+        return jsonify({'error': 'Invalid resource type'}), 400
+
+    # Find the specific resource
+    resource = resource_model.query.filter_by(id=resource_id).first()
+    if not resource:
+        return jsonify({'error': 'Resource not found'}), 404
+
+    # Check if user has already favorited this resource
+    favorite = UserFavorite.query.filter_by(
+        user_id=current_user.id,
+        resource_id=resource_id,
+        resource_type=resource_type
+    ).first()
+
+    if favorite:
+        # User is unfavoriting the resource
+        db.session.delete(favorite)
+        resource.favorite_count = resource.favorite_count - 1 if resource.favorite_count > 0 else 0
+    else:
+        # User is favoriting the resource
+        new_favorite = UserFavorite(
+            user_id=current_user.id,
+            resource_id=resource_id,
+            resource_type=resource_type
+        )
+        db.session.add(new_favorite)
+        resource.favorite_count += 1
+
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'favorite_count': resource.favorite_count,
+        'is_favorited': not favorite
+    })
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to increment click count

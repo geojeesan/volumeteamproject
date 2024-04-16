@@ -118,35 +118,93 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                 const element = document.createElement('div');
                 element.className = 'scroll-item';
 
-                // Creating and appending the image element
+                // Image Element
                 const img = document.createElement('img');
                 img.src = item.image_url;
                 img.alt = item.name;
-                img.style.width = '100%'; // Ensure the image fits the container
+                img.style.width = '100%';
                 img.style.height = 'auto';
                 element.appendChild(img);
 
-                // Creating and appending the link element
+                // Link Element
                 const link = document.createElement('a');
                 link.href = item.link;
                 link.target = "_blank";
                 link.textContent = item.name;
                 element.appendChild(link);
 
-                // Time to complete element
+                // Time to Complete
                 if (item.time_to_completion) {
                     const timeElement = document.createElement('div');
-                    timeElement.className = 'time-to-complete'; // Add a class for styling
+                    timeElement.className = 'time-to-complete';
                     timeElement.textContent = `${item.time_to_completion}`;
                     element.appendChild(timeElement);
                 }
 
+                // Favorite Container
+                const favoriteContainer = document.createElement('div');
+                favoriteContainer.className = 'favorite-container';
+                favoriteContainer.style = 'position: absolute; bottom: 10px; right: 10px; display: flex; align-items: center;';
+
+                const favoriteCount = document.createElement('span');
+                favoriteCount.className = 'favorite-count';
+                favoriteCount.textContent = item.favorite_count + ' ';
+                favoriteContainer.appendChild(favoriteCount);
+
+                const favoriteButton = document.createElement('button');
+                favoriteButton.className = 'favorite-button';
+                favoriteButton.innerHTML = item.is_favorited ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>'; // Set initial heart icon based on favorite status
+                favoriteButton.onclick = function() {
+                    const isActive = this.classList.contains('active');
+                    if (isActive) {
+                        this.classList.remove('active');
+                        this.innerHTML = '<i class="far fa-heart"></i>'; // Change to non-favorite icon
+                    } else {
+                        this.classList.add('active');
+                        this.innerHTML = '<i class="fas fa-heart"></i>'; // Change to favorite icon
+                    }
+                
+                    // Call backend to toggle favorite
+                    fetch(`/api/toggle_favorite/${item.id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ resource_type: resourceType }) // Ensure you send resource type
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            favoriteCount.textContent = data.favorite_count + ' ';
+                            // Update class based on new favorite status
+                            if (data.is_favorited) {
+                                this.classList.add('active');
+                                this.innerHTML = '<i class="fas fa-heart"></i>'; // Ensure icon is correct
+                            } else {
+                                this.classList.remove('active');
+                                this.innerHTML = '<i class="far fa-heart"></i>'; // Ensure icon is correct
+                            }
+                        } else {
+                            console.error('Failed to toggle favorite');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error toggling favorite:', error);
+                    });
+                };
+                
+                
+                favoriteContainer.appendChild(favoriteButton);
+
+                element.appendChild(favoriteContainer);
 
                 container.appendChild(element);
             });
         })
         .catch(error => console.error('Error fetching data:', error));
 }
+
+
 
 function scrollHorizontal(direction, containerId) {
     const container = document.getElementById(containerId);
