@@ -3,6 +3,7 @@ let lastAccessedLessonId = null;
 document.addEventListener('DOMContentLoaded', function() {
 	fetchLastLesson().then(() => {
 		fetchAllLessons().then(() => {
+			insertTutorialCard();
 			updateLessonsCompletion();
 			updatePerformanceProgressBars();
 		});
@@ -172,46 +173,88 @@ async function fetchAllLessons() {
 let lessonTitlesById = {};
 
 function displayLessons(lessons) {
-	const lessonsContainer = document.getElementById('lessons-display');
-	lessonsContainer.innerHTML = ''; // Clear previous lessons
+    const lessonsContainer = document.getElementById('lessons-display');
+    lessonsContainer.innerHTML = ''; // Clear previous lessons
 
-	// Reset the lessonTitlesById map
-	lessonTitlesById = {};
+    // Create containers for each difficulty level
+    const beginnerContainer = createDifficultyContainer('Beginner');
+    const intermediateContainer = createDifficultyContainer('Intermediate');
+    const advancedContainer = createDifficultyContainer('Advanced');
 
-	lessons.forEach(lesson => {
-		// Add lesson titles to the map
-		lessonTitlesById[lesson.id] = lesson.title;
-		displayLesson(lesson, lessonsContainer);
-	});
+    // Append the containers to the main container
+    lessonsContainer.appendChild(beginnerContainer);
+    lessonsContainer.appendChild(createDivider());
+    lessonsContainer.appendChild(intermediateContainer);
+    lessonsContainer.appendChild(createDivider());
+    lessonsContainer.appendChild(advancedContainer);
+
+    // Sort lessons into the correct container based on difficulty
+    lessons.forEach(lesson => {
+        if (lesson.difficulty === 'beginner') {
+            displayLesson(lesson, beginnerContainer);
+        } else if (lesson.difficulty === 'intermediate') {
+            displayLesson(lesson, intermediateContainer);
+        } else if (lesson.difficulty === 'advanced') {
+            displayLesson(lesson, advancedContainer);
+        }
+    });
 }
 
+function createDifficultyContainer(difficulty) {
+    const container = document.createElement('div');
+    container.className = `lessons-${difficulty.toLowerCase()}`;
+    const title = document.createElement('h4');
+    title.innerText = `${difficulty} Lessons:`;
+    container.appendChild(title);
+    return container;
+}
+
+function createDivider() {
+    const divider = document.createElement('hr');
+    divider.className = 'lesson-divider';
+    return divider;
+}
 function displayLesson(lesson, lessonsContainer) {
-	// Assume that you want to link to the first scenario for simplicity
-	// You should implement the logic to find the next incomplete scenario if required
-	const firstScenarioId = lesson.scenarios && lesson.scenarios.length > 0 ? lesson.scenarios[0].id : 1;
+    // Skip the tutorial as previously described
+    if (lesson.title === "Tutorial" || lesson.id === 0) {
+        return;
+    }
 
-	const lessonElement = document.createElement('div');
-	lessonElement.className = 'lesson';
-	lessonElement.innerHTML = `
-      <div class="lesson-card">
-          <h5>${lesson.title}</h5>
-          <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
-          <p>${lesson.description}</p>
-          <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
-          <p>Progress: ${lesson.progress}%</p>
-          <button class="btn ${lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}" data-lesson-num="${lesson.num}" data-scenario-id="${firstScenarioId}">
-              ${lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title} Lesson`}
-          </button>
-      </div>
-  `;
-	lessonsContainer.appendChild(lessonElement);
+    // Assuming the first scenario logic remains the same
+    const firstScenarioId = lesson.scenarios && lesson.scenarios.length > 0 ? lesson.scenarios[0].id : 1;
 
-	const button = lessonElement.querySelector('button');
-	button.addEventListener('click', () => {
-		// Redirect to the first scenario of this lesson
-		window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
-	});
+    // Create the lesson card element
+    const lessonElement = document.createElement('div');
+    lessonElement.className = 'lesson';
+    lessonElement.innerHTML = `
+        <div class="lesson-card">
+            <h5>${lesson.title}</h5>
+            <img src="${lesson.image_path}" alt="Image for ${lesson.title}" style="max-width: 100px; max-height: 100px; height: auto; width: auto; display: block; margin: 0 auto;">
+            <p>${lesson.description}</p>
+            <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
+            <p>Progress: ${lesson.progress}%</p>
+            <button class="btn ${lesson.progress === 100 ? 'btn-success' : lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}" data-lesson-num="${lesson.num}" data-scenario-id="${firstScenarioId}">
+                ${lesson.progress === 100 ? 'Lesson Complete! Try again?' : lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title}`}
+            </button>
+        </div>
+    `;
+
+    // Append the lesson card to the container
+    lessonsContainer.appendChild(lessonElement);
+
+    // Add click event listener to the button
+    const button = lessonElement.querySelector('button');
+    button.addEventListener('click', () => {
+        if (lesson.progress === 100) {
+            // You can decide what should happen when a completed lesson is clicked.
+            // For example, reload the first scenario or show a confirmation dialog.
+        } else {
+            // Redirect to the first scenario of this lesson
+            window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
+        }
+    });
 }
+
 
 
 
@@ -394,44 +437,60 @@ function populateSentimentSkillChart(sentimentData) {
 	});
 }
 
+function insertTutorialCard() {
+    const lessonsContainer = document.getElementById('lessons-display');
+    
+    const tutorialButtonContainer = document.createElement('div');
+    tutorialButtonContainer.className = 'col-12 mb-4'; // Adjust classes for consistent spacing
+    tutorialButtonContainer.innerHTML = `
+        <div class="card lesson-card tutorial-card text-center" style="background-color: #f0f4f7;"> <!-- Use a light background to stand out -->
+            <div class="card-body">
+                <h5 class="card-title" style="color: #305097;">🌟 Start Here: Tutorial 🌟</h5> <!-- Add some emoji for visual appeal -->
+                <p class="card-text">Get to know your way around with a quick guide.</p>
+                <button class="btn btn-primary" id="start-tutorial-btn">Start Tutorial</button>
+            </div>
+        </div>
+    `;
+
+    // Prepend the tutorial button to the beginning of the lessonsContainer
+    lessonsContainer.prepend(tutorialButtonContainer);
+
+    // Event listener for the tutorial button
+    const startTutorialBtn = document.getElementById('start-tutorial-btn');
+    startTutorialBtn.addEventListener('click', function() {
+        // Navigate to the tutorial when this button is clicked
+        window.location.href = '/practice/0-1';
+    });
+}
 function grayOutChartArea() {
-	const canvas = document.getElementById("sentimentSkillChart");
-	const ctx = canvas.getContext("2d");
-	const container = canvas.parentElement; // Get the parent container of the canvas
+    const canvas = document.getElementById("sentimentSkillChart");
+    const ctx = canvas.getContext("2d");
+    const container = canvas.parentElement;
 
-	// Match the canvas dimensions to the parent container
-	canvas.width = container.offsetWidth;
-	canvas.height = container.offsetHeight;
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
 
-	// Fill the canvas with a light gray color
-	ctx.fillStyle = '#f4f5f7';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#f4f5f7';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	// Set the text style
-	ctx.font = "16px Arial";
-	ctx.fillStyle = '#8898aa';
-	ctx.textAlign = "center";
+    // Apply consistent font styling
+    applyGrayOutStyles(ctx);
 
-	// Display the 'no data' message
-	ctx.fillText("No sentiment analysis data available", canvas.width / 2, canvas.height / 2);
+    // Display the 'no data' message
+    ctx.fillText("No sentiment analysis data available, start a lesson to see it!", canvas.width / 2, canvas.height / 2);
+}
+
+function applyGrayOutStyles(ctx) {
+    // Set the consistent text styles
+    ctx.font = "16px 'Roboto', sans-serif"; // Use the same font as other text
+    ctx.fillStyle = '#8898aa';
+    ctx.textAlign = "center";
 }
 
 function grayOutSentimentsProgressContainer() {
-	const container = document.getElementById('sentiments-progress-container');
-	container.innerHTML = '<p>No sentiment analysis data available</p>';
+    const container = document.getElementById('sentiments-progress-container');
+    container.textContent = 'No progress data available, start a lesson to see it!';
 
-	// Set container styles
-	container.style.width = '100%';
-	container.style.height = '100%';
-	container.style.opacity = '0.5';
-	container.style.backgroundColor = '#f4f5f7';
-	container.style.color = '#8898aa';
-	container.style.textAlign = 'center';
-	container.style.padding = '20px';
-	container.style.borderRadius = '10px';
-
-	// Center the content vertically
-	container.style.display = 'flex';
-	container.style.justifyContent = 'center';
-	container.style.alignItems = 'center';
+    // Apply consistent styles to the container
+    container.classList.add('grayed-out-message'); // Adding a class for styling
 }

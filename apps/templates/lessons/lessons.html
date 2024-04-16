@@ -5,6 +5,18 @@
     flex: 1;
   }
 
+  .grayed-out-message {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #f4f5f7;
+    color: #8898aa;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+  }
   .wave-graph {
     width: 100%;
     /* Responsive to container size */
@@ -43,6 +55,12 @@
     font-weight: bold;
     line-height: 1;
     /* Ensures the number is closely followed by the title */
+  }
+
+  .btn-success {
+    background-color: #28a745; /* Example green color */
+    color: white;
+    /* Add any additional styling as needed */
   }
 
   .card-title {
@@ -333,6 +351,13 @@
     margin-top: 0;
     /* Adjust this value if you want less space above the progress bars */
   }
+  
+  #sentimentSkillChart {
+    width: 100vw; /* Take full width of the viewport */
+    height: 50vw; /* Adjust height to maintain aspect ratio */
+    max-width: 100%; /* Prevent it from exceeding the container width */
+    max-height: 300px; /* Maximum height to prevent it from being too tall */
+  }
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
@@ -340,15 +365,9 @@
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
   </div>
-  <!--  
-  <div class="container-fluid py-4">  
-  Lessons Completed Badge Card should be first -->
-  <!-- <div class="row justify-content-center mb-4"><div class="col-lg-8"><div class="card mb-4 text-center"><div class="card-body"><div class="badge-container"><img src="{{ url_for('static', filename='assets/img/banner1.png') }}" alt="Badge" class="badge-image"><div class="completion-percentage" id="lessons-completion-percentage"></div></div></div></div></div></div>  -->
-  <!-- Continue Where You Left Off Card -->
   <div class="row justify-content-center mb-5">
     <div class="col-md-6">
       <div class="card mb-4 text-center">
-        <!-- <div class="card mb-4 text-center" style="margin-top:2%; opacity: 0.5;pointer-events: none;filter: grayscale(100%);"> -->
         <div class="card-body d-flex flex-column align-items-center">
           <h5 class="card-title">Pick up where you left off:</h5>
           <h6 id="lesson-title">Loading...</h6>
@@ -370,11 +389,10 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Or perhaps, start a new challenge:</h5>
+            <h5 class="card-title"></h5>
             <br>
             <div class="challenge-item">
               <div id="lessons-display" class="row"></div>
-              <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
             </div>
           </div>
         </div>
@@ -383,11 +401,11 @@
       <div class="row justify-content-around mb-4">
         <div class="col-md-6">
           <div class="card mb-4 text-center">
-            <div class="card-body d-flex flex-column" style="height: 340px;">
+            <div class="card-body d-flex flex-column" style="height: 400px;">
               <h5>Your Volume™ Spectrum:</h5>
               <p>Here's how your attitude spans with your Volume™ lessons.</p>
               <!-- Container div for the canvas -->
-              <div style="flex-grow: 1; position: relative; height: calc(100% - 60px);">
+              <div style="flex-grow: 1; position: relative; height: calc(100% - 70px);">
                 <!-- Ensure the container div for the canvas fills up the remaining space -->
                 <canvas id="sentimentSkillChart"></canvas>
               </div>
@@ -407,5 +425,6 @@
             </div>
           </div>
         </div> {% include "includes/footer.html" %}
-      </div> {% endblock %} {% block javascripts %} <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
+      </div> {% endblock %} {% block javascripts %}
+      <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
       <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
