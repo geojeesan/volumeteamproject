@@ -25,9 +25,10 @@
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 5px;
+        position: relative;
     }
 
-    .article-image img {
+    .video-image img {
         width: 200px;
         height: auto;
         object-fit: cover;
@@ -35,29 +36,66 @@
         margin-right: 15px;
     }
 
-    .article-info h2 {
+    .video-info h2 {
         font-size: 1em;
         margin: 0;
         padding: 0;
         text-align: left;
     }
 
-    .article-info p {
+    .video-info p {
         font-size: 0.9em;
         margin: 5px 0px 0 0;
         text-align: left;
     }
 
-    .article-info a {
+    .video-info a {
         color: inherit;
         text-decoration: none;
     }
 
-    .article-info a:hover {
+    .video-info a:hover {
         color: inherit;
         text-decoration: underline;
         font-weight: bold;
     }
+
+    .favorite-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        padding: 3px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .favorite-count {
+        margin-right: 5px;
+        font-size: 1em;
+        color: #12174c;
+    }
+
+    .favorite-button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .favorite-button i {
+        color: #12174c; /* Default non-favorite color */
+        transition: color 0.3s ease-in-out;
+    }
+
+    .favorite-button.active i {
+        color: #12174c; /* Favorite color */
+    }
+
 </style>
 
 {% endblock stylesheets %}
@@ -70,15 +108,21 @@
         {% for video in videos %}
         <div class="link-container">
             {% if video.image_url %}
-            <div class="article-image">
+            <div class="video-image">
                 <img src="{{ video.image_url }}" alt="{{ video.name }}">
             </div>
             {% endif %}
-            <div class="article-info">
+            <div class="video-info">
                 <h2><a href="{{ video.link }}" target="_blank">{{ video.name }}</a></h2>
                 <p>{{ video.description }}</p>
-                <p>Time to Complete: {{ video.time_to_complete }}utes</p>
+                <p>Time to Complete: {{ video.time_to_complete }} minutes</p>
                 <p>Content Level: {{ video.content_level }}</p>
+            </div>
+            <div class="favorite-container" onclick="toggleFavorite({{ video.id }}, 'videos', this)">
+                <span class="favorite-count">{{ video.favorite_count }}</span>
+                <button class="favorite-button {% if video.is_favorited %}active{% endif %}">
+                    <i class="{{ 'fas' if video.is_favorited else 'far' }} fa-heart"></i>
+                </button>
             </div>
         </div>
         {% else %}
@@ -87,4 +131,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
 {% endblock %}

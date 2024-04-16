@@ -163,7 +163,7 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                         this.classList.add('active');
                         this.innerHTML = '<i class="fas fa-heart"></i>'; // Change to favorite icon
                     }
-                
+
                     // Call backend to toggle favorite
                     fetch(`/api/toggle_favorite/${item.id}`, {
                         method: 'POST',
@@ -192,8 +192,8 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                         console.error('Error toggling favorite:', error);
                     });
                 };
-                
-                
+
+
                 favoriteContainer.appendChild(favoriteButton);
 
                 element.appendChild(favoriteContainer);
@@ -203,6 +203,40 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
         })
         .catch(error => console.error('Error fetching data:', error));
 }
+
+function toggleFavorite(resourceId, resourceType, element) {
+    fetch(`/api/toggle_favorite/${resourceId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ resource_type: resourceType })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the favorite count and icon based on the response
+            const favCount = element.querySelector('.favorite-count');
+            favCount.textContent = data.favorite_count + ' ';
+            const favIcon = element.querySelector('i');
+            if (data.is_favorited) {
+                element.querySelector('.favorite-button').classList.add('active');
+                favIcon.classList.remove('far');
+                favIcon.classList.add('fas');
+            } else {
+                element.querySelector('.favorite-button').classList.remove('active');
+                favIcon.classList.add('far');
+                favIcon.classList.remove('fas');
+            }
+        } else {
+            console.error('Failed to toggle favorite:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error toggling favorite:', error);
+    });
+}
+
 
 
 
@@ -216,4 +250,3 @@ function scrollHorizontal(direction, containerId) {
         container.scrollLeft += scrollAmount;
     }
 }
-
