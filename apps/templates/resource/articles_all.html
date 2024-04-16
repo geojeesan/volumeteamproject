@@ -25,6 +25,8 @@
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 5px;
+
+        position: relative;
     }
 
     .article-image img {
@@ -58,33 +60,95 @@
         text-decoration: underline;
         font-weight: bold;
     }
+
+    .favorite-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        padding: 3px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .favorite-count {
+        margin-right: 5px;
+        font-size: 1em;
+        color: #12174c;
+    }
+
+    .favorite-button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .favorite-button i {
+        color: #12174c; /* Default non-favorite color */
+        transition: color 0.3s ease-in-out;
+    }
+
+    .favorite-button.active i {
+        color: #12174c; /* Favorite color */
+    }
+
 </style>
 
 {% endblock stylesheets %}
 
 {% block content %}
 
-<div class="container">
-    <h1>Articles</h1>
-    <div class="list-container">
-        {% for article in articles %}
-        <div class="link-container">
-            <div class="article-image">
-                {% if article.image_url %}
-                <img src="{{ article.image_url }}" alt="{{ article.name }}">
-                {% endif %}
-            </div>
-            <div class="article-info">
-                <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
-                <p>{{ article.description }}</p>
-                <p>Time to Complete: {{ article.time_to_complete }}utes</p>
-                <p>Content Level: {{ article.content_level }}</p>
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <script src="/static/assets/js/resource/resource.js" defer></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Articles</h1>
+            <div class="list-container">
+                {% for article in articles %}
+                <div class="link-container">
+                    <div class="article-image">
+                        {% if article.image_url %}
+                        <img src="{{ article.image_url }}" alt="{{ article.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="article-info">
+                        <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
+                        <p>{{ article.description }}</p>
+                        <p>Time to Complete: {{ article.time_to_complete }}utes</p>
+                        <p>Content Level: {{ article.content_level }}</p>
+                    </div>
+                    <div class="favorite-container" onclick="toggleFavorite({{ article.id }}, 'articles', this)">
+                        <span class="favorite-count">{{ article.favorite_count }}</span>
+                        <button class="favorite-button {% if article.is_favorited %}active{% endif %}">
+                            <i class="{{ 'fas' if article.is_favorited else 'far' }} fa-heart"></i>
+                        </button>
+                    </div>
+
+                </div>
+                {% else %}
+                <p>No articles found.</p>
+                {% endfor %}
             </div>
         </div>
-        {% else %}
-        <p>No articles found.</p>
-        {% endfor %}
-    </div>
-</div>
+    </body>
 
+</html>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
 {% endblock %}
