@@ -12,22 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		grayOutLastAccessedLessonCard();
 	});
 
-	const analyzeProgressBtn = document.getElementById('analyze-btn');
-	if (analyzeProgressBtn) {
-		analyzeProgressBtn.addEventListener('click', function() {
-			console.log('Analyze button clicked');
-			// Add functionality for analyze progress button here
-		});
-	}
-
-	const startLessonBtn = document.getElementById('start-confidence-boost');
-	if (startLessonBtn) {
-		startLessonBtn.addEventListener('click', function() {
-			const lessonTitle = 'Confidence Boost';
-			window.location.href = `/practice?lesson_title=${encodeURIComponent(lessonTitle)}`;
-		});
-	}
-
 	const nextScenarioBtn = document.getElementById('next-scenario-btn');
 	if (nextScenarioBtn) {
 		nextScenarioBtn.addEventListener('click', function() {

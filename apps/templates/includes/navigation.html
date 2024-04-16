@@ -3,26 +3,34 @@
   <div class="container-fluid py-1 px-3">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
-          <i class="fa fa-home me-1"></i> 
+        <li class="breadcrumb-item text-sm">
+          <a class="opacity-5 text-dark" href="/index">
+            <i class="fa fa-home"></i>
+          </a>
         </li>
+        <!-- Dynamic breadcrumb item for the current page -->
+        <li class="breadcrumb-item text-sm text-dark active" aria-current="page" id="dynamic-breadcrumb"></li>
       </ol>
     </nav>
-    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+
+    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
     </div>   
-    <ul class="navbar-nav  justify-content-end"></ul>
-         <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-           <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-           <div class="sidenav-toggler-inner">
-               <i class="sidenav-toggler-line"></i>
-               <i class="sidenav-toggler-line"></i>
-               <i class="sidenav-toggler-line"></i>
-             </div>
-           </a>
-         </li>
+
+    <ul class="navbar-nav justify-content-end">
+        <!-- Sidenav toggler -->
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+          <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+            </div>
+          </a>
+        </li>
+
+        <!-- Profile dropdown -->
          <li class="nav-item d-xl-none ps-3 d-flex align-items-center"></li>
-         <!-- Profile dropmenu-->
          <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 0px;">
            <a href="javascript:;" class="nav-link p-0" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             {% if base64_encoded_image %}
@@ -50,5 +58,40 @@
      </div>
    </div>
  </nav>
+
+ <script type="text/javascript">
+  // Function to capitalize the first letter of a string
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  // Function to update the breadcrumb based on the current page
+  function updateBreadcrumb() {
+    var pathArray = window.location.pathname.split('/');
+    var pageName = pathArray[pathArray.length - 1] || pathArray[pathArray.length - 2]; // Handles trailing slash
+    var displayName = pageName.toLowerCase();
+
+    var pageNames = {
+      'lessons': 'Lessons',
+      'resource': 'Resources',
+      'favorites': 'Favorites',
+      'profilepage': 'Profile',
+      'feedback': 'Feedback',
+      'faq': 'FAQ',
+      'contact': 'Contact Us',
+      'privacy': 'Privacy Policy',
+      'acknowledgments': 'Acknowledgments'
+    };
+
+    var breadcrumbItem = document.getElementById('dynamic-breadcrumb');
+    // If it's not the homepage, set the breadcrumb text
+    if (displayName && displayName !== 'home' && pageNames[displayName]) {
+      breadcrumbItem.textContent = pageNames[displayName];
+    }
+  }
+
+  // Call the function to update the breadcrumb when the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', updateBreadcrumb);
+</script>
 
 
