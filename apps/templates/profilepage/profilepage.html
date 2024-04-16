@@ -215,20 +215,20 @@
                 {% endif %}
             </h5>
             {% if profile.bio|length <=60 %}
-            <p class="mb-0 font-weight-bold text-sm"><i class="mb-0 font-weight-bold text-sm fas fa-user"></i>  @{{ user.username }} <!--| <i class="mb-0 font-weight-bold text-sm fas fa-envelope"></i>  {{ user.email }}--></p>
+            <p class="mb-0 font-weight-bold text-sm"><i class="mb-0 font-weight-bold text-sm fas fa-user"></i>  @{{ user.username }} | <i class="mb-0 font-weight-bold text-sm fas fa-envelope"></i>  {{ user.email }}</p>
             {% else %}
             <p class="mb-0 font-weight-bold text-sm"><i class="mb-0 font-weight-bold text-sm fas fa-user"></i>  @{{ user.username }}</p>
-            <!--<p class="mb-0 font-weight-bold text-sm"><i class="mb-0 font-weight-bold text-sm fas fa-envelope"></i>  {{ user.email }}</p>-->
+            <p class="mb-0 font-weight-bold text-sm"><i class="mb-0 font-weight-bold text-sm fas fa-envelope"></i>  {{ user.email }}</p>
             {% endif %}
           {% else %}
             <h5 class="mb-1">
               @{{ user.username }}
             </h5>
-            <!--<p class="mb-0 font-weight-bold text-sm">
+            <p class="mb-0 font-weight-bold text-sm">
               {% if user.email %}
               <i class="mb-0 font-weight-bold text-sm fas fa-envelope"></i> {{ user.email }}
               {% endif %}
-            </p>-->
+            </p>
           {% endif %}
           {% if profile.bio|length <= 60 %}
               <div class="text-sm">
@@ -677,8 +677,7 @@ document.getElementById('searchButton').addEventListener('click', function(event
 <script> var ASSETS_ROOT = "{{ url_for('static', filename='') }}"; </script>
 
 <!-- Render emojis on all platforms -->
-<!-- <script src="https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" integrity="sha384-ICOlZarapRIX6UjKPcWKEpubjg7lGADN7Y9fYP4DU9zm0aPFhgnP5ef+XFaPyKv+" crossorigin="anonymous"></script> -->
-<script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" integrity="sha384-ICOlZarapRIX6UjKPcWKEpubjg7lGADN7Y9fYP4DU9zm0aPFhgnP5ef+XFaPyKv+" crossorigin="anonymous"></script>
 <script>
   twemoji.parse(document.body, {
     className: 'emoji',
