@@ -31,7 +31,7 @@ function viewProfile(username) {
 // Function to handle search
 function searchUsers() {
   var searchInput = document.getElementById('searchInput').value;
-  var userId = 2;
+  var userId = 5;
 
   // Send AJAX request to Flask endpoint
   $.ajax({

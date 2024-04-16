@@ -28,6 +28,3 @@ transformers==4.38.2
 praat-parselmouth==0.4.3
 numpy==1.24.4
 Pillow==10.1.0
-
-# Ollama for volumeBot
-ollama
