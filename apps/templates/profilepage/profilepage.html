@@ -165,7 +165,7 @@
   <div class="page-header min-height-300 border-radius-xl mt-4"
     style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved6.jpg'); background-position-y: 50%;">
     <span class="mask bg-gradient-primary opacity-6"></span>
-    <button class="btn btn-secondary blur shadow-blur" style="position: absolute; left: 0.5%; top: 2%; border-radius: 0.8rem; color: #3b416c;" onclick="window.location.href='/profilepage/{{ current_user.id }}'">◀ Your Profile</button>
+    <button class="btn btn-secondary blur shadow-blur" style="position: absolute; left: 0.5%; top: 2%; border-radius: 0.8rem; color: #3b416c;" onclick="window.location.href='/profilepage/{{ current_user.username }}'">◀ Your Profile</button>
   </div>
   {% else %}
   <div class="page-header min-height-300 border-radius-xl mt-4"
@@ -184,12 +184,12 @@
       {% else %}
         <div class="nav-wrapper position-absolute end-0 top-buttons" >
           {% if is_following %}
-          <form action="/unfollow/{{ user.id }}" method="POST" enctype="multipart/form-data">
+          <form action="/unfollow/{{ user.username }}" method="POST" enctype="multipart/form-data">
             <a>‎ ‎ ‎Following </a> <br>
             <button class="btn btn-primary" style="background-color: #781963;">Unfollow</button>
           </form>
           {% else %}
-          <form action="/follow/{{ user.id }}" method="POST" enctype="multipart/form-data">
+          <form action="/follow/{{ user.username }}" method="POST" enctype="multipart/form-data">
             <button class="btn btn-primary top:50px" id="toggleFollow" onclick="validateForm()">Follow</button>
           </form>
           {% endif %}

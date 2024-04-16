@@ -7,65 +7,51 @@ function toggleFollow(button) {
 }
 
 function viewProfile(username) {
-  // Assuming you're using AJAX to send a POST request to the Flask route
-  fetch('/viewProfile/' + username, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => {
-    if (response.ok) {
-      window.location.href = response.url; // Redirect to the profile page URL
-    } else {
-      console.error('Error:', response.status);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  // Redirect to the profile page of the username
+  window.location.href = '/profilepage/' + username;
 }
 
 
 
-// Function to handle search
+// Function to handle user search
 function searchUsers() {
-  var searchInput = document.getElementById('searchInput').value;
-  var userId = 5;
+  var searchInput = document.getElementById('searchInput').value.trim();
 
   // Send AJAX request to Flask endpoint
   $.ajax({
-      url: '/profilepage/' + userId,  // Dynamically generate URL with the correct user ID
-      method: 'POST',
-      data: {searchTerm: searchInput},
-      success: function(response) {
-          var searchResults = document.getElementById('searchResults');
-          searchResults.innerHTML = ''; // Clear previous search results
+    url: '/profilepage/' + searchInput,  // Assuming you have a '/search' endpoint for searching users
+    method: 'POST',
+    data: { searchTerm: searchInput },
+    success: function(response) {
+      var searchResults = document.getElementById('searchResults');
+      searchResults.innerHTML = ''; // Clear previous search results
 
-          // Append search results to the list
-          response.forEach(function(user) {
-              var listItem = document.createElement('li');
-              listItem.className = 'list-group-item';
-              listItem.textContent = '@' + user.username;
-              listItem.style.height = '50px';
+      // Append search results to the list
+      response.forEach(function(user) {
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = '@' + user.username;
+        listItem.style.height = '50px';
 
-              // Create button to view user profile
-              var viewProfileButton = document.createElement('button');
-              viewProfileButton.textContent = 'View Profile';
-              viewProfileButton.className = 'btn btn-secondary btn-sm ml-2';
-              viewProfileButton.dataset.userId = user.id; // Store user ID as a data attribute
-              viewProfileButton.addEventListener('click', viewUserProfile);
-              viewProfileButton.style.float = 'right'; // Align to the right side
+        // Create button to view user profile
+        var viewProfileButton = document.createElement('button');
+        viewProfileButton.textContent = 'View Profile';
+        viewProfileButton.className = 'btn btn-secondary btn-sm ml-2';
+        viewProfileButton.onclick = function() {
+          viewProfile(user.username); // Call viewProfile with the username
+        };
+        viewProfileButton.style.float = 'right'; // Align to the right side
 
-              // Append button to list item
-              listItem.appendChild(viewProfileButton);
+        // Append button to list item
+        listItem.appendChild(viewProfileButton);
 
-              // Append list item to search results
-              searchResults.appendChild(listItem);
-          });
-      }
+        // Append list item to search results
+        searchResults.appendChild(listItem);
+      });
+    }
   });
 }
+
 
 // document.addEventListener('DOMContentLoaded', function() {
 //   fetch('/profile-user-progress')
@@ -83,8 +69,7 @@ function searchUsers() {
     
 // Event handler for viewing user profile
 function viewUserProfile(event) {
-  var userId = event.target.dataset.userId; // Get user ID from data attribute
-  window.location.href = '/profilepage/' + userId; // Redirect to user profile page
+  window.location.href = '/profilepage/' + user.username; // Redirect to user profile page
 }
 
   // Event listener for search button click

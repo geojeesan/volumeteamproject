@@ -57,6 +57,10 @@ def editprofile():
 @blueprint.route('/update_profile', methods=['POST'])
 def update_profile():
     user_id = current_user.get_id()
+    user = Users.query.filter_by(id=user_id).first()  # Get the user object to access the username
+    # if user is None:
+    #     flash('User not found.')
+    #     return redirect(url_for('home_blueprint.index'))
     full_name = request.form.get('full_name')
     location = request.form.get('location')
     bio = request.form.get('bio')
@@ -107,15 +111,17 @@ def update_profile():
     db.session.commit()
     flash('Changes Saved | You have successfully edited your profile')
     UserActionLog.log_user_action('Profile Edited')
-    return redirect(url_for('profilepage.profilepage', user_id=current_user.get_id()))
+    return redirect(url_for('profilepage.profilepage', username=user.username))
 
 
-@blueprint.route('/profilepage/<int:user_id>', methods=['GET', 'POST'])
+@blueprint.route('/profilepage/<string:username>', methods=['GET', 'POST'])
 @login_required
-def profilepage(user_id):
-    user = Users.query.filter_by(id=user_id).first()
+def profilepage(username):
+    user = Users.query.filter_by(username=username).first()
     if not user:
         return render_template("home/page-404.html"), 404
+    
+    user_id = user.id
 
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
 
@@ -212,27 +218,46 @@ def profilepage(user_id):
 def getUserId():
     return current_user.get_id()
 
-@blueprint.route('/follow/<int:followed_id>', methods=['POST'])
-def follow(followed_id):
-    follower_id = current_user.get_id()
-    follow = Follows(follower_id=follower_id, followed_id=followed_id)
+@blueprint.route('/follow/<string:username>', methods=['POST'])
+@login_required
+def follow(username):
+    # Find the user you want to follow by username
+    followed_user = Users.query.filter_by(username=username).first()
+    if followed_user is None:
+        flash('User not found.')
+        return redirect(url_for('home_blueprint.index'))  # Replace with your appropriate redirect
+
+    # Create a new Follows entry
+    follow = Follows(follower_id=current_user.id, followed_id=followed_user.id)
     db.session.add(follow)
     db.session.commit()
-    followed_name = Users.query.filter_by(id=followed_id).first().username
-    flash('You have successfully followed @'+str(followed_name))
-    UserActionLog.log_user_action('Followed '+str(followed_id))
-    return redirect(url_for('profilepage.profilepage', user_id=followed_id))
 
-@blueprint.route('/unfollow/<int:followed_id>', methods=['POST'])
-def unfollow(followed_id):
-    follower_id = current_user.get_id()
-    follow = Follows.query.filter_by(follower_id=follower_id, followed_id=followed_id).first()
-    db.session.delete(follow)
-    db.session.commit()
-    followed_name = Users.query.filter_by(id=followed_id).first().username
-    flash('You have successfully unfollowed @'+str(followed_name))
-    UserActionLog.log_user_action('Unfollowed ' + str(followed_id))
-    return redirect(url_for('profilepage.profilepage', user_id=followed_id))
+    flash(f'You have successfully followed @{username}')
+    UserActionLog.log_user_action(f'Followed {username}')
+    return redirect(url_for('profilepage.profilepage', username=username))
+
+
+@blueprint.route('/unfollow/<string:username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    # Find the user you want to unfollow by username
+    followed_user = Users.query.filter_by(username=username).first()
+    if followed_user is None:
+        flash('User not found.')
+        return redirect(url_for('home_blueprint.index'))  # Replace with your appropriate redirect
+
+    # Find the follow entry to remove
+    follow = Follows.query.filter_by(follower_id=current_user.id, followed_id=followed_user.id).first()
+    if follow:
+        db.session.delete(follow)
+        db.session.commit()
+        flash(f'You have successfully unfollowed @{username}')
+        UserActionLog.log_user_action(f'Unfollowed {username}')
+    else:
+        flash('Follow relationship not found.')
+
+    return redirect(url_for('profilepage.profilepage', username=username))
+
 
 @blueprint.route('/viewProfile/<string:username>', methods=['POST'])
 def viewProfile(username):

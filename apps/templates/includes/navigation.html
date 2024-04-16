@@ -67,28 +67,35 @@
 
   // Function to update the breadcrumb based on the current page
   function updateBreadcrumb() {
-    var pathArray = window.location.pathname.split('/');
-    var pageName = pathArray[pathArray.length - 1] || pathArray[pathArray.length - 2]; // Handles trailing slash
-    var displayName = pageName.toLowerCase();
+  var pathArray = window.location.pathname.split('/');
+  var pageName = pathArray[pathArray.length - 1] || pathArray[pathArray.length - 2]; // Handles trailing slash
+  var displayName = pageName.toLowerCase();
 
-    var pageNames = {
-      'lessons': 'Lessons',
-      'resource': 'Resources',
-      'favorites': 'Favorites',
-      'profilepage': 'Profile',
-      'feedback': 'Feedback',
-      'faq': 'FAQ',
-      'contact': 'Contact Us',
-      'privacy': 'Privacy Policy',
-      'acknowledgments': 'Acknowledgments'
-    };
+  var pageNames = {
+    'lessons': 'Lessons',
+    'resource': 'Resources',
+    'favorites': 'Favorites',
+    'profilepage': 'Profile',
+    'feedback': 'Feedback',
+    'faq': 'FAQ',
+    'contact': 'Contact Us',
+    'privacy': 'Privacy Policy',
+    'acknowledgments': 'Acknowledgments'
+  };
 
-    var breadcrumbItem = document.getElementById('dynamic-breadcrumb');
-    // If it's not the homepage, set the breadcrumb text
-    if (displayName && displayName !== 'home' && pageNames[displayName]) {
-      breadcrumbItem.textContent = pageNames[displayName];
+  var breadcrumbItem = document.getElementById('dynamic-breadcrumb');
+  // If it's not the homepage, set the breadcrumb text
+  if (displayName && displayName !== 'home' && pageNames[displayName]) {
+    var breadcrumbText = pageNames[displayName];
+    // Check if the current page is the profile page
+    if (displayName === 'profilepage' && pathArray.length > 3) {
+      // Assuming the username is the next path segment after 'profilepage'
+      var username = pathArray[pathArray.length - 1];
+      breadcrumbText += ' / ' + capitalizeFirstLetter(username); // Add username to breadcrumb
     }
+    breadcrumbItem.textContent = breadcrumbText;
   }
+}
 
   // Call the function to update the breadcrumb when the DOM is fully loaded
   document.addEventListener('DOMContentLoaded', updateBreadcrumb);
