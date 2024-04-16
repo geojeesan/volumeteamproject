@@ -45,7 +45,7 @@ tutTextElement = document.getElementById("tut-text")
 tutNextElement = document.getElementById("tut-next")
 tutPrevElement = document.getElementById("tut-prev")
 
-tutData = {1:["Hi, I'm Speeko! I'm going to teach you how to use Volume.", scenarioDescElement, 0.5, 0.9], 
+tutData = {1:["Hi, I'm Speako! I'm going to teach you how to use Volume.", scenarioDescElement, 0.5, 0.9], 
 2:["This part shows you the specific scenario's details.", scenarioDescElement, 0.8, 0.9],
 3:["When recording your voice, you must attempt to respond in the most fitting way you can depending on the scenario.", null],
 4:["To record your voice, click this button. Make sure your device allows Volume to record your voice!", recordButton, 1.1, 0.6],

@@ -23,7 +23,7 @@
          </li>
          <li class="nav-item d-xl-none ps-3 d-flex align-items-center"></li>
          <!-- Profile dropmenu-->
-         <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 20px;">
+         <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 0px;">
            <a href="javascript:;" class="nav-link p-0" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             {% if base64_encoded_image %}
               <img src="data:image/jpeg;base64,{{ base64_encoded_image }}" alt="profile_image" class="avatar avatar-sm rounded-circle me-2">
@@ -39,86 +39,7 @@
              <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
            </ul>
          </li>               
-         <!-- Notifications dropmenu-->
-         <li class="nav-item dropdown pe-3 d-flex align-items-center">
-           <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-             <i class="fa fa-bell cursor-pointer"></i>
-           </a>
-           <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-             <li class="mb-2">
-               <a class="dropdown-item border-radius-md" href="javascript:;">
-                 <div class="d-flex py-1">
-                   <div class="my-auto">
-                     <img src="{{ config.ASSETS_ROOT }}/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                   </div>
-                   <div class="d-flex flex-column justify-content-center">
-                     <h6 class="text-sm font-weight-normal mb-1">
-                       <span class="font-weight-bold">Alex followed you</span>
-                     </h6>
-                     <p class="text-xs text-secondary mb-0 ">
-                       <i class="fa fa-clock me-1"></i>
-                       5 minutes ago
-                     </p>
-                   </div>
-                 </div>
-               </a>
-             </li>
-             <li class="mb-2">
-               <a class="dropdown-item border-radius-md" href="javascript:;">
-                 <div class="d-flex py-1">
-                   <div class="my-auto">
-                     <i class="ni ni-single-02 avatar avatar-sm bg-gradient-primary me-3"></i>
-                   </div>
-                   <div class="d-flex flex-column justify-content-center">
-                     <h6 class="text-sm font-weight-normal mb-1">
-                       <span class="font-weight-bold">New mentor available: Sarah</span>
-                     </h6>
-                     <p class="text-xs text-secondary mb-0 ">
-                       <i class="fa fa-clock me-1"></i>
-                       30 minutes ago
-                     </p>
-                   </div>
-                 </div>
-               </a>
-             </li>
-             <li>
-               <a class="dropdown-item border-radius-md" href="javascript:;">
-                 <div class="d-flex py-1">
-                   <div class="avatar avatar-sm bg-gradient-success  me-3  my-auto">
-                     <i class="ni ni-trophy"></i>
-                   </div>
-                   <div class="d-flex flex-column justify-content-center">
-                     <h6 class="text-sm font-weight-normal mb-1">
-                       You achieved a new badge: "Public Speaking Pro"
-                     </h6>
-                     <p class="text-xs text-secondary mb-0 ">
-                       <i class="fa fa-clock me-1"></i>
-                       1 day ago
-                     </p>
-                   </div>
-                 </div>
-               </a>
-             </li>
-             <li>
-               <a class="dropdown-item border-radius-md" href="javascript:;">
-                 <div class="d-flex py-1">
-                   <div class="avatar avatar-sm bg-gradient-info me-3 my-auto">
-                     <i class="ni ni-calendar-grid-58"></i>
-                   </div>
-                   <div class="d-flex flex-column justify-content-center">
-                     <h6 class="text-sm font-weight-normal mb-1">
-                       Reminder: "Effective Communication Workshop" starts tomorrow
-                     </h6>
-                     <p class="text-xs text-secondary mb-0 ">
-                       <i class="fa fa-clock me-1"></i>
-                       2 days ago
-                     </p>
-                   </div>
-                 </div>
-               </a>
-             </li>
-           </ul>
-         </li>              
+          <!-- Theme changer -->
          <li class="nav-item pe-2 d-flex align-items-center">
            <label for="theme-switch" class="nav-link text-body p-0 m-0">
              <i class="fa fa-sun fixed-plugin-button-nav cursor-pointer" id="theme-indicator"></i>
