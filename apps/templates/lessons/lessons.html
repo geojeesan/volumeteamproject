@@ -17,17 +17,6 @@
     display: flex;
     justify-content: center;
   }
-  .wave-graph {
-    width: 100%;
-    /* Responsive to container size */
-    max-width: 600px;
-    /* Maximum width */
-    height: 400px;
-    /* Fixed height */
-    margin: auto;
-    /* Centering if needed */
-    /* Adjust as necessary to maintain aspect ratio */
-  }
 
   /* General page styles */
   .container-fluid {
@@ -85,13 +74,11 @@
     /* Adjust based on home page padding */
   }
 
-  /* Styles for the lessons and wave graph cards */
+  /* Styles for the lessons cards */
   .card {
     border: none;
     border-radius: 15px;
     margin-bottom: 2rem;
-    margin-right: 1rem;
-    /* Reduce from larger values if necessary */
   }
 
   .card-body {
@@ -250,6 +237,7 @@
     font-weight: bold;
     /* Bold text */
     position: relative;
+    min-width: 70px;
     /* Relative position for percentage text */
     overflow: hidden;
     /* Hide the overflow to keep the text inside the bar */
@@ -257,6 +245,8 @@
 
   .progress-bar-text {
     position: absolute;
+    right: 0;
+    white-space: nowrap;
     width: 100%;
     text-align: center;
   }

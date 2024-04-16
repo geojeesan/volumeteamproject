@@ -51,10 +51,13 @@ def get_lessons_completion():
     for lesson in Lesson.query.all():
         total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
         completed_scenarios = (
-            UserScenarioProgress.query.filter_by(
-                user_id=user_id, scenario_id=SubLesson.id, completed=True
-            )
-            .join(SubLesson, SubLesson.lesson_id == lesson.id)
+            UserScenarioProgress.query
+            .join(SubLesson, UserScenarioProgress.scenario_id == SubLesson.id)
+            .filter(
+                UserScenarioProgress.user_id == user_id,
+                UserScenarioProgress.completed == True,
+                SubLesson.lesson_id == lesson.id
+                )
             .count()
         )
 
@@ -106,17 +109,6 @@ def get_lessons_status():
     except Exception as e:
         print(e)  # For debugging purposes
         return jsonify({"error": str(e)}), 500
-
-
-@blueprint.route("/api/latest_pace_data", methods=["GET"])
-def latest_pace_data():
-    # Assuming paceData is stored globally or retrieved from a database
-    global paceData
-    if paceData:
-        return jsonify(paceData)
-    else:
-        return jsonify({"error": "No pace data available"}), 404
-
 
 @blueprint.route(
     "/api/lessons/<int:lesson_id>/next_scenario_after_last_completed", methods=["GET"]
