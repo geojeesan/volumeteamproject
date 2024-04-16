@@ -99,62 +99,20 @@ def get_expert_insights():
 @blueprint.route('/articles/all')
 @login_required
 def all_articles():
-    user_id = current_user.id  # Get the current logged-in user's ID
-    articles = Article.query.outerjoin(UserFavorite, (UserFavorite.resource_id == Article.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'articles')).add_columns(UserFavorite.id.label('favorited'))
-
-    articles_data = [{
-        'id': article.Article.id,
-        'name': article.Article.name,
-        'link': article.Article.link,
-        'content_level': article.Article.content_level,
-        'click_count': article.Article.click_count,
-        'image_url': article.Article.image_url,
-        'time_to_completion': article.Article.time_to_complete,
-        'description': article.Article.description,
-        'favorite_count': article.Article.favorite_count,
-        'is_favorited': article.favorited is not None
-    } for article in articles]
-    return render_template('resource/articles_all.html', articles=articles_data, segment='articles_all')
+    articles = Article.query.all() 
+    return render_template('resource/articles_all.html', articles=articles, segment='articles_all')
 
 @blueprint.route('/videos/all')
 @login_required
 def all_videos():
-    user_id = current_user.id
-    videos = Video.query.outerjoin(UserFavorite, (UserFavorite.resource_id == Video.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'videos')).add_columns(UserFavorite.id.label('favorited'))
-
-    videos_data = [{
-        'id': video.Video.id,
-        'name': video.Video.name,
-        'link': video.Video.link,
-        'content_level': video.Video.content_level,
-        'click_count': video.Video.click_count,
-        'image_url': video.Video.image_url,
-        'time_to_completion': video.Video.time_to_complete,
-        'description': video.Video.description,
-        'favorite_count': video.Video.favorite_count,
-        'is_favorited': video.favorited is not None
-    } for video in videos]
-    return render_template('resource/videos_all.html', videos=videos_data, segment='videos_all')
+    videos = Video.query.all()
+    return render_template('resource/videos_all.html', videos=videos, segment='videos_all')
 
 @blueprint.route('/expert/all')
 @login_required
 def all_expert_insights():
-    user_id = current_user.id
-    expert_insights = ExpertInsight.query.outerjoin(UserFavorite, (UserFavorite.resource_id == ExpertInsight.id) & (UserFavorite.user_id == user_id) & (UserFavorite.resource_type == 'expert_insights')).add_columns(UserFavorite.id.label('favorited'))
-
-    expert_insights_data = [{
-        'id': insight.ExpertInsight.id,
-        'name': insight.ExpertInsight.name,
-        'link': insight.ExpertInsight.link,
-        'content_type': insight.ExpertInsight.content_type,
-        'click_count': insight.ExpertInsight.click_count,
-        'image_url': insight.ExpertInsight.image_url,
-        'time_to_completion': insight.ExpertInsight.time_to_complete,
-        'description': insight.ExpertInsight.description,
-        'favorite_count': insight.ExpertInsight.favorite_count,
-        'is_favorited': insight.favorited is not None
-    } for insight in expert_insights]
-    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all')
+    expert_insights = ExpertInsight.query.all() 
+    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights, segment='expert_insights_all')
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to toggle favorite
