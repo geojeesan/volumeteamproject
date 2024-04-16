@@ -25,7 +25,6 @@
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 5px;
-        position: relative;
     }
 
     .article-image img {
@@ -59,43 +58,6 @@
         text-decoration: underline;
         font-weight: bold;
     }
-
-    .favorite-container {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        padding: 3px 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        z-index: 10;
-        cursor: pointer;
-    }
-
-    .favorite-count {
-        margin-right: 5px;
-        font-size: 1em;
-        color: #12174c;
-    }
-
-    .favorite-button {
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        font-size: 1em;
-    }
-
-    .favorite-button i {
-        color: #12174c; /* Default non-favorite color */
-        transition: color 0.3s ease-in-out;
-    }
-
-    .favorite-button.active i {
-        color: #12174c; /* Favorite color */
-    }
-
 </style>
 
 {% endblock stylesheets %}
@@ -115,14 +77,8 @@
             <div class="article-info">
                 <h2><a href="{{ insight.link }}" target="_blank">{{ insight.name }}</a></h2>
                 <p>{{ insight.description }}</p>
-                <p>Time to Complete: {{ insight.time_to_complete }} minutes</p>
+                <p>Time to Complete: {{ insight.time_to_complete }}utes</p>
                 <p>Content Type: {{ insight.content_type }}</p>
-            </div>
-            <div class="favorite-container" onclick="toggleFavorite({{ insight.id }}, 'expert_insights', this)">
-                <span class="favorite-count">{{ insight.favorite_count }}</span>
-                <button class="favorite-button {% if insight.is_favorited %}active{% endif %}">
-                    <i class="{{ 'fas' if insight.is_favorited else 'far' }} fa-heart"></i>
-                </button>
             </div>
         </div>
         {% else %}
@@ -131,8 +87,4 @@
     </div>
 </div>
 
-{% endblock %}
-
-{% block javascripts %}
-<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
 {% endblock %}
