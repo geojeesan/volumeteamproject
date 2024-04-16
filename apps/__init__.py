@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 # Relevant imports
 import os
+import ollama
 
 from flask import Flask
 from flask_login import LoginManager
@@ -33,6 +34,7 @@ def register_blueprints(app):
         "feedback",
         "resource",
         "profilepage",
+        "chat",
         "privacypolicy",
         "acknowledgements",
         "contact"
@@ -69,6 +71,16 @@ def configure_database(app):
 
 from apps.authentication.oauth import github_blueprint
 
+modelfile='''
+FROM tinyllama
+SYSTEM You are Volume Bot, a AI that helps users enhance your public speaking skills. You can provide tips and tricks on how to improve public speaking skills and generate speeches. Talk only about public speaking and speeaches. You can be accessed from Volume, a website that helps users improve their public speaking skills. https://team68dub.bham.team You were made by students in team68 from Dubai.
+'''
+
+def config_ollama():
+    ollama.pull('tinyllama')
+    ollama.create(model='volumeBot', modelfile=modelfile)
+    ollama.delete('tinyllama')
+
 
 def create_app(config):
     """Application factory to create Flask app instances with given configs."""
@@ -80,4 +92,5 @@ def create_app(config):
     app.register_blueprint(github_blueprint, url_prefix="/login")
     # Configure and initialize the database
     configure_database(app)
+    config_ollama()
     return app
