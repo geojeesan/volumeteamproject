@@ -23,19 +23,6 @@
     max-width: 1200px;
   }
 
-  /*fonts*/
-  .custom-font {
-    font-family: "Alegreya Sans SC", sans-serif;
-  }
-
-  .custom-text {
-    font-family: "Roboto", sans-serif;
-  }
-
-  .allerta-text {
-    font-family: 'Allerta', sans-serif;
-  }
-
   /* Card titles and numbers */
   .card-number {
     margin-top: 20px;
@@ -57,14 +44,14 @@
     /* Smaller font size for the title */
     color: #344767;
     font-weight: normal;
-    font-family: 'Allerta', sans-serif;
+    font-family: 'Open sans', sans-serif;
   }
 
   /* Apply custom fonts to relevant elements on the lessons page */
   #lesson-title,
   #lesson-description,
   #lesson-difficulty {
-    font-family: "Alegreya Sans SC", sans-serif;
+    font-family: "Open sans", sans-serif;
     /* This is assuming you want to use Alegreya for these elements */
   }
 
@@ -89,17 +76,6 @@
     /* If not already set, for positioning context */
     overflow: hidden;
     /* Prevents content from spilling outside the card */
-  }
-
-  #wave-placeholder {
-    width: 100%;
-    /* Make canvas width responsive */
-    max-width: 400px;
-    /* Max width to prevent excessive expansion */
-    height: 400px;
-    /* Fixed height, adjust as needed */
-    margin: auto;
-    /* Center the canvas element */
   }
 
   p {
@@ -175,12 +151,7 @@
     /* Center content if the graph is not as wide as the container */
   }
 
-  /* Make sure the 'Analyze Progress' button is centered below the graph */
-  #analyze-btn {
-    display: block;
-    margin: 1.5rem auto 0;
-    /* Centers the button with top margin */
-  }
+
 
   /* Additional styles for alignment and responsiveness */
   @media (min-width: 992px) {
@@ -342,12 +313,7 @@
     /* Adjust this value if you want less space above the progress bars */
   }
   
-  #sentimentSkillChart {
-    width: 100vw; /* Take full width of the viewport */
-    height: 50vw; /* Adjust height to maintain aspect ratio */
-    max-width: 100%; /* Prevent it from exceeding the container width */
-    max-height: 300px; /* Maximum height to prevent it from being too tall */
-  }
+
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
     <div class="col-12">
@@ -359,8 +325,8 @@
     <div class="col-md-6">
       <div class="card mb-4 text-center">
         <div class="card-body d-flex flex-column align-items-center">
-          <h5 class="card-title">Pick up where you left off:</h5>
-          <h6 id="lesson-title">Loading...</h6>
+          <h4>Pick up where you left off:</h4>
+          <h5 id="lesson-title">Loading...</h5>
           <p id="lesson-description">Loading description...</p>
           <div id="lesson-difficulty" class="badge">Loading difficulty...</div>
           <p id="lesson-progress">Loading progress...</p>
@@ -374,7 +340,7 @@
     </div>
   </div>
   <div class="row">
-    <!-- Start New Challenge Card -->
+    <!-- Lessons Cards -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-12">
         <div class="card">
@@ -387,7 +353,7 @@
           </div>
         </div>
       </div>
-      <!-- Volume Wave Card -->
+      <!-- Volume Spectrum Card -->
       <div class="row justify-content-around mb-4">
         <div class="col-md-6">
           <div class="card mb-4 text-center">
@@ -396,7 +362,6 @@
               <p>Here's how your attitude spans with your Volume™ lessons.</p>
               <!-- Container div for the canvas -->
               <div style="flex-grow: 1; position: relative; height: calc(100% - 70px);">
-                <!-- Ensure the container div for the canvas fills up the remaining space -->
                 <canvas id="sentimentSkillChart"></canvas>
               </div>
             </div>
@@ -406,11 +371,9 @@
         <div class="col-md-6">
           <div class="card mb-4 text-center">
             <div class="card-body">
-              <h5 class="card-title">Your Progression Tracker:</h5>
-              <p class="text-muted">Each bar represents your average performance score in each lesson.</p>
+              <h5> Your Progression Tracker:</h5>
+              <p>Each bar represents your average performance score in each lesson.</p>
               <div id="sentiments-progress-container">
-                <!-- Performance progress bars will be dynamically inserted here by the JavaScript -->
-                <!-- The static content has been removed to make way for dynamic content -->
               </div>
             </div>
           </div>
