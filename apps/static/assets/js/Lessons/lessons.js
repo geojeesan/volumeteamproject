@@ -161,6 +161,7 @@ async function fetchAllLessons() {
 		const lessons = await response.json();
 		if (Array.isArray(lessons)) {
 			displayLessons(lessons);
+			populateLessonTitles(lessons);
 		} else {
 			console.error('Fetched lessons data is not an array.');
 		}
@@ -170,7 +171,12 @@ async function fetchAllLessons() {
 }
 
 
-let lessonTitlesById = {};
+function populateLessonTitles(lessons) {
+	lessonTitlesById = {}; // Reset the map
+	lessons.forEach(lesson => {
+		lessonTitlesById[lesson.id] = lesson.title;
+	});
+}
 
 function displayLessons(lessons) {
     const lessonsContainer = document.getElementById('lessons-display');
@@ -351,6 +357,8 @@ function updatePerformanceProgressBars() {
 					const progressBarText = document.createElement('div');
 					progressBarText.className = 'progress-bar-text';
 					progressBarText.textContent = `${score.toFixed(1)} / 10.0`; // Show score out of 10
+
+					progressBar.style.minWidth = '70px'; // This matches the CSS change above
 
 					// Append the progress bar text to the progress bar
 					progressBar.appendChild(progressBarText);
