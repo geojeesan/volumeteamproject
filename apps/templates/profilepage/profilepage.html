@@ -141,6 +141,35 @@
     padding: 8px 12px;
   }
 
+  .follow-form {
+    display: flex;
+    flex-direction: column; /* stack elements vertically */
+    justify-content: center; /* center vertically */
+    align-items: center; /* center horizontally */
+    height: 100%; /* take full height of parent */
+}
+
+.follow-text {
+    margin-bottom: 0.5rem; /* spacing between text and button */
+    font-size: 1rem; /* adjust size as needed */
+}
+
+.profile-back-button {
+  display: inline-flex; /* Use flexbox for inline elements */
+  align-items: center; /* Center align vertically */
+  justify-content: center; /* Center align horizontally */
+  position: absolute;
+  margin-right: 8px;
+  left: 0.5%;
+  top: 2%;
+  border-radius: 0.8rem;
+  color: #3b416c;
+  font-size: 16px; /* Set font-size as per your design */
+  padding: 8px 12px; /* Adjust the padding as needed */
+}
+
+
+
 </style>
 
 {% endblock stylesheets %}
@@ -165,9 +194,11 @@
   <div class="page-header min-height-300 border-radius-xl mt-4"
     style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved6.jpg'); background-position-y: 50%;">
     <span class="mask bg-gradient-primary opacity-6"></span>
-    <button class="btn btn-secondary blur shadow-blur" style="position: absolute; left: 0.5%; top: 2%; border-radius: 0.8rem; color: #3b416c;" onclick="window.location.href='/profilepage/{{ current_user.username }}'">◀ Your Profile</button>
+    <button class="btn btn-secondary blur shadow-blur profile-back-button" onclick="window.location.href='/profilepage/{{ current_user.username }}'">
+      ⏪ Go Back to Your Profile Page
+    </button>
   </div>
-  {% else %}
+{% else %}
   <div class="page-header min-height-300 border-radius-xl mt-4"
     style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved0.jpg'); background-position-y: 50%;">
     <span class="mask bg-gradient-primary opacity-6"></span>
@@ -184,9 +215,9 @@
       {% else %}
         <div class="nav-wrapper position-absolute end-0 top-buttons" >
           {% if is_following %}
-          <form action="/unfollow/{{ user.username }}" method="POST" enctype="multipart/form-data">
-            <a>‎ ‎ ‎Following </a> <br>
-            <button class="btn btn-primary" style="background-color: #781963;">Unfollow</button>
+          <form class="follow-form" action="/unfollow/{{ user.username }}" method="POST" enctype="multipart/form-data">
+            <div class="follow-text">‎ ‎ ‎Following</div> <br>
+            <button class="btn btn-primary">Unfollow</button>
           </form>
           {% else %}
           <form action="/follow/{{ user.username }}" method="POST" enctype="multipart/form-data">

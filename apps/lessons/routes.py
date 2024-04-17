@@ -49,37 +49,31 @@ def get_lessons():
 def get_lessons_completion():
     total_lessons = Lesson.query.count()
     user_id = current_user.id
-
     completed_lessons = 0
-    completed_lessons_names = []  # List to store names of completed lessons
 
     for lesson in Lesson.query.all():
-        total_scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).count()
-        completed_scenarios = (
-            UserScenarioProgress.query
-            .join(SubLesson, UserScenarioProgress.scenario_id == SubLesson.id)
-            .filter(
-                UserScenarioProgress.user_id == user_id,
-                UserScenarioProgress.completed == True,
-                SubLesson.lesson_id == lesson.id
+        scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).order_by(SubLesson.order_in_lesson).all()
+        total_scenarios = len(scenarios)
+        completed_scenarios = 0
+        
+        for scenario in scenarios:
+            if UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario.id, completed=True).first():
+                completed_scenarios += 1
+                UserActionLog.log_user_action(
+                    f"Completed scenario {scenario.order_in_lesson} in the {lesson.title} lesson"
                 )
-            .count()
-        )
-
+        
         if total_scenarios > 0 and total_scenarios == completed_scenarios:
             completed_lessons += 1
-            completed_lessons_names.append(lesson.title)  # Add the lesson title to the list
-
+            UserActionLog.log_user_action(f"Completed the {lesson.title} lesson")
 
     completion_percentage = (
         (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
     )
-
-    # Ensure the response is always a float rounded to two decimal places
     completion_percentage = round(completion_percentage, 2)
     
-    UserActionLog.log_user_action(f"Lessons completed: {', '.join(completed_lessons_names)}")
     return jsonify({"completionPercentage": completion_percentage})
+
 
 
 @blueprint.route("/api/lessons/status", methods=["GET"])
