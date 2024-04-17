@@ -117,18 +117,23 @@ def user_actions():
 @blueprint.route("/test-scores")
 @login_required
 def test_scores():
-    scores_query = UserScenarioProgress.query.order_by(UserScenarioProgress.score.asc()).limit(6).all()
+    user_id = current_user.get_id()  # Get the ID of the currently logged-in user
+    # Query the latest 6 test scores for the logged-in user
+    scores_query = UserScenarioProgress.query.filter_by(user_id=user_id).order_by(UserScenarioProgress.id.desc()).limit(6).all()
+    scores_query.reverse()  # Reverse the list to have the oldest test first
     scores_data = {
-        "labels": [f"Test {i+1}" for i in range(len(scores_query))],
-        "datasets": [{
-            "label": "Test Scores",
-            "data": [score.score for score in scores_query],
-            "fill": False,
-            "borderColor": "rgb(75, 192, 192)",
-            "tension": 0.1,
-        }]
-    }
+            "labels": [f"Test {score.id}" for score in scores_query],
+            "datasets": [{
+                "label": "Test Scores",
+                "data": [score.score for score in scores_query],
+                "fill": False,
+                "borderColor": "rgb(75, 192, 192)",  # Original color
+                "tension": 0.1,
+            }]
+        }
     return jsonify(scores_data)
+
+
 
 # Leaderboard Endpoint
 @blueprint.route("/leaderboard")
