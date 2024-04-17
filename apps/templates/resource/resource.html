@@ -7,32 +7,43 @@
 <style>
     body {
         font-family: "Roboto", sans-serif;
-        background-color: #ACAACC;
-        color: #12174c;
     }
 
+    /* Applying dark and light themes */
+    body.light-page {
+        background-color: #d7d7d7; /* Light background for light mode */
+        color: #12174c; /* Dark blue text for light background */
+    }
+
+    body.dark-page {
+        background-color: #283149; /* Dark blue background for dark mode */
+        color: #d7d7d7; /* Light gray text for dark mode */
+    }
+
+    /* General style adjustments for buttons, links, and hover states */
+    .category-button, .scroll-btn, .view-all-btn {
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+    }
+
+
     .category-button {
-        background-color: #ffffff;
-        color: #12174c;
-        border: 1px solid #12174c;
-        /* Black border */
+        background-color: #ffffff; /* Default light background */
+        color: #12174c; /* Dark text */
+        border: 1px solid #12174c; /* Border uses the text color for contrast */
         border-radius: 5px;
         padding: 20px 30px;
         margin: 10px;
         cursor: pointer;
-
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
     }
 
-    .category-button:hover {
-        background-color:#ACAACC;
-        /* background-color: rgba(223, 216, 216, 0.8); */
-        color: inherit;
+    .category-button:hover, .category-button.active {
+        background-color: #ACAACC; 
+        color: #283149;
     }
 
     .category-button.active {
-        background-color:#ACAACC;
-        /* background-color: rgba(223, 216, 216, 0.8); */
-        color: #12174c;
         font-weight: bold;
     }
 
@@ -51,7 +62,7 @@
     }
 
     .featured-link-box {
-        background-color: #ACAACC;
+        background-color: #ffffff;
         border-radius: 20px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         display: flex;
@@ -84,7 +95,7 @@
         width: 100%;
         height: 100%;
         position: relative;
-        border-radius: 20px;
+        border-radius: 10px;
         opacity: 0.7;
     }
 
@@ -125,7 +136,7 @@
 
     .subsection-title {
         font-size: 1.5em;
-        color: inherit;
+        color: #12174c;
         font-weight: bolder;
         margin-right: 50px;
     }
@@ -150,6 +161,16 @@
         width: 100%;
     }
 
+    
+
+    /* Styles for containers that need to be distinct from the background */
+    .scroll-item, .scroll-box, .featured-link-box {
+        background-color: #404B69; /* Dark blue for boxes in dark mode */
+        color: inherit; /* Light gray text in dark mode */
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
     .scroll-container {
         display: flex;
         overflow-x: auto;
@@ -161,7 +182,7 @@
     }
 
     .scroll-box {
-        background-color: #aca9e3;
+        background-color: #ffffff;
         border-radius: 10px;
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         align-items: center;
@@ -175,25 +196,18 @@
         justify-content: flex-start;
         min-width: 200px;
         min-height: 150px;
-        background-color:#ACAACC;
-        /* background-color: rgba(223, 216, 216, 0.8); */
+        background-color: #ffffff;
         border-radius: 10px;
         margin-right: 10px;
         overflow: hidden;
-
-        /* new changes */
-        position: relative; /* Needed for absolute positioning of children */
+        position: relative;
     }
 
     .scroll-item img {
         width: 100%;
         height: 100%;
-        position: relative;
         border-radius: 10px;
-        /* object-fit: contain; */
-
-        /* new changes */
-        object-fit: cover; /* Changed to cover to ensure full area is filled */
+        object-fit: cover;
     }
 
     .scroll-item a {
@@ -202,27 +216,41 @@
         text-decoration: none;
         font-weight: bold;
         padding: 10px;
-        z-index: 10;
     }
 
-
     .scroll-item a:hover {
-        color: #12174c;
         text-decoration: underline;
         font-weight: bold;
     }
 
     .scroll-btn {
-        cursor: pointer;
-        padding: 10px;
-        background-color:#ACAACC;
-        /* background-color: rgba(223, 216, 216, 0.8); */
+        background-color: inherit; /* Dark blue background for buttons */
         border: none;
-        color: #12174c;
         font-size: 90px;
+        padding: 10px;
         margin: 0 5px;
         border-radius: 5px;
     }
+
+    /* Adapting to dark theme */
+    body.dark-page .category-button, body.dark-page .scroll-btn, body.dark-page .view-all-btn{
+        background-color: #283149; /* Darker background for dark mode */
+        color: #d7d7d7; /* Light text for dark mode */
+    }
+
+    body.dark-page .scroll-item a, body.dark-page .time-to-complete, body.dark-page .subsection-title  {
+        color: #ffffff; /* Dark blue text for dark mode */
+    }
+
+    body.dark-page .category-button:hover, body.dark-page .category-button.active {
+        background-color: #404B69; /* Lighter purple for hover/active in dark mode */
+        color: #ffffff; /* White text for hover/active */
+    }
+
+    body.dark-page .scroll-item, body.dark-page .scroll-box, body.dark-page .featured-link-box {
+        background-color: #404B69; /* Consistent dark blue for all containers in dark mode */
+    }
+
 
     .scroll-btn.left {
         margin-right: 25px;
@@ -241,7 +269,6 @@
         padding: 5px;
         font-size: 0.9em;
     }
-
 
 
     /* new changes */
