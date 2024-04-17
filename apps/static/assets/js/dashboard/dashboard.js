@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
                   rankCell.innerHTML = badgeHTML;
                   const usernameCell = row.insertCell();
-                  usernameCell.innerHTML = user.username ? `<a href="/profilepage/${user.user_id}">${user.username}</a>` : '-';
+                  usernameCell.innerHTML = user.username ? `<a href="/profilepage/${user.username}">${user.username}</a>` : '-';
                   const scoreCell = row.insertCell();
                   scoreCell.textContent = user.score || '-';
                   const levelCell = row.insertCell();

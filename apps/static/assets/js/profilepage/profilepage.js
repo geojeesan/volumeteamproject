@@ -13,45 +13,44 @@ function viewProfile(username) {
 
 
 
-// Function to handle user search
+// Function to handle search
 function searchUsers() {
-  var searchInput = document.getElementById('searchInput').value.trim();
+  var searchInput = document.getElementById('searchInput').value;
+  var username = 'hassan';
 
   // Send AJAX request to Flask endpoint
   $.ajax({
-    url: '/profilepage/' + searchInput,  // Assuming you have a '/search' endpoint for searching users
-    method: 'POST',
-    data: { searchTerm: searchInput },
-    success: function(response) {
-      var searchResults = document.getElementById('searchResults');
-      searchResults.innerHTML = ''; // Clear previous search results
+      url: '/profilepage/' + username,  // Dynamically generate URL with the correct user ID
+      method: 'POST',
+      data: {searchTerm: searchInput},
+      success: function(response) {
+          var searchResults = document.getElementById('searchResults');
+          searchResults.innerHTML = ''; // Clear previous search results
 
-      // Append search results to the list
-      response.forEach(function(user) {
-        var listItem = document.createElement('li');
-        listItem.className = 'list-group-item';
-        listItem.textContent = '@' + user.username;
-        listItem.style.height = '50px';
+          // Append search results to the list
+          response.forEach(function(user) {
+              var listItem = document.createElement('li');
+              listItem.className = 'list-group-item';
+              listItem.textContent = '@' + user.username;
+              listItem.style.height = '50px';
 
-        // Create button to view user profile
-        var viewProfileButton = document.createElement('button');
-        viewProfileButton.textContent = 'View Profile';
-        viewProfileButton.className = 'btn btn-secondary btn-sm ml-2';
-        viewProfileButton.onclick = function() {
-          viewProfile(user.username); // Call viewProfile with the username
-        };
-        viewProfileButton.style.float = 'right'; // Align to the right side
+              // Create button to view user profile
+              var viewProfileButton = document.createElement('button');
+              viewProfileButton.textContent = 'View Profile';
+              viewProfileButton.className = 'btn btn-secondary btn-sm ml-2';
+              viewProfileButton.dataset.username = user.username; // Store user ID as a data attribute
+              viewProfileButton.addEventListener('click', viewUserProfile);
+              viewProfileButton.style.float = 'right'; // Align to the right side
 
-        // Append button to list item
-        listItem.appendChild(viewProfileButton);
+              // Append button to list item
+              listItem.appendChild(viewProfileButton);
 
-        // Append list item to search results
-        searchResults.appendChild(listItem);
-      });
-    }
+              // Append list item to search results
+              searchResults.appendChild(listItem);
+          });
+      }
   });
 }
-
 
 // document.addEventListener('DOMContentLoaded', function() {
 //   fetch('/profile-user-progress')
@@ -69,7 +68,8 @@ function searchUsers() {
     
 // Event handler for viewing user profile
 function viewUserProfile(event) {
-  window.location.href = '/profilepage/' + user.username; // Redirect to user profile page
+  var username = event.target.dataset.username; // Get user ID from data attribute
+  window.location.href = '/profilepage/' + username; // Redirect to user profile page
 }
 
   // Event listener for search button click
