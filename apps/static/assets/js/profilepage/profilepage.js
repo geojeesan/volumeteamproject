@@ -18,6 +18,13 @@ function searchUsers() {
   var searchInput = document.getElementById('searchInput').value;
   var username = 'hassan';
 
+  // Check if search input is empty
+  if (!searchInput.trim()) {
+    var searchResults = document.getElementById('searchResults');
+    searchResults.innerHTML = '<p style="color: red;">Please enter a search term</p>';
+    return; // Exit the function early if search input is empty
+  }
+
   // Send AJAX request to Flask endpoint
   $.ajax({
       url: '/profilepage/' + username,  // Dynamically generate URL with the correct user ID
