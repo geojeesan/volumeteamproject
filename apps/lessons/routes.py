@@ -6,15 +6,20 @@ from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from apps.models import Lesson
 from sqlalchemy import desc
-from apps.models import Lesson, UserScenarioProgress, SubLesson
+from apps.models import Lesson, UserScenarioProgress, SubLesson, Profile
 from apps.models import UserActionLog  # Make sure the import path matches your project structure
-
+import base64
 
 
 @blueprint.route("/lessons")
 def lessons():
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
     return render_template(
-        "lessons/lessons.html", segment="lessons"
+        "lessons/lessons.html", segment="lessons", current_base64_encoded_image=current_base64_encoded_image
     )
 
 

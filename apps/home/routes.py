@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import random
+import base64
 from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
@@ -15,7 +16,8 @@ from apps.models import (
     UserProgress,
     LessonImage,
     UserNotes, 
-    UserActionLog
+    UserActionLog,
+    Profile
 )
 from apps.authentication.models import Users
 from sqlalchemy.sql.expression import func
@@ -186,7 +188,13 @@ def index():
         # Use the provided default image path
         image_url = "/static/assets/img/lessonsPictures/speech.png"
 
-    return render_template("home/index.html", segment="index", featured_lesson=featured_lesson, image_url=image_url)
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+
+    return render_template("home/index.html", segment="index", featured_lesson=featured_lesson, image_url=image_url, current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route("/<template>")
 def route_template(template):

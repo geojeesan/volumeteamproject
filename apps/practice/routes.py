@@ -4,7 +4,7 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
 from flask import request, jsonify
-from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress
+from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress, Profile
 from speech_recognition import UnknownValueError
 import speech_recognition as sr
 import traceback
@@ -14,6 +14,7 @@ import os
 import parselmouth
 import numpy as np
 import time
+import base64
 
 current_lesson = None
 user_sentiments = None
@@ -22,11 +23,17 @@ user_sentiments = None
 @blueprint.route("/practice/<int:lesson_num>-<int:scenario_num>")
 @login_required
 def practice(lesson_num, scenario_num):
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
     return render_template(
         "practice/practice.html",
         segment="practice",
         lesson_number=lesson_num,
         scenario_number=scenario_num,
+        current_base64_encoded_image=current_base64_encoded_image,
     )
 
 

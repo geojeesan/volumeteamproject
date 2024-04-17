@@ -3,15 +3,21 @@
 from apps.home import blueprint
 from apps import db
 from flask import flash, render_template, request, redirect, url_for, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from flask import jsonify
-from apps.models import Feedback, UserActionLog
+from apps.models import Feedback, UserActionLog, Profile
+import base64
 
 @blueprint.route('/feedback')
 @login_required
 def feedback():
-    return render_template('feedback/feedback.html', segment='feedback')
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+    return render_template('feedback/feedback.html', segment='feedback', current_base64_encoded_image=current_base64_encoded_image)
 
 
 @blueprint.route('/submit_feedback', methods=['POST'])

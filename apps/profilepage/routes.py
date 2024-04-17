@@ -11,12 +11,10 @@ from io import BytesIO
 
 from apps.models import (
     db,
-    Event,
     Lesson,
     SubLesson,
     UserScenarioProgress,
     UserProgress,
-    LessonImage,
     Profile,
     Follows,
     UserActionLog
@@ -29,38 +27,18 @@ import datetime
 @blueprint.route('/editprofile')
 @login_required
 def editprofile():
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
 
-    if request.method == 'POST':
-        full_name = request.form.get('fullname')
-        location = request.form.get('location')
-        bio = request.form.get('bio')
-        profile_pic = request.files.get('profilepic').read() if 'profilepic' in request.files else None
-        user_id = 1  # You need to replace this with actual user id
-        
-        # Check if the user already has a profile
-        profile = Profile.query.filter_by(user_id=user_id).first()
-        if profile:
-            # Update existing profile
-            profile.full_name = full_name
-            profile.location = location
-            profile.bio = bio
-            if profile_pic:
-                profile.profile_picture = profile_pic
-        else:
-            # Create new profile
-            profile = Profile(user_id=user_id, full_name=full_name, location=location, bio=bio, profile_picture=profile_pic)
-            db.session.add(profile)
-        
-        db.session.commit()
-    return render_template('profilepage/editprofile.html', segment='editprofile')
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+    return render_template('profilepage/editprofile.html', segment='editprofile', current_base64_encoded_image=current_base64_encoded_image, profile=current_profile)
 
 @blueprint.route('/update_profile', methods=['POST'])
 def update_profile():
     user_id = current_user.get_id()
-    user = Users.query.filter_by(id=user_id).first()  # Get the user object to access the username
-    # if user is None:
-    #     flash('User not found.')
-    #     return redirect(url_for('home_blueprint.index'))
+    user = Users.query.filter_by(id=user_id).first()
     full_name = request.form.get('full_name')
     location = request.form.get('location')
     bio = request.form.get('bio')
@@ -120,7 +98,6 @@ def profilepage(username):
     user = Users.query.filter_by(username=username).first()
     if not user:
         return render_template("home/page-404.html"), 404
-    
     user_id = user.id
 
     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
@@ -196,16 +173,24 @@ def profilepage(username):
         formatted_results = [{'id': user.id, 'username': user.username} for user in search_results]
 
         return jsonify(formatted_results)
+    
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
 
     streak = user_progress.streak
     current_level = user_progress.current_level
     return render_template('profilepage/profilepage.html', 
-                           segment='profilepage',  
+                           segment='profilepage',
                            streak=streak, 
                            current_level=current_level, 
                            user=user, 
                            profile=profile, 
-                           base64_encoded_image=base64_encoded_image, 
+                           base64_encoded_image=base64_encoded_image,
+                           current_base64_encoded_image=current_base64_encoded_image, 
                            is_following=is_following,
                            follows=follows,
                            followers=followers,
@@ -221,43 +206,34 @@ def getUserId():
 @blueprint.route('/follow/<string:username>', methods=['POST'])
 @login_required
 def follow(username):
-    # Find the user you want to follow by username
     followed_user = Users.query.filter_by(username=username).first()
     if followed_user is None:
         flash('User not found.')
-        return redirect(url_for('home_blueprint.index'))  # Replace with your appropriate redirect
-
-    # Create a new Follows entry
+        return redirect(url_for('profilepage.profilepage', username=username))
     follow = Follows(follower_id=current_user.id, followed_id=followed_user.id)
     db.session.add(follow)
     db.session.commit()
 
     flash(f'You have successfully followed @{username}')
-    UserActionLog.log_user_action(f'Followed {username}')
+    UserActionLog.log_user_action(f'Followed @{username}')
     return redirect(url_for('profilepage.profilepage', username=username))
-
 
 @blueprint.route('/unfollow/<string:username>', methods=['POST'])
 @login_required
 def unfollow(username):
-    # Find the user you want to unfollow by username
     followed_user = Users.query.filter_by(username=username).first()
     if followed_user is None:
         flash('User not found.')
-        return redirect(url_for('home_blueprint.index'))  # Replace with your appropriate redirect
-
-    # Find the follow entry to remove
+        return redirect(url_for('profilepage.profilepage', username=username))
     follow = Follows.query.filter_by(follower_id=current_user.id, followed_id=followed_user.id).first()
     if follow:
         db.session.delete(follow)
         db.session.commit()
         flash(f'You have successfully unfollowed @{username}')
-        UserActionLog.log_user_action(f'Unfollowed {username}')
+        UserActionLog.log_user_action(f'Unfollowed @{username}')
     else:
         flash('Follow relationship not found.')
-
     return redirect(url_for('profilepage.profilepage', username=username))
-
 
 @blueprint.route('/viewProfile/<string:username>', methods=['POST'])
 def viewProfile(username):
@@ -268,18 +244,7 @@ def viewProfile(username):
     else:
         return render_template("home/page-404.html"), 404
 
-# @blueprint.route("/profile-user-progress")
-# @login_required
-# def profile_user_progress():
-#     user_id = profilepage.user.user_id
-#     user_progress = UserProgress.query.filter_by(user_id=user_id).first()
-#     return jsonify({
-#         "user_lessons_completed": user_progress.lessons_completed,
-#         "user_lessons_in_progress": user_progress.lessons_in_progress,
-#         "user_current_level": user_progress.current_level,
-#         "user_level_progress": user_progress.level_progress,
-#         "user_streak": user_progress.streak,
-#     })
+
 
 # Helper - Extract current page name from request
 def get_segment(request):

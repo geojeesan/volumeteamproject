@@ -8,15 +8,20 @@ from apps import db
 from flask_login import login_required, current_user
 from flask import redirect, url_for
 from datetime import datetime
-from apps.models import UserActionLog
+from apps.models import UserActionLog, Profile
 from apps.authentication.models import Users
-
+import base64
 
 @blueprint.route('/resource')
 @login_required
 def resource():
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
     UserActionLog.log_user_action(f'Viewed Resources')  # Logging action
-    return render_template('resource/resource.html', segment='resource')
+    return render_template('resource/resource.html', segment='resource', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/api/articles')
 @login_required
@@ -114,7 +119,13 @@ def all_articles():
         'favorite_count': article.Article.favorite_count,
         'is_favorited': article.favorited is not None
     } for article in articles]
-    return render_template('resource/articles_all.html', articles=articles_data, segment='articles_all')
+
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+    return render_template('resource/articles_all.html', articles=articles_data, segment='articles_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/videos/all')
 @login_required
@@ -134,7 +145,13 @@ def all_videos():
         'favorite_count': video.Video.favorite_count,
         'is_favorited': video.favorited is not None
     } for video in videos]
-    return render_template('resource/videos_all.html', videos=videos_data, segment='videos_all')
+
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+    return render_template('resource/videos_all.html', videos=videos_data, segment='videos_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/expert/all')
 @login_required
@@ -154,7 +171,13 @@ def all_expert_insights():
         'favorite_count': insight.ExpertInsight.favorite_count,
         'is_favorited': insight.favorited is not None
     } for insight in expert_insights]
-    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all')
+
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+    else:
+        current_base64_encoded_image = None
+    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all', current_base64_encoded_image=current_base64_encoded_image)
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to toggle favorite
