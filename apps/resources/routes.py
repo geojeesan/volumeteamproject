@@ -12,16 +12,16 @@ from apps.models import UserActionLog, Profile
 from apps.authentication.models import Users
 import base64
 
-@blueprint.route('/resource')
+@blueprint.route('/resources')
 @login_required
-def resource():
+def resources():
     current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     if current_profile and current_profile.profile_picture:
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
     UserActionLog.log_user_action(f'Viewed Resources')  # Logging action
-    return render_template('resource/resource.html', segment='resource', current_base64_encoded_image=current_base64_encoded_image)
+    return render_template('resources/resource.html', segment='resources', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/api/articles')
 @login_required
@@ -125,7 +125,7 @@ def all_articles():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
-    return render_template('resource/articles_all.html', articles=articles_data, segment='articles_all', current_base64_encoded_image=current_base64_encoded_image)
+    return render_template('resources/articles_all.html', articles=articles_data, segment='articles_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/videos/all')
 @login_required
@@ -151,7 +151,7 @@ def all_videos():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
-    return render_template('resource/videos_all.html', videos=videos_data, segment='videos_all', current_base64_encoded_image=current_base64_encoded_image)
+    return render_template('resources/videos_all.html', videos=videos_data, segment='videos_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/expert/all')
 @login_required
@@ -177,7 +177,7 @@ def all_expert_insights():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
-    return render_template('resource/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all', current_base64_encoded_image=current_base64_encoded_image)
+    return render_template('resources/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all', current_base64_encoded_image=current_base64_encoded_image)
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to toggle favorite
