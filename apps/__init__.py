@@ -31,7 +31,7 @@ def register_blueprints(app):
         "practice",
         "lessons",
         "feedback",
-        "resource",
+        "resources",
         "profilepage",
         "privacypolicy",
         "acknowledgements",
