@@ -72,6 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Setup event listeners for buttons
     setupButtonListeners();
+
+    // Attach click listeners to all links within resource containers to log actions
+    document.querySelectorAll('.scroll-container a').forEach(link => {
+        link.addEventListener('click', function(event) {
+            // Prevent the default action if you need to handle the event before navigating
+            // event.preventDefault(); 
+
+            // Log the user action
+            logUserAction(`Viewed a Resource: ${this.textContent.trim()}`);
+
+            // Optionally, proceed to the link href if not using event.preventDefault()
+            // window.location.href = this.href;
+        });
+    });
 });
 
 function setupButtonListeners() {
@@ -249,4 +263,19 @@ function scrollHorizontal(direction, containerId) {
     } else if (direction === 'right') {
         container.scrollLeft += scrollAmount;
     }
+}
+
+function logUserAction(description) {
+    fetch('/log_action', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // Include CSRF token if needed
+            'X-CSRFToken': csrfToken  // Adjust according to how your CSRF protection is configured
+        },
+        body: JSON.stringify({ action: description })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Action logged:', data))
+    .catch(error => console.error('Error logging action:', error));
 }
