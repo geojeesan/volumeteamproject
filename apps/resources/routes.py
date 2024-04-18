@@ -20,7 +20,7 @@ def resources():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
-    UserActionLog.log_user_action(f'Viewed Resources')  # Logging action
+    
     return render_template('resources/resource.html', segment='resources', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/api/articles')
@@ -125,6 +125,7 @@ def all_articles():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
+    UserActionLog.log_user_action('Viewed Articles')
     return render_template('resources/articles_all.html', articles=articles_data, segment='articles_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/videos/all')
@@ -151,6 +152,7 @@ def all_videos():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
+    UserActionLog.log_user_action('Viewed Videos')
     return render_template('resources/videos_all.html', videos=videos_data, segment='videos_all', current_base64_encoded_image=current_base64_encoded_image)
 
 @blueprint.route('/expert/all')
@@ -177,6 +179,7 @@ def all_expert_insights():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
+    UserActionLog.log_user_action('Viewed Expert Insights')
     return render_template('resources/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all', current_base64_encoded_image=current_base64_encoded_image)
 
 #----------------------------------------------------------------------------------------------------------------------
@@ -214,6 +217,7 @@ def toggle_favorite(resource_id):
         # User is unfavoriting the resource
         db.session.delete(favorite)
         resource.favorite_count = resource.favorite_count - 1 if resource.favorite_count > 0 else 0
+        UserActionLog.log_user_action('Unfavorited a Resource')
     else:
         # User is favoriting the resource
         new_favorite = UserFavorite(
@@ -223,6 +227,8 @@ def toggle_favorite(resource_id):
         )
         db.session.add(new_favorite)
         resource.favorite_count += 1
+        UserActionLog.log_user_action('Favorited a Resource')
+
 
     db.session.commit()
 
@@ -233,51 +239,16 @@ def toggle_favorite(resource_id):
     })
 
 #----------------------------------------------------------------------------------------------------------------------
-# Function to increment click count
+# Function to log user action on clicking any link
 
-@blueprint.route('/increment_click/<string:resource_type>/<int:item_id>', methods=['POST'])
+@blueprint.route('/log_action', methods=['POST'])
 @login_required
-def increment_click(resource_type, item_id):
-    model_map = {'articles': Article, 'videos': Video, 'expert_insights': ExpertInsight}
-    model = model_map.get(resource_type)
+def log_user_action():
+    description = request.json.get('action', 'Viewed a Resource')
+    UserActionLog.log_user_action('Viewed a Resource', user_id=current_user.get_id())
+    return jsonify({'message': 'Action logged successfully', 'success': True})
 
-    if not model:
-        return jsonify({'error': 'Invalid resource type'}), 400
-
-    item = model.query.filter_by(id=itemId).first()
-    if item is None:
-        return jsonify({'error': 'Item not found'}), 404
-
-    item.click_count += 1
-    db.session.commit()
-    # UserActionLog.log_user_action(f'User {current_user.get_id()} clicked on {resource_type} ID {item_id}')  # Logging action
-    return jsonify({'success': True, 'new_click_count': item.click_count})
-
-
-# Function to update featured items
-@blueprint.route('/api/featured')
-@login_required
-def get_featured_items():
-    # Fetch top 2 most-clicked articles
-    top_articles = Article.query.order_by(Article.click_count.desc()).limit(2).all()
-
-    # Fetch top 2 most-clicked videos
-    top_videos = Video.query.order_by(Video.click_count.desc()).limit(2).all()
-
-    # Fetch top 2 most-clicked expert insights
-    top_expert_insights = ExpertInsight.query.order_by(ExpertInsight.click_count.desc()).limit(2).all()
-
-    # Combine and serialize the data to send as a response
-    featured_items = {
-        'articles': [{'id': a.id, 'name': a.name, 'link': a.link, 'click_count': a.click_count} for a in top_articles],
-        'videos': [{'id': v.id, 'name': v.name, 'link': v.link, 'click_count': v.click_count} for v in top_videos],
-        'expert_insights': [{'id': ei.id, 'name': ei.name, 'link': ei.link, 'click_count': ei.click_count} for ei in top_expert_insights]
-    }
-
-    return jsonify(featured_items)
-
-
-# ----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
 # Resource Page models
 
 class Article(db.Model):
