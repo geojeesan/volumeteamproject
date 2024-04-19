@@ -1,10 +1,9 @@
-{% extends 'layouts/base.html' %}
+# {% extends 'layouts/base.html' %}
 
 {% block title %}Feedback{% endblock %}
 
 {% block stylesheets %}
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 
@@ -17,6 +16,7 @@
   cursor: pointer;
   position: relative;
 }
+
 
 .custom-radio:after {
   content: "";
@@ -183,7 +183,7 @@
   .likert-table td {
     border: 1px solid #ddd;
     padding: 10px;
-    text-align: center;
+    text-align: left;
   }
 
   .likert-table th {
@@ -250,8 +250,14 @@
         <form id="feedbackForm" action="/submit_feedback" method="POST">
 
         <h5 class="card-title">1. User Experience</h5>
+      
 
         <h6>a) How would you rate your overall experience with Volume?</h6>
+        <style>
+          .no-outline {
+            outline: none;
+          }
+        </style>
           <div class="rating">
             <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
             <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
@@ -259,47 +265,54 @@
             <input type="radio" id="star4" name="rating" value="4"><label for="star4"></label>
             <input type="radio" id="star5" name="rating" value="5"><label for="star5"></label>
           </div>
+          <br>
+          
 
         <h6>b) On a typical week, how many times would you say you use Volume?</h6>
           <div class=“frequency”>
             <input type="radio" id="daily" name="frequency" value="Daily">
-            <label for="daily">Daily</label><br>
+            <label for="daily" style="font-weight: normal; color: #344767; font-size: 14px;">Daily</label><br>
   
             <input type="radio" id="several-times-week" name="frequency" value="Several times a week">
-            <label for="several-times-week">Several times a week</label><br>
+            <label for="several-times-week" style="font-weight: normal; color: #344767; font-size: 14px;">Several times a week</label><br>
   
             <input type="radio" id="once-a-week" name="frequency" value="Once a week">
-            <label for="once-a-week">Once a week</label><br>
+            <label for="once-a-week" style="font-weight: normal; color: #344767; font-size: 14px;">Once a week</label><br>
   
             <input type="radio" id="occasionally" name="frequency" value="Occasionally">
-            <label for="occasionally">Occasionally</label><br>
+            <label for="occasionally" style="font-weight: normal; color: #344767; font-size: 14px;">Occasionally</label><br>
   
             <input type="radio" id="rarely" name="frequency" value="Rarely">
-            <label for="rarely">Rarely</label><br>
+            <label for="rarely" style="font-weight: normal; color: #344767; font-size: 14px;">Rarely</label><br>
             </div>
+            <br>
             
         <h6>c) How would you rate the clarity of instructions within the app?</h6>
             <div class=“clarity”>
               <input type="radio" id="very-clear" name="clarity" value="Very Clear">
-              <label for="very-clear">Very Clear</label><br>
+              <label for="very-clear" style="font-weight: normal; color: #344767; font-size: 14px;">Very Clear</label><br>
+
     
               <input type="radio" id="clear" name="clarity" value="Clear">
-              <label for="clear">Clear</label><br>
+              <label for="clear" style="font-weight: normal; color: #344767; font-size: 14px;">Clear</label><br>
     
               <input type="radio" id="instruction-neutral" name="clarity" value="Neutral">
-              <label for="instruction-neutral">Neutral</label><br>
+              <label for="instruction-neutral" style="font-weight: normal; color: #344767; font-size: 14px;">Neutral</label><br>
     
               <input type="radio" id="unclear" name="clarity" value="Unclear">
-              <label for="unclear">Unclear</label><br>
+              <label for="unclear" style="font-weight: normal; color: #344767; font-size: 14px;">Unclear</label><br>
     
               <input type="radio" id="very-unclear" name="clarity" value="Very Unclear">
-              <label for="very-unclear">Very Unclear</label><br>
+              <label for="very-unclear" style="font-weight: normal; color: #344767; font-size: 14px;">Very Unclear</label><br>
               </div>
+              <br>
 
         <div>
         <h6>d) Have you experienced any technical issues or bugs while using Volume? If so, please describe.</h6>
             <textarea class="form-control" id="issues" name="issues" rows="4" cols="50"></textarea>
-            </div>      
+            </div>    
+            <br>  
+          
 
         <div>
             <h6>e) What improvements and new features would you like to see in future Volume updates to improve your learning?</h6>
@@ -307,89 +320,95 @@
                 </div>
                 
         <br>
+        <br>
 
         <h5 class="card-title">2. Feature Analysis</h5>
         <h6>a) How satisfied are you with the Dashboard's data organization, presentation, and ease of navigation?</h6>
         <div class="dashboard">
           <input type="radio" id="very-satisfied" name="dashboard" value="Very Satisfied">
-          <label for="very-satisfied">Very Satisfied</label><br>
+          <label for="very-satisfied" style="font-weight: normal; color: #344767; font-size: 14px;">Very Satisfied</label><br>
         
           <input type="radio" id="satisfied" name="dashboard" value="Satisfied">
-          <label for="satisfied">Satisfied</label><br>
+          <label for="satisfied" style="font-weight: normal; color: #344767; font-size: 14px;">Satisfied</label><br>
         
           <input type="radio" id="neutral" name="dashboard" value="Neutral">
-          <label for="neutral">Neutral</label><br>
+          <label for="neutral" style="font-weight: normal; color: #344767; font-size: 14px;">Neutral</label><br>
         
           <input type="radio" id="dissatisfied" name="dashboard" value="Dissatisfied">
-          <label for="dissatisfied">Dissatisfied</label><br>
+          <label for="dissatisfied" style="font-weight: normal; color: #344767; font-size: 14px;">Dissatisfied</label><br>
         
           <input type="radio" id="very-dissatisfied" name="dashboard" value="Very Dissatisfied">
-          <label for="very-dissatisfied">Very Dissatisfied</label><br>
+          <label for="very-dissatisfied" style="font-weight: normal; color: #344767; font-size: 14px;">Very Dissatisfied</label><br>
         </div>
+        <br>
    
         
         <h6>b) Have you noticed any improvements in your speaking skills as a result of using the Speech Breakdown feature?</h6>
 <div class="breakdown">
   <input type="radio" id="significant-improvement" name="breakdown" value="Yes, significant improvement">
-  <label for="significant-improvement">Yes, significant improvement</label><br>
+  <label for="significant-improvement" style="font-weight: normal; color: #344767; font-size: 14px;">Yes, significant improvement</label><br>
 
   <input type="radio" id="moderate-improvement" name="breakdown" value="Yes, moderate improvement">
-  <label for="moderate-improvement">Yes, moderate improvement</label><br>
+  <label for="moderate-improvement" style="font-weight: normal; color: #344767; font-size: 14px;">Yes, moderate improvement</label><br>
 
   <input type="radio" id="slight-improvement" name="breakdown" value="Yes, slight improvement">
-  <label for="slight-improvement">Yes, slight improvement</label><br>
+  <label for="slight-improvement" style="font-weight: normal; color: #344767; font-size: 14px;">Yes, slight improvement</label><br>
 
   <input type="radio" id="no-improvement" name="breakdown" value="No, noticeable improvement">
-  <label for="no-improvement">No, noticeable improvement</label><br>
+  <label for="no-improvement" style="font-weight: normal; color: #344767; font-size: 14px;">No, noticeable improvement</label><br>
 
   <input type="radio" id="not-sure" name="breakdown" value="Not sure">
-  <label for="not-sure">Not sure</label><br>
+  <label for="not-sure" style="font-weight: normal; color: #344767; font-size: 14px;">Not sure</label><br>
 </div>
+<br>
 
 
 <div>
     <h6>c) Do you find the lessons engaging and interactive? If so, what interactive exercises would you like added to Volume?</h6>
     <textarea class="form-control" id="lessons" name="lessons" rows="4" cols="50"></textarea>
     </div>
+    <br>
     
     <h6>d) Is the progress tracking system effectively capturing your advancements in speaking skills?</h6>
         <div class="track">
           <input type="radio" id="yes-definitely" name="track" value="Yes, definitely">
-          <label for="yes-definitely">Yes, definitely</label><br>
+          <label for="yes-definitely" style="font-weight: normal; color: #344767; font-size: 14px;">Yes, definitely</label><br>
       
           <input type="radio" id="yes" name="track" value="Yes">
-          <label for="yes">Yes</label><br>
+          <label for="yes" style="font-weight: normal; color: #344767; font-size: 14px;">Yes</label><br>
       
           <input type="radio" id="not-sure" name="track" value="Not sure">
-          <label for="not-sure">Not sure</label><br>
+          <label for="not-sure" style="font-weight: normal; color: #344767; font-size: 14px;">Not sure</label><br>
       
           <input type="radio" id="no" name="track" value="No">
-          <label for="no">No</label><br>
+          <label for="no" style="font-weight: normal; color: #344767; font-size: 14px;">No</label><br>
       
           <input type="radio" id="not-really" name="track" value="Not really">
-          <label for="not-really">Not really</label><br>
+          <label for="not-really" style="font-weight: normal; color: #344767; font-size: 14px;">Not really</label><br>
         </div>
+        <br>
       
 
     <h6>e) How responsive has our customer support team been in addressing your concerns?</h6>
     <div class="support">
       <input type="radio" id="very-responsive" name="support" value="Very Responsive">
-      <label for="very-responsive">Very Responsive</label><br>
+      <label for="very-responsive" style="font-weight: normal; color: #344767; font-size: 14px;">Very Responsive</label><br>
     
       <input type="radio" id="responsive" name="support" value="Responsive">
-      <label for="responsive">Responsive</label><br>
+      <label for="responsive" style="font-weight: normal; color: #344767; font-size: 14px;">Responsive</label><br>
     
       <input type="radio" id="average" name="support" value="Average">
-      <label for="average">Average</label><br>
+      <label for="average" style="font-weight: normal; color: #344767; font-size: 14px;">Average</label><br>
     
       <input type="radio" id="slow" name="support" value="Slow">
-      <label for="slow">Slow</label><br>
+      <label for="slow" style="font-weight: normal; color: #344767; font-size: 14px;">Slow</label><br>
     
       <input type="radio" id="very-slow" name="support" value="Very Slow">
-      <label for="very-slow">Very Slow</label><br>
+      <label for="very-slow" style="font-weight: normal; color: #344767; font-size: 14px;">Very Slow</label><br>
     </div>
     
     <br>
+    
 
     <table class="likert-table">
         <h5>3. Likert Scale:</h5>
@@ -406,7 +425,7 @@
         <tbody>
         <tr>
         <td>a) Volume impacted your speaking skills in real-life scenarios such as meetings, or everyday conversations</td>
-        <td><input type="radio" id="q1_option1" name="life-impact" value="Strongly Disagree" class="custom-radio" required></td>
+        <td text-align="center"><input type="radio" id="q1_option1" name="life-impact" value="Strongly Disagree" class="custom-radio" required></td>
         <td><input type="radio" id="q1_option2" name="life-impact" value="Disagree" class="custom-radio" required></td>
         
         <td><input type="radio" id="q1_option3" name="life-impact" value="Neutral" class="custom-radio" required></td>
@@ -459,6 +478,36 @@
 <script src="{{ url_for('static', filename='assets/js/feedback/feedback.js') }}"></script>
 
 <script>
+  let lastClickedRadioButton = null;
+  let lastClickTimestamp = null;
+
+  function handleClick(radioButton) {
+    const currentClickTimestamp = Date.now();
+    if (radioButton === lastClickedRadioButton && currentClickTimestamp - lastClickTimestamp < 500) {
+      // Prevent the default action if the same radio button is clicked again within 500ms
+      event.preventDefault();
+    } else {
+      lastClickedRadioButton = radioButton;
+      lastClickTimestamp = currentClickTimestamp;
+    }
+  }
+</script>
+
+<script>
+  document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {
+      radio.addEventListener('click', function() {
+          if (this.previousValue === this.value) {
+              this.checked = false;
+              this.previousValue = null;
+          } else {
+              this.previousValue = this.value;
+          }
+      });
+  });
+</script>
+
+
+<script>
     document.querySelector('#feedbackForm').addEventListener('submit', function(event) {
       const rating = document.querySelector('input[name="rating"]:checked');
       const frequency = document.querySelector('input[name="frequency"]:checked');
@@ -477,6 +526,7 @@ if (!rating || !frequency || !clarity || !issues || !updates || !dashboard || !b
       }
     });
   </script>
+ 
 
 {% endblock %}
 
