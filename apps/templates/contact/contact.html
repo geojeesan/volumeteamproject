@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+# {% extends 'layouts/base.html' %}
 
 {% block title %}Contact Us{% endblock %}
 
@@ -146,12 +146,9 @@
             <ul>
                 <li>
                     <h5>What is Volume? <span>&#9660;</span></h5>
-                    <p>Volume is a website designed to help individuals improve their speaking skills.</p>
+                    <p>Volume is a website designed to help individuals improve their speaking skills through interactive lessons, personalized feedback, and performance tracking.</p>
                 </li>
-                <li>
-                    <h5>How can I sign up for Volume? <span>&#9660;</span></h5>
-                    <p>You can sign up for Volume by visiting our registration page and following the instructions.</p>
-                </li>
+                
                 <li>
                     <h5>Is Volume accessible? <span>&#9660;</span></h5>
                     <p>Yes, Volume offers both dark and light themes, as well as three different font sizes for accessibility.</p>
@@ -165,9 +162,14 @@
                     <p>Yes, Volume allows users to customize their profiles with personal information, profile pictures, and preferences.</p>
                 </li>
                 <li>
-                    <h5>How can I reset my password on Volume? <span>&#9660;</span></h5>
-                    <p>You can reset your password on Volume by clicking on the "Forgot Password" link on the login page and following the instructions provided.</p>
+                    <h5>What resources are available on Volume? <span>&#9660;</span></h5>
+                    <p>Volume offers a comprehensive resource page with articles, videos, and expert insights tailored to users of all skill levels.</p>
                 </li>
+                <li>
+                    <h5>How can I provide feedback or share my concerns about Volume? <span>&#9660;</span></h5>
+                    <p>We value your input! Share your thoughts or concerns about Volume on our dedicated feedback page, helping us continue to improve and serve you better.</p>
+                </li>
+                
             </ul>
         </div>
 
@@ -206,6 +208,7 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const faqQuestions = document.querySelectorAll('.faq h5');
@@ -218,3 +221,4 @@
     });
 </script>
 {% endblock javascripts %}
+
