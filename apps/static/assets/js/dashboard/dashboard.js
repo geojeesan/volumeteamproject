@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     rankCell.innerHTML = badgeHTML;
                     const usernameCell = row.insertCell();
-                    usernameCell.innerHTML = user.username ? `<a href="/profilepage/${user.username}">${user.username}</a>` : '-';
+                    usernameCell.innerHTML = user.username ? `<a href="/profilepage/${user.username}" class="username-link">${user.username}</a>` : '-';
                     const scoreCell = row.insertCell();
                     scoreCell.textContent = user.score || '-';
                     const levelCell = row.insertCell();
@@ -268,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error loading leaderboard:', error);
         });
+        
 
     // Fetches and lists upcoming events
     fetch('/index/upcoming-events')
