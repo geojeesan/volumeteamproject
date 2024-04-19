@@ -370,7 +370,8 @@
   }
 
   .progress-percentage {
-    position: absolute;
+    z-index: 2; /* Ensure it is above other elements */
+    position: absolute; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -384,8 +385,8 @@
   }
 
   .leaderboard-progress-chart {
-    width: 45px !important;
-    height: 45px !important;
+    width: 35px !important;
+    height: 35px !important;
   }
 
   .grayed-out {
@@ -395,6 +396,18 @@
     opacity: 0.5;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   }
+
+  a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2b42c7; 
+  }
+  .username-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2b42c7;
+  }
+
 
   .level-beginner {
     background-color: #97D700;
