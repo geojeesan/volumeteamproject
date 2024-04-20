@@ -25,6 +25,117 @@ function formatTimestampToLocal(utcTimestamp) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Fetches and displays the leaderboard
+    fetch('/leaderboard')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        const leaderboardBody = document.getElementById('leaderboard-body');
+        // Retrieve the login status from the server's response.
+        const isLoggedIn = data.is_logged_in; // Ensure this value is being sent from the server
+        const leaderboardData = data.leaderboard; // Assuming leaderboard data is under 'leaderboard' key
+        
+        for (let i = 0; i < leaderboardData.length; i++) {
+            const row = leaderboardBody.insertRow();
+            const user = leaderboardData[i];
+            
+            let badgeHTML;
+            if (i === 0) {
+                badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/goldBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">1</span></span>';
+            } else if (i === 1) {
+                badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/silverBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">2</span></span>';
+            } else if (i === 2) {
+                badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/bronzeBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">3</span></span>';
+            } else {
+                badgeHTML = `<span class="centered-rank-number">${i + 1}</span>`;
+            }
+            row.insertCell().innerHTML = badgeHTML;
+
+            const usernameCell = row.insertCell();
+            // If logged in, make username clickable, otherwise just display it
+            usernameCell.innerHTML = isLoggedIn && user.username
+                ? `<a href="/profilepage/${user.username}" class="username-link">${user.username}</a>`
+                : user.username || '-';
+
+            const scoreCell = row.insertCell();
+            scoreCell.textContent = user.score || '-';
+
+            const levelCell = row.insertCell();
+            levelCell.innerHTML = user.level ? getLevelBadge(user.level) : '<span class="badge-level badge-level-undefined">-</span>';
+
+            const progressCell = row.insertCell();
+            progressCell.classList.add('progress-cell');
+            const progressValue = user.level_progress || 0;
+            progressCell.innerHTML = `
+                <div class="progress-chart-container">
+                    <canvas id="progressChart${i}" class="leaderboard-progress-chart" width="35" height="35"></canvas>
+                    <span class="progress-percentage">${progressValue}%</span>
+                </div>
+            `;
+
+            // Initialize the progress chart if necessary
+            if (user.level_progress) {
+                const ctx = document.getElementById('progressChart' + i).getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [user.level_progress, 100 - user.level_progress],
+                            backgroundColor: ['#FF6384', '#EEEEEE'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        cutoutPercentage: 70,
+                        tooltips: { enabled: false },
+                        hover: { mode: null },
+                        maintainAspectRatio: false,
+                        animation: {
+                            animateRotate: false,
+                            animateScale: true
+                        }
+                    }
+                });
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error loading leaderboard:', error);
+    });
+
+
+    // Fetches and lists upcoming events
+    fetch('/index/upcoming-events')
+        .then(response => response.json())
+        .then(events => {
+            const eventsContainer = document.getElementById('events-container');
+            events.forEach(event => {
+                const startDate = new Date(event.start_utc);
+                const endDate = new Date(event.end_utc);
+                const eventElement = document.createElement('div');
+                eventElement.className = 'd-flex align-items-start timeline-event-spacing';
+                eventElement.innerHTML = `
+                  <div class="card-body p-1">
+                      <div class="timeline timeline-one-side">
+                          <div class="timeline-block mb-0">
+                              <span class="timeline-step">
+                                  <i class="ni ni-bell-55 text-success text-gradient"></i>
+                              </span>
+                              <div class="timeline-content">
+                                  <h6 class="text-dark text-sm font-weight-bold mb-0">${event.name}</h6>
+                                  <p class="text-secondary font-weight-bold text-xs mt-0 mb-0"> Date: ${startDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}, Time: ${startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })} - ${endDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
+                                  <p class="text-secondary text-xs mt-0 mb-0">${event.description}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>`;
+                eventsContainer.appendChild(eventElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading events:', error);
+        });
     // Fetches and displays user's learning progress
     fetch('/user-progress')
         .then(response => response.json())
@@ -192,113 +303,5 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading test scores:', error));
 
 
-    // Fetches and displays the leaderboard
-    fetch('/leaderboard')
-        .then(response => response.json())
-        .then(leaderboardData => {
-            console.log(leaderboardData);
-            const leaderboardBody = document.getElementById('leaderboard-body');
-            for (let i = 0; i < 10; i++) {
-                const row = leaderboardBody.insertRow();
-                const rankCell = row.insertCell();
-                const user = leaderboardData[i];
-                if (user) {
-                    let badgeHTML;
-                    if (i === 0) {
-                        badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/goldBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">1</span></span>';
-                    } else if (i === 1) {
-                        badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/silverBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">2</span></span>';
-                    } else if (i === 2) {
-                        badgeHTML = '<span class="badge-wrapper"><img src="static/assets/img/bronzeBadge.svg" class="leaderboard-badge-icon" /><span class="badge-number">3</span></span>';
-                    } else {
-                        badgeHTML = `<span class="centered-rank-number">${i + 1}</span>`;
-                    }
-                    rankCell.innerHTML = badgeHTML;
-                    const usernameCell = row.insertCell();
-                    usernameCell.innerHTML = user.username ? `<a href="/profilepage/${user.username}" class="username-link">${user.username}</a>` : '-';
-                    const scoreCell = row.insertCell();
-                    scoreCell.textContent = user.score || '-';
-                    const levelCell = row.insertCell();
-                    levelCell.innerHTML = user.level ? getLevelBadge(user.level) : '<span class="badge-level badge-level-undefined">-</span>';
-                    const progressCell = row.insertCell();
-                    progressCell.classList.add('progress-cell');
-                    const progressValue = user.level_progress || 0;
-                    progressCell.innerHTML = `
-                      <div class="progress-chart-container">
-                          <canvas id="progressChart${i}" class="leaderboard-progress-chart" width="35" height="35"></canvas>
-                          <span class="progress-percentage">${progressValue}%</span>
-                      </div>
-                  `;
-                    const progress = user.level_progress || 0;
-                    const ctx = document.getElementById('progressChart' + i).getContext('2d');
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            datasets: [{
-                                data: [progress, 100 - progress],
-                                backgroundColor: ['#FF6384', '#EEEEEE'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            cutoutPercentage: 70,
-                            tooltips: {
-                                enabled: false
-                            },
-                            hover: {
-                                mode: null
-                            },
-                            maintainAspectRatio: false,
-                            animation: {
-                                animateRotate: false,
-                                animateScale: true
-                            }
-                        }
-                    });
-                } else {
-                    rankCell.innerHTML = `<span class="centered-rank-number">${i + 1}</span>`;
-                    row.insertCell().textContent = '-';
-                    row.insertCell().textContent = '-';
-                    row.insertCell().textContent = '-';
-                    row.insertCell().textContent = '-';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error loading leaderboard:', error);
-        });
-        
-
-    // Fetches and lists upcoming events
-    fetch('/index/upcoming-events')
-        .then(response => response.json())
-        .then(events => {
-            const eventsContainer = document.getElementById('events-container');
-            events.forEach(event => {
-                const startDate = new Date(event.start_utc);
-                const endDate = new Date(event.end_utc);
-                const eventElement = document.createElement('div');
-                eventElement.className = 'd-flex align-items-start timeline-event-spacing';
-                eventElement.innerHTML = `
-                  <div class="card-body p-1">
-                      <div class="timeline timeline-one-side">
-                          <div class="timeline-block mb-0">
-                              <span class="timeline-step">
-                                  <i class="ni ni-bell-55 text-success text-gradient"></i>
-                              </span>
-                              <div class="timeline-content">
-                                  <h6 class="text-dark text-sm font-weight-bold mb-0">${event.name}</h6>
-                                  <p class="text-secondary font-weight-bold text-xs mt-0 mb-0"> Date: ${startDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}, Time: ${startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })} - ${endDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
-                                  <p class="text-secondary text-xs mt-0 mb-0">${event.description}</p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>`;
-                eventsContainer.appendChild(eventElement);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading events:', error);
-        });
+    
 });

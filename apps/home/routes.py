@@ -136,8 +136,10 @@ def test_scores():
 
 
 # Leaderboard Endpoint
+
 @blueprint.route("/leaderboard")
 def leaderboard():
+    is_logged_in = current_user.is_authenticated
     top_users = db.session.query(
         UserProgress.user_id,
         UserProgress.total_score.label("best_score"),
@@ -153,11 +155,14 @@ def leaderboard():
             "score": user.best_score,
             "level": user_progress.current_level,
             "level_progress": user_progress.level_progress,
-            "user_id": user.user_id  
-
+            "user_id": user.user_id
         })
 
-    return jsonify(leaderboard_data)
+   
+    return jsonify({
+        'is_logged_in': is_logged_in,
+        'leaderboard': leaderboard_data
+    })
 
 
 # Upcoming Events Endpoint
