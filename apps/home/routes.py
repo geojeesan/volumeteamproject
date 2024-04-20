@@ -137,7 +137,6 @@ def test_scores():
 
 # Leaderboard Endpoint
 @blueprint.route("/leaderboard")
-@login_required
 def leaderboard():
     top_users = db.session.query(
         UserProgress.user_id,
@@ -163,7 +162,6 @@ def leaderboard():
 
 # Upcoming Events Endpoint
 @blueprint.route("/index/upcoming-events")
-@login_required
 def upcoming_events():
     current_time = datetime.utcnow()
     events = Event.query.filter(Event.end_utc > current_time).order_by(Event.start_utc.asc()).limit(5).all()
@@ -173,12 +171,12 @@ def upcoming_events():
 
 # Featured Lesson Endpoint
 @blueprint.route("/index")
-@login_required
 def index():
-    if UserProgress(user_id=current_user.id):
-        UserProgress.update_progress(current_user.id)
-    else:
-        UserProgress.create_new_progress(current_user.id)
+    if current_user.is_authenticated:
+        if UserProgress(user_id=current_user.id):
+            UserProgress.update_progress(current_user.id)
+        else:
+            UserProgress.create_new_progress(current_user.id)
     
     lessons = Lesson.query.all()
     lesson_index = get_daily_index(len(lessons))

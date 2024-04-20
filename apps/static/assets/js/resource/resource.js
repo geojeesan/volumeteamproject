@@ -154,7 +154,6 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                     timeElement.textContent = `${item.time_to_completion}`;
                     element.appendChild(timeElement);
                 }
-
                 // Favorite Container
                 const favoriteContainer = document.createElement('div');
                 favoriteContainer.className = 'favorite-container';
@@ -206,12 +205,20 @@ function fetchAndDisplayResources(resourceType, containerId, filter) {
                         console.error('Error toggling favorite:', error);
                     });
                 };
+                
+                fetch(`/api/isAuthenticated`)
+                .then(response => response.json())
+                .then(data => {
+                const isAuthenticated = data.isAuthenticated;
 
-
+                if (isAuthenticated) {
                 favoriteContainer.appendChild(favoriteButton);
 
                 element.appendChild(favoriteContainer);
-
+                }
+                }
+                )
+                
                 container.appendChild(element);
             });
         })
