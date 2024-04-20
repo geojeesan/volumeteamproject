@@ -304,20 +304,24 @@ class Article(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_level = db.Column(db.String(50))
     click_count = db.Column(db.Integer, default=0)
-    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
-    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
-    description = db.Column(db.Text, nullable=True)  # New column for description
-    favorite_count = db.Column(db.Integer, default=0)  # New column for favorite count
-    __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
+    image_url = db.Column(db.String(512), nullable=False)
+    time_to_complete = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    favorite_count = db.Column(db.Integer, default=0)
+    __table_args__ = (db.CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, image_url, time_to_complete, description, click_count=0):
-        self.name = name
-        self.link = link
-        self.content_level = content_level
-        self.click_count = click_count
-        self.image_url = image_url
-        self.time_to_complete = time_to_complete
-        self.description = description
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'link': self.link,
+            'content_level': self.content_level,
+            'click_count': self.click_count,
+            'image_url': self.image_url,
+            'time_to_complete': self.time_to_complete,
+            'description': self.description,
+            'favorite_count': self.favorite_count
+        }
 
 class Video(db.Model):
     __tablename__ = 'videos'
@@ -326,20 +330,24 @@ class Video(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_level = db.Column(db.String(50), nullable=False)
     click_count = db.Column(db.Integer, default=0)
-    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
-    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
-    description = db.Column(db.Text, nullable=True)  # New column for description
-    favorite_count = db.Column(db.Integer, default=0)  # New column for favorite count
-    __table_args__ = (CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
+    image_url = db.Column(db.String(512), nullable=False)
+    time_to_complete = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    favorite_count = db.Column(db.Integer, default=0)
+    __table_args__ = (db.CheckConstraint("content_level IN ('beginner', 'intermediate', 'advanced')"),)
 
-    def __init__(self, name, link, content_level, image_url, time_to_complete, description, click_count=0):
-        self.name = name
-        self.link = link
-        self.content_level = content_level
-        self.click_count = click_count
-        self.image_url = image_url
-        self.time_to_complete = time_to_complete
-        self.description = description
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'link': self.link,
+            'content_level': self.content_level,
+            'click_count': self.click_count,
+            'image_url': self.image_url,
+            'time_to_complete': self.time_to_complete,
+            'description': self.description,
+            'favorite_count': self.favorite_count
+        }
 
 class ExpertInsight(db.Model):
     __tablename__ = 'expert_insights'
@@ -348,33 +356,40 @@ class ExpertInsight(db.Model):
     link = db.Column(db.String(512), nullable=False)
     content_type = db.Column(db.String(50), nullable=False)
     click_count = db.Column(db.Integer, default=0)
-    image_url = db.Column(db.String(512), nullable=False)  # New column for image URL
-    time_to_complete = db.Column(db.String(50), nullable=False)  # New column for duration
-    description = db.Column(db.Text, nullable=True)  # New column for description
-    favorite_count = db.Column(db.Integer, default=0)  # New column for favorite count
-    __table_args__ = (CheckConstraint("content_type IN ('article', 'video')"),)
+    image_url = db.Column(db.String(512), nullable=False)
+    time_to_complete = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    favorite_count = db.Column(db.Integer, default=0)
+    __table_args__ = (db.CheckConstraint("content_type IN ('article', 'video')"),)
 
-    def __init__(self, name, link, content_type, image_url, time_to_complete, description, click_count=0):
-        self.name = name
-        self.link = link
-        self.content_type = content_type
-        self.click_count = click_count
-        self.image_url = image_url
-        self.time_to_complete = time_to_complete
-        self.description = description
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'link': self.link,
+            'content_type': self.content_type,
+            'click_count': self.click_count,
+            'image_url': self.image_url,
+            'time_to_complete': self.time_to_complete,
+            'description': self.description,
+            'favorite_count': self.favorite_count
+        }
 
 class UserFavorite(db.Model):
     __tablename__ = 'user_favorites'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     resource_id = db.Column(db.Integer, nullable=False)
     resource_type = db.Column(db.String(50), nullable=False)
-    __table_args__ = (CheckConstraint("resource_type IN ('articles', 'videos', 'expert_insights')"),)
+    __table_args__ = (db.CheckConstraint("resource_type IN ('articles', 'videos', 'expert_insights')"),)
 
-    def __init__(self, user_id, resource_id, resource_type):
-        self.user_id = user_id
-        self.resource_id = resource_id
-        self.resource_type = resource_type
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'resource_id': self.resource_id,
+            'resource_type': self.resource_type
+        }
 # ----------------------------------------------------------------------------------------------------------------------
 
 @blueprint.route('/api/isAuthenticated')
