@@ -93,7 +93,6 @@ def update_profile():
 
 
 @blueprint.route('/profilepage/<string:username>', methods=['GET', 'POST'])
-@login_required
 def profilepage(username):
     user = Users.query.filter_by(username=username).first()
     if not user:
