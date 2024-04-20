@@ -377,7 +377,11 @@
         <div id="articles-section" class="articles-section">
             <div class="section-header">
                 <span class="subsection-title">ARTICLES</span>
+                {% if current_user.is_authenticated %}
                 <a href="/articles/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all articles</a>
+                {% endif %}
             </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-level="beginner" data-section="articles"
@@ -405,7 +409,11 @@
         <div id="videos-section" class="videos-section">
             <div class="section-header">
                 <span class="subsection-title">VIDEOS</span>
+                {% if current_user.is_authenticated %}
                 <a href="/videos/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all videos</a>
+                {% endif %}
             </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-level="beginner" data-section="videos"
@@ -431,7 +439,11 @@
         <div id="expert-section" class="expert-insights-section">
             <div class="section-header">
                 <span class="subsection-title">EXPERT INSIGHTS</span>
+                {% if current_user.is_authenticated %}
                 <a href="/expert/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all expert insights</a>
+                {% endif %}
             </div>
             <div class="category-buttons">
                 <button class="category-button" data-content-type="article" data-section="expert"
@@ -467,4 +479,7 @@
 
 {% block javascripts %}
 <script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
+<!-- <script>
+    var isAuthenticated = {{ current_user.is_authenticated | tojson }};
+</script> -->
 {% endblock %}

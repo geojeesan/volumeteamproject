@@ -28,7 +28,7 @@
             </div>
           </a>
         </li>
-
+        {% if current_user.is_authenticated %}
         <!-- Profile dropdown -->
          <li class="nav-item d-xl-none ps-3 d-flex align-items-center"></li>
          <li class="nav-item dropdown pe-3 d-flex align-items-center" style="margin-right: 0px;">
@@ -54,6 +54,27 @@
            </label>
            <input type="checkbox" class="d-none" id="theme-switch"/>
          </li>
+        {% else %}
+        <!-- Login button -->
+        <li class="nav-item">
+          <a class="nav-link me-2" href="{{ url_for('authentication_blueprint.register') }}">
+            <i class="fas fa-user-circle opacity-6 me-1"></i>
+            Sign Up
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link me-2" href="{{ url_for('authentication_blueprint.login') }}">
+            <i class="fas fa-key opacity-6 me-1"></i>
+            Sign In
+          </a>
+        </li>
+        <li class="nav-item pe-2 d-flex align-items-center">
+          <label for="theme-switch" class="nav-link text-body p-0 m-0">
+            <i class="fa fa-sun fixed-plugin-button-nav cursor-pointer" id="theme-indicator"></i>
+          </label>
+          <input type="checkbox" class="d-none" id="theme-switch"/>
+        </li>
+        {% endif %}
        </ul>
      </div>
    </div>
