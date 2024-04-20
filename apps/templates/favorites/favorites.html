@@ -1,0 +1,93 @@
+{% extends 'layouts/base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/favorites.css') }}">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f1f8; /* Light purple background */
+    }
+    .container {
+        width: 90%;
+        margin: auto;
+        color: #4A274F; /* Dark purple text */
+    }
+    section {
+        margin-bottom: 40px; /* Adds space between sections */
+        padding-bottom: 20px;
+        border-bottom: 2px solid #EDE7F6; /* Light purple border at the bottom of each section */
+    }
+    .link-container {
+        background-color: #EDE7F6; /* Very light purple */
+        border: 1px solid #D1C4E9; /* Light purple border */
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .article-image img {
+        width: 200px;
+        height: auto;
+        border-radius: 5px;
+        margin-right: 15px;
+    }
+    .article-info h3 {
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+    .article-info p {
+        font-size: 0.9em;
+        color: #666;
+    }
+    .article-info a {
+        color: #6A1B9A; /* Dark purple, for links */
+        text-decoration: none;
+    }
+    .article-info a:hover {
+        text-decoration: underline;
+        color: #9C27B0; /* Lighter purple, for hovered links */
+    }
+</style>
+{% endblock head %}
+
+{% block title %}Favorites{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <h1 class="fw-bold">Favorites</h1>
+    <p>Review all your favorite resources collected here.</p>
+
+    <div id="favorites-sections">
+        <!-- Articles Section -->
+        <section id="favorite-articles">
+            <h2>Favorite Articles</h2>
+            <div class="articles-container">
+                <!-- Articles will be dynamically loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section id="favorite-videos">
+            <h2>Favorite Videos</h2>
+            <div class="videos-container">
+                <!-- Videos will be dynamically loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Expert Insights Section -->
+        <section id="favorite-expert-insights">
+            <h2>Favorite Expert Insights</h2>
+            <div class="expert-insights-container">
+                <!-- Expert insights will be dynamically loaded here by JavaScript -->
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
+{% endblock javascripts %}
