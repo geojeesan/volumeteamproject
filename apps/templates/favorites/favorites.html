@@ -1,93 +1,170 @@
 {% extends 'layouts/base.html' %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/favorites.css') }}">
+{% block title %}Favorites{% endblock %}
+
+{% block stylesheets %}
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f1f8; /* Light purple background */
+        font-family: "Roboto", sans-serif;
+        background-color: #f4f1f8;
     }
     .container {
         width: 90%;
         margin: auto;
-        color: #4A274F; /* Dark purple text */
+        color: #4A274F;
     }
     section {
-        margin-bottom: 40px; /* Adds space between sections */
-        padding-bottom: 20px;
-        border-bottom: 2px solid #EDE7F6; /* Light purple border at the bottom of each section */
+        margin-bottom: 40px;
+        padding-bottom: 40px;
+        border-bottom: 2px solid #EDE7F6;
+    }
+    .content-container {
+        margin-top: 20px;
     }
     .link-container {
-        background-color: #EDE7F6; /* Very light purple */
-        border: 1px solid #D1C4E9; /* Light purple border */
-        padding: 10px;
-        margin-top: 20px;
-        border-radius: 5px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
+        background-color: var(--container-bg);
+        color: var(--text-color);
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
-    .article-image img {
-        width: 200px;
+    .resource-image img {
+        width: 150px; 
         height: auto;
-        border-radius: 5px;
+        object-fit: cover;
+        border-radius: 20px;
         margin-right: 15px;
     }
-    .article-info h3 {
+    .resource-info {
+        flex-grow: 1;
+    }
+    .resource-info h2 {
+        font-size: 1em;
         margin: 0;
         padding: 0;
-        color: #333;
+        text-align: left;
     }
-    .article-info p {
+    .resource-info p {
         font-size: 0.9em;
-        color: #666;
+        margin: 5px 0;
+        text-align: left;
     }
-    .article-info a {
-        color: #6A1B9A; /* Dark purple, for links */
+    .resource-info a {
+        color: var(--text-color);
         text-decoration: none;
     }
-    .article-info a:hover {
+    .resource-info a:hover {
         text-decoration: underline;
-        color: #9C27B0; /* Lighter purple, for hovered links */
+        font-weight: bold;
+    }
+    .navigation {
+        display: flex;
+        justify-content: flex-start;
+        gap: 200px; /* Spacing between links */
+        text-align: left;
+        margin-top: 50px; /* Increased space from the title */
+        margin-left: 5%; /* Aligns with the container */
+        margin-bottom: 50px;
+    }
+    .navigation a {
+        font-size: 1.2em;
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: bold; /* Make text bold */
+    }
+    .navigation a:hover {
+        text-decoration: underline;
+    }
+    :root {
+        --container-bg: #ffffff;
+        --text-color: #12174c;
+    }
+
+    body.dark-page {
+        --container-bg: #404B69;
+        --text-color: #d7d7d7;
     }
 </style>
-{% endblock head %}
-
-{% block title %}Favorites{% endblock title %}
+{% endblock stylesheets %}
 
 {% block content %}
 <div class="container-fluid py-4">
-    <h1 class="fw-bold">Favorites</h1>
+    <h1>Favorites</h1>
     <p>Review all your favorite resources collected here.</p>
-
+    <div class="navigation">  
+        <a href="#favorite-articles" class="scroll-link">Articles</a>
+        <a href="#favorite-videos" class="scroll-link">Videos</a>
+        <a href="#favorite-expert-insights" class="scroll-link">Expert Insights</a>
+    </div>
     <div id="favorites-sections">
         <!-- Articles Section -->
         <section id="favorite-articles">
             <h2>Favorite Articles</h2>
-            <div class="articles-container">
-                <!-- Articles will be dynamically loaded here by JavaScript -->
+            <div class="content-container" id="favorite-articles-container">
+                {% for article in articles %}
+                <div class="link-container">
+                    <div class="resource-image">
+                        <img src="{{ article.image_url }}" alt="{{ article.name }}">
+                    </div>
+                    <div class="resource-info">
+                        <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
+                        <p>{{ article.description }}</p>
+                        <p>Time to Complete: {{ article.time_to_complete }}</p>
+                        <p>Content Level: {{ article.content_level }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p>No favorite articles found.</p>
+                {% endfor %}
             </div>
         </section>
 
         <!-- Videos Section -->
         <section id="favorite-videos">
             <h2>Favorite Videos</h2>
-            <div class="videos-container">
-                <!-- Videos will be dynamically loaded here by JavaScript -->
+            <div class="content-container" id="favorite-videos-container">
+                {% for video in videos %}
+                <div class="link-container">
+                    <div class="resource-image">
+                        <img src="{{ video.image_url }}" alt="{{ video.name }}">
+                    </div>
+                    <div class="resource-info">
+                        <h2><a href="{{ video.link }}" target="_blank">{{ video.name }}</a></h2>
+                        <p>{{ video.description }}</p>
+                        <p>Time to Complete: {{ video.time_to_complete }}</p>
+                        <p>Content Level: {{ video.content_level }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p>No favorite videos found.</p>
+                {% endfor %}
             </div>
         </section>
 
         <!-- Expert Insights Section -->
         <section id="favorite-expert-insights">
             <h2>Favorite Expert Insights</h2>
-            <div class="expert-insights-container">
-                <!-- Expert insights will be dynamically loaded here by JavaScript -->
+            <div class="content-container" id="favorite-expert-insights-container">
+                {% for insight in expert_insights %}
+                <div class="link-container">
+                    <div class="resource-image">
+                        <img src="{{ insight.image_url }}" alt="{{ insight.name }}">
+                    </div>
+                    <div class="resource-info">
+                        <h2><a href="{{ insight.link }}" target="_blank">{{ insight.name }}</a></h2>
+                        <p>{{ insight.description }}</p>
+                        <p>Time to Complete: {{ insight.time_to_complete }}</p>
+                        <p>Content Type: {{ insight.content_type }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p>No favorite expert insights found.</p>
+                {% endfor %}
             </div>
         </section>
     </div>
 </div>
-{% endblock content %}
-
-{% block javascripts %}
-<script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
-{% endblock javascripts %}
+{% endblock %}
