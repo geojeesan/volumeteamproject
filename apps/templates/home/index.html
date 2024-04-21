@@ -423,6 +423,11 @@
     background-color: #ED5D5D;
   }
 
+  .badge-level-undefined {
+    background-color: #CCCCCC; /* Example grey color */
+
+  }
+
   /* Red/Orange for advanced */
   .streak-orange {
     background-color: #ff8000;
@@ -449,6 +454,17 @@
   }
 
   /* Purple for other ranks */
+
+  .dark-page .leaderboard-header, .dark-page .table td.username, .dark-page .progress-percentage {
+      color: #FFFFFF; 
+  }
+  .dark-page .username-link {
+      color: #FFFFFF; 
+  }
+  .dark-page .badge-number, .dark-page .score {
+      color: #FFFFFF; 
+  }
+
 </style> {% endblock stylesheets %} {% block content %} <div class="container-fluid py-4">
   <div class="hello">
     {% if current_user.is_authenticated %}
