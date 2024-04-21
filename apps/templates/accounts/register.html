@@ -1,111 +1,167 @@
-{% extends 'layouts/base-fullscreen.html' %}
+{% extends 'layouts/base-fullscreen.html' %} {% block title %}| Sign Up {% endblock title %}
+<!-- Specific CSS goes HERE --> {% block stylesheets %}
+<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:400,400i,700,700i" rel="stylesheet">
+<style>
+  .custom-font {
+    font-family: "Alegreya Sans SC", sans-serif;
+  }
 
-{% block title %}| Sign Up {% endblock title %}
+  .password-criteria {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+  .password-criteria p {
+    margin: 0;
+    color: red;
+    font-size: 0.75rem;
+  }
 
-{% block content %}
+  .invalid {
+    background: url(/static/assets/img/invalid.png) no-repeat 0 50%;
+    padding-left: 22px;
+    line-height: 24px;
+    color: #ec3f41;
+  }
 
-  <div class="container position-sticky z-index-sticky top-1">
-    <div class="row">
-      <div class="col-12">
+  .valid {
+    background: url(/static/assets/img/valid.png) no-repeat 0 50%;
+    padding-left: 22px;
+    line-height: 24px;
+    color: #3a7d34;
+  }
 
-        {% include "includes/navigation-fullscreen.html" %}
+  .password-criteria p.valid {
+    background: url('/static/assets/img/valid.png') no-repeat 0 50% !important;
+    padding-left: 22px !important;
+    line-height: 24px !important;
+    color: #3a7d34 !important;
 
+}
+</style> {% endblock stylesheets %} {% block content %} <div class="container position-sticky z-index-sticky top-1">
+  <div class="row">
+    <div class="col-12"> {% include "includes/navigation-fullscreen.html" %} </div>
+  </div>
+</div>
+<main class="main-content  mt-0">
+  <section class="min-vh-100 mb-8">
+    <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg');">
+      <span class="mask bg-gradient-dark opacity-6"></span>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 text-center mx-auto">
+            <h1 class="text-white mb-2 mt-5 custom-font">Welcome!</h1>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <main class="main-content  mt-0">
-
-    <section class="min-vh-100 mb-8">
-      <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg');">
-        <span class="mask bg-gradient-dark opacity-6"></span>
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-5 text-center mx-auto">
-              <h1 class="text-white mb-2 mt-5">Welcome!</h1>
+    <div class="container">
+      <div class="row mt-lg-n10 mt-md-n11 mt-n10">
+        <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+          <div class="card z-index-0">
+            <div class="card-header text-center pt-4">
+              <h5>Sign Up</h5>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row mt-lg-n10 mt-md-n11 mt-n10">
-          <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
-            <div class="card z-index-0">
-
-              <div class="card-header text-center pt-4">
-                <h5>Sign Up</h5>
+            <div class="row px-xl-5 px-sm-4 px-3">
+              <div class="mt-2 position-relative text-center">
+                <p class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 px-3"> {% if msg %} <span class="text-danger">{{ msg | safe }}</span> {% else %} Add your credentials {% endif %} </p>
               </div>
-
-              <div class="row px-xl-5 px-sm-4 px-3">
-                
-                <div class="mt-2 position-relative text-center">
-                  <p class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 px-3">
-                    {% if msg %}
-                      <span class="text-danger">{{ msg | safe }}</span>
-                    {% else %}
-                      Add your credentials
-                    {% endif %}  
-                  </p>
+            </div>
+            <div class="card-body"> {% if success %} <p class="text-sm mt-3 mb-0 text-center">
+              <div class="text-center">
+                <a href="{{ url_for('authentication_blueprint.login') }}" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign IN</a>
+              </div>
+              </p> {% else %} <form role="form text-left" method="post" action="">
+                {{ form.hidden_tag() }}
+                <label>Username</label>
+                <div class="mb-3">
+                  {{ form.username(placeholder="Username", class="form-control") }}
                 </div>
-
-              </div>
-
-              <div class="card-body">
-
-                {% if success %} 
-                
-                  <p class="text-sm mt-3 mb-0 text-center"> 
-                    <div class="text-center">
-                      <a href="{{ url_for('authentication_blueprint.login') }}" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign IN</a>
-                    </div> 
-                  </p>
-
-                {% else %}
-
-                  <form role="form text-left" method="post" action="">
-
-                    {{ form.hidden_tag() }}
-
-                      <label>Username</label>
-                      <div class="mb-3">
-                        {{ form.username(placeholder="Username", class="form-control") }}
-                      </div>
-                      <label>Email</label>
-                      <div class="mb-3">
-                        {{ form.email(placeholder="Email", class="input form-control", type="email") }}
-                      </div>
-                      <label>Password</label>
-                      <div class="mb-3">
-                        {{ form.password(placeholder="Password", class="form-control", type="password") }}
-                      </div>
-
-                      <div class="text-center">
-                        <button type="submit" name="register" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign UP</button>
-                      </div>
-
-                      <div class="text-center">
-                        <a href="{{ url_for('authentication_blueprint.login') }}" class="btn bg-gradient-secondary w-100 mt-4 mb-0">Sign IN</a>
-                      </div>                
-
-                  </form>
-
-                {% endif %}
-
-              </div>
+                <label>Email</label>
+                <div class="mb-3">
+                  {{ form.email(placeholder="Email", class="input form-control", type="email") }}
+                </div>
+                <label>Password</label>
+                <div class="mb-3 position-relative">
+                  {{ form.password(placeholder="Password", class="form-control", id="passwordField", onfocus="showCriteria()", onblur="hideCriteria()", oninput="validatePassword()") }}
+                  <i class="fa fa-eye password-toggle" onclick="togglePasswordVisibility()" style="cursor: pointer; position: absolute; right: 10px; top: 10px;"></i>
+                  <div class="password-criteria" style="display: none;">
+                    <p id="passwordCriteriaLength">At least 8 characters</p>
+                    <p id="passwordCriteriaNumber">At least one number</p>
+                    <p id="passwordCriteriaUpperCase">At least one uppercase letter</p>
+                    <p id="passwordCriteriaLetter">At least one letter</p>
+                  </div>
+                </div>
+                <div class="mb-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="privacyPolicyCheckbox" required>
+                    <label class="form-check-label" for="privacyPolicyCheckbox"> I have read and agree to the <a style="text-decoration: underline;" href="/privacypolicy">Privacy Policy</a>
+                    </label>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" name="register" class="btn bg-gradient-dark w-100 my-4 mb-3">Sign UP</button>
+                </div>
+                <label>Already have an account?</label>
+                <div class="text-center">
+                  <a href="{{ url_for('authentication_blueprint.login') }}" class="btn bg-gradient-secondary w-100 mt-0 mb-0">Sign IN</a>
+                </div>
+              </form> {% endif %}
             </div>
           </div>
         </div>
       </div>
-    </section>
-
-    {% include "includes/footer-fullscreen.html" %}
-
-  </main>
-
-  {% endblock content %}
-
-  <!-- Specific JS goes HERE --> 
-  {% block javascripts %}{% endblock javascripts %}
+    </div>
+  </section> {% include "includes/footer-fullscreen.html" %}
+</main> {% endblock content %}
+<!-- Specific JS goes HERE --> {% block javascripts %} <script>
+  // This function checks the password criteria and updates the class of the elements
+  function validatePassword() {
+    var password = document.getElementById('passwordField').value;
+    var hasUpperCase = /[A-Z]/.test(password);
+    var hasNumber = /[0-9]/.test(password);
+    var hasLetter = /[a-zA-Z]/.test(password);
+    var isValidLength = password.length >= 8;
+    document.getElementById('passwordCriteriaLength').className = isValidLength ? 'valid' : 'invalid';
+    document.getElementById('passwordCriteriaUpperCase').className = hasUpperCase ? 'valid' : 'invalid';
+    document.getElementById('passwordCriteriaNumber').className = hasNumber ? 'valid' : 'invalid';
+    document.getElementById('passwordCriteriaLetter').className = hasLetter ? 'valid' : 'invalid';
+    return isValidLength && hasUpperCase && hasNumber && hasLetter;
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    var passwordInput = document.getElementById('passwordField');
+    var passwordCriteria = document.querySelector('.password-criteria');
+    passwordInput.addEventListener('focus', function() {
+      passwordCriteria.style.display = 'block';
+      validatePassword(); 
+    });
+    passwordInput.addEventListener('blur', function() {
+      passwordCriteria.style.display = 'none';
+    });
+    passwordInput.addEventListener('input', validatePassword);
+  });
+  // Toggle password visibility
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById('passwordField');
+    var toggleIcon = document.querySelector('.password-toggle');
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleIcon.classList.add('fa-eye-slash');
+      toggleIcon.classList.remove('fa-eye');
+    } else {
+      passwordInput.type = "password";
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+  }
+  document.querySelector('form').addEventListener('submit', function(event) {
+    if (!validatePassword()) {
+      event.preventDefault();
+      alert('Please ensure the password meets all the criteria.');
+    }
+  });
+</script> {% endblock javascripts %}

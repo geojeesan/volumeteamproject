@@ -1,4 +1,4 @@
-{% extends 'layouts/base-fullscreen.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block title %} Privacy Policy {% endblock title %}
 
@@ -7,22 +7,13 @@
 
 {% block content %}
 
-<div class="container position-sticky z-index-sticky top-1">
-    <div class="row">
-      <div class="col-12">
-
-        {% include "includes/navigation-fullscreen.html" %}
-
-      </div>
-    </div>
-  </div>
 
     <div class="container-fluid">
 
       <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
         <span class="mask bg-gradient-primary opacity-6"></span>
       </div>
-      <div class="card card-body blur shadow-blur mx-12 mt-n10 overflow-hidden">
+      <div class="card card-body blur shadow-blur mx-7 mt-n10 overflow-hidden">
         <div class="row gx-4">
           <div class="col-12">
             <h1>Volume Privacy Policy</h1>
@@ -143,7 +134,7 @@
 
     <div class="container-fluid py-4">
 
-      {% include "includes/footer-fullscreen.html" %}
+      {% include "includes/footer.html" %}
 
     </div>
 

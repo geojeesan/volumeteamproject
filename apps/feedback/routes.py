@@ -1,68 +1,92 @@
 # -*- encoding: utf-8 -*-
 
 from apps.home import blueprint
-from flask import render_template, request
-from flask_login import login_required
+from apps import db
+from flask import flash, render_template, request, redirect, url_for, jsonify
+from flask_login import login_required, current_user
 from jinja2 import TemplateNotFound
 from flask import jsonify
-
-from apps.config import API_GENERATOR
+from apps.models import Feedback, UserActionLog, Profile
+import base64
 
 @blueprint.route('/feedback')
+@login_required
 def feedback():
-    return render_template('feedback/feedback.html', segment='feedback', API_GENERATOR=len(API_GENERATOR))
-
-
-def get_speech_score(num):
-    return num - 10
-
-
-
-def send_to_database(feedback):
-    # Some code which sends feedback to database
-
-    sent = False
-
-    return sent
-
-
-
-@blueprint.route('/send_feedback', methods=['POST'])
-def send_feedback():
-
-    requestData = request.get_json()  # Retrieve requestData from the POST request
-
-    # Use the requestData as needed
-    # For example, pass it to get_speech_score function
-    feedback = requestData['feedback']
-
-    has_been_sent = send_to_database(feedback)
-
-    if has_been_sent:
-        return jsonify("Your feedback has been sent")
+    current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+    if current_profile and current_profile.profile_picture:
+        current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
-        return jsonify("Failed to send feedback")
+        current_base64_encoded_image = None
+    return render_template('feedback/feedback.html', segment='feedback', current_base64_encoded_image=current_base64_encoded_image)
 
 
-    # to_return = f"Your feedback '{feedback}' has been submitted"
+@blueprint.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    rating = request.form.get('rating')
+    frequency = request.form.get('frequency')
+    clarity = request.form.get('clarity')
+    issues = request.form.get('issues')
+    updates = request.form.get('updates')
+    dashboard = request.form.get('dashboard')
+    breakdown = request.form.get('breakdown')
+    lessons = request.form.get('lessons')
+    track = request.form.get('track')
+    support = request.form.get('support')
+    life_impact = request.form.get('life-impact')
+    feature_assist = request.form.get('feature-assist')
+    interface_design = request.form.get('interface-design')
 
-    to_return = f"Your feedback has been submitted"
+    # Check if rating is not None and can be converted to an integer
+    if rating is not None:
+        rating = int(rating)
+    else:
+        # If rating is None, you can set a default value, for example:
+        rating = 0
+        
+    feedback = Feedback(
+        rating=rating,
+        frequency = frequency,
+        clarity = clarity,
+        issues = issues,
+        updates = updates,
+        dashboard = dashboard,
+        breakdown = breakdown,
+        lessons = lessons,
+        track = track,
+        support = support,
+        life_impact = life_impact,
+        feature_assist = feature_assist,
+        interface_design = interface_design
+    )
 
+    db.session.add(feedback)
+    db.session.commit()
+    flash('Feedback submitted successfully!')
+    flash('We will thoroughly review your suggestions and work towards enhancing our app experience.')
+    UserActionLog.log_user_action('Feedback submitted successfully!')
+    return redirect(url_for('feedback.feedback'))
 
-    return jsonify(to_return)
+@blueprint.route('/get_feedback_data')
+def get_feedback():
+    feedback_data = Feedback.query.all()
+    feedback_list = []
 
+    for feedback in feedback_data:
+        feedback_list.append({
+            'id': feedback.id,
+            'rating': feedback.rating,
+            'frequency': feedback.frequency,
+            'clarity': feedback.clarity,
+            'issues': feedback.issues,
+            'updates': feedback.updates,
+            'dashboard': feedback. dashboard,
+            'breakdown': feedback.breakdown,
+            'lessons': feedback.lessons,
+            'track': feedback.track,
+            'support': feedback.support,
+            'life_impact': feedback.life_impact,
+            'feature_assist': feedback.feature_assist,
+            'interface_design': feedback.interface_design
+        })
 
-# Helper - Extract current page name from request
-def get_segment(request):
-
-    try:
-
-        segment = request.path.split('/')[-1]
-
-        if segment == '':
-            segment = 'index'
-
-        return segment
-
-    except:
-        return None
+    return jsonify({'feedback': feedback_list})

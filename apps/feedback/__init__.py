@@ -2,8 +2,4 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint(
-    'feedback_blueprint',
-    __name__,
-    url_prefix=''
-)
+blueprint = Blueprint("feedback_blueprint", __name__, url_prefix="")

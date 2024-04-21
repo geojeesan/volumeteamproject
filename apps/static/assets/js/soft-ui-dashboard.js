@@ -264,22 +264,45 @@ function sidebarColor(a) {
 }
 
 // Set Navbar Fixed
-function navbarFixed(el) {
+function navbarFixed(el, clicked=true) {
+
+  if(clicked){
+    if(el.getAttribute("checked")){
+      localStorage.setItem("isFixed", "false")
+      el.setAttribute("checked", "true");
+    }else{
+      localStorage.setItem("isFixed", "true")
+      el.removeAttribute("checked");
+    }
+  }
+
+  let isFixed = localStorage.getItem("isFixed") || "true"
+  
+  if(isFixed == "true"){
+    el.setAttribute("checked", "true");
+  }else{
+    el.removeAttribute("checked");
+  }
+
   let classes = ['position-sticky', 'blur', 'shadow-blur', 'mt-4', 'left-auto', 'top-1', 'z-index-sticky'];
   const navbar = document.getElementById('navbarBlur');
 
-  if (!el.getAttribute("checked")) {
+  if (isFixed == "true") {
     navbar.classList.add(...classes);
     navbar.setAttribute('navbar-scroll', 'true');
     navbarBlurOnScroll('navbarBlur');
-    el.setAttribute("checked", "true");
+    
   } else {
     navbar.classList.remove(...classes);
     navbar.setAttribute('navbar-scroll', 'false');
     navbarBlurOnScroll('navbarBlur');
-    el.removeAttribute("checked");
+    
   }
 };
+
+navbarFixed(buttonNavbarFixed, false)
+
+
 
 // Navbar blur on scroll
 
@@ -371,6 +394,8 @@ function sidebarType(a) {
   var parent = a.parentElement.children;
   var color = a.getAttribute("data-class");
 
+  localStorage.setItem("sidebar", color)
+
   var colors = [];
 
   for (var i = 0; i < parent.length; i++) {
@@ -392,6 +417,14 @@ function sidebarType(a) {
 
   sidebar.classList.add(color);
 }
+
+if(localStorage.getItem("sidebar") == "bg-transparent"){
+  sidebarType(document.getElementById("transparent"))
+}else if(localStorage.getItem("sidebar") == "bg-white"){
+  sidebarType(document.getElementById("white"))
+}
+
+
 
 
 // Toggle Sidenav
@@ -460,3 +493,227 @@ function sidenavTypeOnResize() {
     });
   }
 }
+
+
+
+
+const toggleSpeech = document.getElementById('toggleSpeech');
+let isEnabled;
+// Check if the setting is saved in localStorage
+const savedSetting = localStorage.getItem('textToSpeechEnabled');
+toggleSpeech.checked = savedSetting === 'true'; // Convert the saved setting to boolean
+isEnabled = toggleSpeech.checked
+// Function to update localStorage when the setting is changed
+toggleSpeech.addEventListener('change', () => {
+  isEnabled = toggleSpeech.checked;
+  localStorage.setItem('textToSpeechEnabled', isEnabled); // Save the setting to localStorage
+  toggleTTS()
+});
+
+
+function toggleTTS(){
+if (isEnabled) {
+  document.addEventListener('mouseover', handleMouseOver);
+} else {
+  speechSynthesis.cancel();
+  document.removeEventListener('mouseover', handleMouseOver);
+}
+}
+toggleTTS()
+
+
+function handleMouseOver(event) {
+  const target = event.target;
+  const text = getTextContent(target);
+  if (text.trim() !== '') {
+    speakText(text);
+  }
+}
+
+function getTextContent(element) {
+  const textNodes = Array.from(element.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent.trim())
+    .join(' ');
+  return textNodes;
+}
+
+function speakText(text) {
+  speechSynthesis.cancel(); // Cancel any ongoing speech
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(text); // Create new utterance object
+    speechSynthesis.speak(utterance); // Start speaking the new text
+  }, 500); // Delay in milliseconds (adjust as needed)
+}
+
+// Function to create and show the popup
+function showPopup(message) {
+  // Create popup element
+  var popup = document.createElement('div');
+  popup.id = 'popup';
+  popup.textContent = message;
+
+  // Apply styles
+  popup.style.position = 'absolute';
+  popup.style.backgroundColor = '#f9f9f9';
+  popup.style.border = '1px solid #ccc';
+  popup.style.padding = '15px';
+  popup.style.zIndex = '1';
+  popup.style.borderRadius = '10px';
+
+  // Position the popup near the link
+  var linkRect = document.getElementById('profile-link').getBoundingClientRect();
+  popup.style.top = (linkRect.top) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+
+  // Append to body
+  document.body.appendChild(popup);
+
+  // Function to hide popup
+  function hidePopup() {
+      popup.parentNode.removeChild(popup);
+  }
+
+  // Hide popup when mouse leaves link or popup
+  popup.addEventListener('mouseleave', hidePopup);
+  document.getElementById('profile-link').addEventListener('mouseleave', hidePopup);
+
+  return hidePopup;
+}
+
+// Add event listener to profile link
+document.getElementById('profile-link').addEventListener('mouseenter', function() {
+
+      // Show popup if user is not authenticated
+      showPopup('You need to be signed in to access the Profile Page');
+
+});
+
+// Function to create and show the popup
+function showPopup2(message) {
+  // Create popup element
+  var popup = document.createElement('div');
+  popup.id = 'popup';
+  popup.textContent = message;
+
+  // Apply styles
+  popup.style.position = 'absolute';
+  popup.style.backgroundColor = '#f9f9f9';
+  popup.style.border = '1px solid #ccc';
+  popup.style.padding = '15px';
+  popup.style.zIndex = '1';
+  popup.style.borderRadius = '10px';
+
+  // Position the popup near the link
+  var linkRect = document.getElementById('lesson-link').getBoundingClientRect();
+  popup.style.top = (linkRect.top) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+
+  // Append to body
+  document.body.appendChild(popup);
+
+  // Function to hide popup
+  function hidePopup() {
+      popup.parentNode.removeChild(popup);
+  }
+
+  // Hide popup when mouse leaves link or popup
+  popup.addEventListener('mouseleave', hidePopup);
+  document.getElementById('lesson-link').addEventListener('mouseleave', hidePopup);
+
+  return hidePopup;
+}
+
+// Add event listener to profile link
+document.getElementById('lesson-link').addEventListener('mouseenter', function() {
+
+      // Show popup if user is not authenticated
+      showPopup2('You need to be signed in to access the Lessons Page');
+
+});
+
+// Function to create and show the popup
+function showPopup3(message) {
+  // Create popup element
+  var popup = document.createElement('div');
+  popup.id = 'popup';
+  popup.textContent = message;
+
+  // Apply styles
+  popup.style.position = 'absolute';
+  popup.style.backgroundColor = '#f9f9f9';
+  popup.style.border = '1px solid #ccc';
+  popup.style.padding = '15px';
+  popup.style.zIndex = '1';
+  popup.style.borderRadius = '10px';
+
+  // Position the popup near the link
+  var linkRect = document.getElementById('feedback-link').getBoundingClientRect();
+  popup.style.top = (linkRect.top) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+
+  // Append to body
+  document.body.appendChild(popup);
+
+  // Function to hide popup
+  function hidePopup() {
+      popup.parentNode.removeChild(popup);
+  }
+
+  // Hide popup when mouse leaves link or popup
+  popup.addEventListener('mouseleave', hidePopup);
+  document.getElementById('feedback-link').addEventListener('mouseleave', hidePopup);
+
+  return hidePopup;
+}
+
+// Add event listener to profile link
+document.getElementById('feedback-link').addEventListener('mouseenter', function() {
+
+      // Show popup if user is not authenticated
+      showPopup3('You need to be signed in to access the Feedback Page');
+
+});
+
+// Function to create and show the popup
+function showPopup4(message) {
+  // Create popup element
+  var popup = document.createElement('div');
+  popup.id = 'popup';
+  popup.textContent = message;
+
+  // Apply styles
+  popup.style.position = 'absolute';
+  popup.style.backgroundColor = '#f9f9f9';
+  popup.style.border = '1px solid #ccc';
+  popup.style.padding = '15px';
+  popup.style.zIndex = '1';
+  popup.style.borderRadius = '10px';
+
+  // Position the popup near the link
+  var linkRect = document.getElementById('favorites-link').getBoundingClientRect();
+  popup.style.top = (linkRect.top) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+
+  // Append to body
+  document.body.appendChild(popup);
+
+  // Function to hide popup
+  function hidePopup() {
+      popup.parentNode.removeChild(popup);
+  }
+
+  // Hide popup when mouse leaves link or popup
+  popup.addEventListener('mouseleave', hidePopup);
+  document.getElementById('favorites-link').addEventListener('mouseleave', hidePopup);
+
+  return hidePopup;
+}
+
+// Add event listener to profile link
+document.getElementById('favorites-link').addEventListener('mouseenter', function() {
+
+      // Show popup if user is not authenticated
+      showPopup4('You need to be signed in to access the Favorites Page');
+
+});
