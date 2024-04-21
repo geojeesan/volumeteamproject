@@ -136,16 +136,20 @@ def test_scores():
 
 
 # Leaderboard Endpoint
+from flask import jsonify
 
 @blueprint.route("/leaderboard")
 def leaderboard():
     is_logged_in = current_user.is_authenticated
-    top_users = db.session.query(
+    top_users_query = db.session.query(
         UserProgress.user_id,
         UserProgress.total_score.label("best_score"),
         Users.username,
-    ).join(Users, UserProgress.user_id == Users.id).order_by(UserProgress.total_score.desc()).limit(10).all()
-
+    ).join(Users, UserProgress.user_id == Users.id).order_by(UserProgress.total_score.desc())
+    
+    # Fetch top 10 users or as many as there are in the database
+    top_users = top_users_query.limit(10).all()
+    
     leaderboard_data = []
     for idx, user in enumerate(top_users):
         user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
@@ -153,16 +157,26 @@ def leaderboard():
             "rank": idx + 1,
             "username": user.username,
             "score": user.best_score,
-            "level": user_progress.current_level,
+            "level": user_progress.current_level if user_progress.current_level is not None else 'Unranked',
             "level_progress": user_progress.level_progress,
             "user_id": user.user_id
         })
 
+    # Check if we have less than 10 users and fill the remaining spots with placeholders
+    while len(leaderboard_data) < 10:
+        leaderboard_data.append({
+            "rank": len(leaderboard_data) + 1,
+            "username": "-",
+            "score": "-",
+            "level": "-",
+            "level_progress": "-"       
+         })
    
     return jsonify({
         'is_logged_in': is_logged_in,
         'leaderboard': leaderboard_data
     })
+
 
 
 # Upcoming Events Endpoint

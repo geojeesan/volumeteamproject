@@ -1,23 +1,33 @@
 function getLevelBadge(level) {
     let badgeClass = '';
-    let levelText = level.charAt(0).toUpperCase() + level.slice(1);
+    let levelText = '-';
+    
     switch (level.toLowerCase()) {
         case 'beginner':
             badgeClass = 'badge-level-beginner';
+            levelText = 'Beginner';
             break;
         case 'intermediate':
             badgeClass = 'badge-level-intermediate';
+            levelText = 'Intermediate';
             break;
         case 'advanced':
             badgeClass = 'badge-level-advanced';
+            levelText = 'Advanced';
+            break;
+        case '-':
+            badgeClass = 'badge-level-undefined';
+            levelText = '-';
             break;
         default:
             badgeClass = 'badge-level';
             levelText = 'Undefined';
             break;
     }
+    
     return `<span class="badge-level ${badgeClass}">${levelText}</span>`;
 }
+
 
 function formatTimestampToLocal(utcTimestamp) {
     const date = new Date(utcTimestamp);
@@ -34,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Retrieve the login status from the server's response.
         const isLoggedIn = data.is_logged_in; // Ensure this value is being sent from the server
         const leaderboardData = data.leaderboard; // Assuming leaderboard data is under 'leaderboard' key
+        const isDarkMode = localStorage.getItem('theme') === 'dark';
         
         for (let i = 0; i < leaderboardData.length; i++) {
             const row = leaderboardBody.insertRow();
@@ -52,29 +63,36 @@ document.addEventListener('DOMContentLoaded', function() {
             row.insertCell().innerHTML = badgeHTML;
 
             const usernameCell = row.insertCell();
-            // If logged in, make username clickable, otherwise just display it
-            usernameCell.innerHTML = isLoggedIn && user.username
-                ? `<a href="/profilepage/${user.username}" class="username-link">${user.username}</a>`
-                : user.username || '-';
+            let usernameHtml = user.username || '-';
+            if (isLoggedIn && user.username) {
+                usernameHtml = `<a href="/profilepage/${user.username}" class="username-link${isDarkMode ? ' dark-page' : ''}">${user.username}</a>`;
+            }
+            usernameCell.innerHTML = usernameHtml;
 
             const scoreCell = row.insertCell();
             scoreCell.textContent = user.score || '-';
+            if (isDarkMode) {
+                scoreCell.classList.add('score', 'dark-page'); 
+            }
 
             const levelCell = row.insertCell();
-            levelCell.innerHTML = user.level ? getLevelBadge(user.level) : '<span class="badge-level badge-level-undefined">-</span>';
-
+            levelCell.innerHTML = user.level && user.level !== '-' 
+            ? getLevelBadge(user.level) 
+            : '<span class="badge-level badge-level-undefined">Unranked</span>';
+        
             const progressCell = row.insertCell();
             progressCell.classList.add('progress-cell');
             const progressValue = user.level_progress || 0;
-            progressCell.innerHTML = `
+            let progressHtml = `
                 <div class="progress-chart-container">
                     <canvas id="progressChart${i}" class="leaderboard-progress-chart" width="35" height="35"></canvas>
-                    <span class="progress-percentage">${progressValue}%</span>
+                    <span class="progress-percentage${isDarkMode ? ' dark-page' : ''}">${progressValue}%</span>
                 </div>
             `;
+            progressCell.innerHTML = progressHtml;
 
             // Initialize the progress chart if necessary
-            if (user.level_progress) {
+            if (user.hasOwnProperty('level_progress') && user.level_progress !== null) {
                 const ctx = document.getElementById('progressChart' + i).getContext('2d');
                 new Chart(ctx, {
                     type: 'doughnut',
@@ -98,6 +116,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
+
+
         }
     })
     .catch(error => {
@@ -140,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('/user-progress')
         .then(response => response.json())
         .then(data => {
+            
             document.getElementById('lessons-completed').textContent = data.lessons_completed;
             document.getElementById('lessons-in-progress').textContent = data.lessons_in_progress;
             document.getElementById('level_progress').textContent = data.level_progress.toFixed(0) + '%';
@@ -244,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
           console.log(data.message);
-          // Add a feedback message here for successful save, if desired.
         })
         .catch(error => console.error('Error saving notes:', error));
       });
@@ -291,8 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                suggestedMax: 10
+                                suggestedMax: 10,
+
                             }
+                      
                         },
                         responsive: true,
                         maintainAspectRatio: false
