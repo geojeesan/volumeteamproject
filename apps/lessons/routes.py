@@ -12,6 +12,7 @@ import base64
 
 
 @blueprint.route("/lessons")
+@login_required
 def lessons():
     current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     if current_profile and current_profile.profile_picture:
