@@ -101,6 +101,36 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+/* .list-item {
+  margin-bottom: 7px;
+} */
+
+li{
+  padding-top: 7px; /* Increase top padding */
+  padding-bottom: 7px; /* Increase bottom padding */
+}
+
+li[aria-selected="true"] {
+  background-color: rgba(0, 0, 0, 0.07); /* Grayish tint */
+}
+
+
+.popup-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  z-index: 99999; /* Ensure the popup appears in front of everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -1470,11 +1500,11 @@ progress {
   }
   .col-lg-4 {
     flex: 0 0 auto;
-    width: 33.33333333%;
+    width: 31.9%;
   }
   .col-lg-5 {
     flex: 0 0 auto;
-    width: 41.66666667%;
+    width: 40.66666667%;
   }
   .col-lg-6 {
     flex: 0 0 auto;
@@ -1486,7 +1516,7 @@ progress {
   }
   .col-lg-8 {
     flex: 0 0 auto;
-    width: 66.66666667%;
+    width: 67.5%
   }
   .col-lg-9 {
     flex: 0 0 auto;
@@ -17742,7 +17772,7 @@ textarea.form-control-lg {
 }
 .card .card-body {
   font-family: "Open Sans";
-  padding: 1.5rem;
+  padding: 1rem;
 }
 .card.card-plain {
   background-color: transparent;
@@ -17788,8 +17818,8 @@ textarea.form-control-lg {
 .card.card-background .card-body .content-left {
   min-height: 330px;
   max-width: 450px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding-top: 55px;
+  padding-bottom: 55px;
 }
 .card.card-background .card-body .content-center {
   text-align: center;
@@ -20831,6 +20861,8 @@ hr.horizontal.gray-light {
 
 .timeline-block {
   position: relative;
+  padding-top: 0.25rem; 
+  padding-bottom: 0.25rem; /* Adjust this value as well */
 }
 .timeline-block:after {
   content: "";
@@ -20838,10 +20870,10 @@ hr.horizontal.gray-light {
   clear: both;
 }
 .timeline-block:first-child {
-  margin-top: 0;
+  margin-top: 30px;
 }
 .timeline-block:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0rem;
 }
 
 .timeline-step {
@@ -20849,7 +20881,7 @@ hr.horizontal.gray-light {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  left: 0;
+  left: -5px;
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -20859,17 +20891,19 @@ hr.horizontal.gray-light {
   font-size: 1rem;
   font-weight: 600;
   z-index: 1;
+  top: -35px
+  
 }
 .timeline-step svg, .timeline-step i {
-  line-height: 1.4;
+  line-height: 1.0;
 }
 
 .timeline-content {
   position: relative;
-  margin-left: 45px;
-  padding-top: 0.35rem;
+  margin-left: 2.4rem;
+  padding-top: 0;
   position: relative;
-  top: -6px;
+  top: -35px;
 }
 .timeline-content:after {
   content: "";
@@ -20886,7 +20920,7 @@ hr.horizontal.gray-light {
     left: 50%;
   }
   .timeline-content {
-    width: 38%;
+    width: 30%;
   }
   .timeline-block:nth-child(even) .timeline-content {
     float: right;
