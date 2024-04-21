@@ -238,6 +238,7 @@ def route_template(template):
         return render_template("home/page-500.html"), 500
 
 
+
 # Helper - Extract current page name from request
 def get_segment(request):
 
@@ -253,3 +254,51 @@ def get_segment(request):
     except:
         return None
 
+
+@blueprint.route('/complete_scenario', methods=['POST'])
+@login_required
+def complete_scenario():
+    user_id = request.json.get('user_id')
+    scenario_id = request.json.get('scenario_id')
+    score = request.json.get('score', None)  # Score might be optional
+    current_time = datetime.utcnow()
+
+    # Verify that the user_id and scenario_id are valid (not shown here for brevity)
+    user_progress = UserProgress.query.filter_by(user_id=user_id).first()
+    if not user_progress:
+        user_progress = UserProgress(user_id=user_id)
+        db.session.add(user_progress)
+
+    # Update or create the scenario progress entry
+    scenario_progress = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario_id).first()
+    if scenario_progress:
+        scenario_progress.completed = True
+        scenario_progress.date = current_time
+        scenario_progress.score = score  # Update the score if provided
+    else:
+        # Create a new scenario progress record if it doesn't exist
+        scenario_progress = UserScenarioProgress(
+            user_id=user_id,
+            scenario_id=scenario_id,
+            completed=True,
+            date=current_time,
+            score=score
+        )
+        db.session.add(scenario_progress)
+
+    # Check and update streak
+    streak_change = user_progress.update_streak()
+    if streak_change == 0:
+        # Streak was reset
+        user_progress.streak_time = current_time
+    else:
+        # Streak was incremented or maintained
+        user_progress.streak_time = current_time
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Scenario completion processed.",
+        "streak_change": "Reset" if streak_change == 0 else "Incremented",
+        "streak_time": user_progress.streak_time.isoformat()
+    })

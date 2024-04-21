@@ -13,6 +13,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import func
 from apps.authentication.models import Users
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 
 
 # Define an enumeration for difficulty levels using Python's built-in enum
@@ -270,8 +271,33 @@ class UserProgress(db.Model):
 
         return current_level, round(level_progress, 1)
 
-    def check_streak(user_id):
-        pass
+    def check_reset_streak(self, current_time=None):
+        """Reset streak if more than 24 hours have passed since last activity."""
+        if not current_time:
+            current_time = datetime.utcnow()
+        if self.streak_time and (current_time - self.streak_time > timedelta(days=1)):
+            return 0  # Reset streak
+        return 1  # Maintain current streak
+
+    def check_increment_streak(self, current_time=None):
+        """Increment streak if the activity is within 16 to 24 hours of the last activity."""
+        if not current_time:
+            current_time = datetime.utcnow()
+        if self.streak_time and timedelta(hours=16) <= (current_time - self.streak_time) <= timedelta(hours=24):
+            return 1  # Increment streak
+        return 0  # Do not increment streak
+
+    def update_streak(self):
+        """Update the streak based on the user's activity."""
+        current_time = datetime.utcnow()
+        if self.check_reset_streak(current_time) == 0:
+            self.streak_time = current_time  # Reset streak time
+            return 0  # Return reset streak count
+        else:
+            increment = self.check_increment_streak(current_time)
+            if increment:
+                self.streak_time = current_time  # Update streak time
+            return increment
 
     def update_progress(user_id):
         # Get lessons completed and lessons in progress
@@ -311,11 +337,14 @@ class UserProgress(db.Model):
         db.session.commit()
         UserProgress.update_progress(user_id=user_id)
 
+    
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("Users.id"), nullable=False)
     lessons_completed = db.Column(db.Integer, default=0)
     lessons_in_progress = db.Column(db.Integer, default=0)
     streak = db.Column(db.Integer, default=0)
+    streak_time = db.Column(db.DateTime, default=datetime.utcnow)
     total_score = db.Column(db.Integer, default=0)
     current_level = db.Column(db.Text, nullable=False, default="beginner")
     level_progress = db.Column(db.Float, default=0)
