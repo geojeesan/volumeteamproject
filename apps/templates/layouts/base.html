@@ -12,14 +12,17 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ config.ASSETS_ROOT }}/img/apple-icon.png">
   <link rel="icon" type="image/png" href="{{ config.ASSETS_ROOT }}/img/audio-waves-light.svg">
+  
 
   <title>
     Volume {% block title %}{% endblock %}
@@ -34,27 +37,129 @@
   <!-- Nucleo Icons -->
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+  
   <!-- Font Awesome Icons -->
+  
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
   <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/soft-ui-dashboard.css?v=1.0.6" rel="stylesheet" />
-  
-  <link id="pagestyle_dark" href="{{ config.ASSETS_ROOT }}/css/dark-theme-core.css" rel="stylesheet" />
 
+  <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/soft-ui-dashboard.css?v=1.0.6" rel="stylesheet" />
+  <link id="pagestyle_dark" href="{{ config.ASSETS_ROOT }}/css/dark-theme-core.css" rel="stylesheet" />
+  
+
+  
   <!-- Specific CSS goes HERE -->
   {% block stylesheets %}{% endblock stylesheets %}  
+
+  
 
 </head>
 <body class="g-sidenav-show  bg-gray-100">
   
+  <script src="{{ config.ASSETS_ROOT }}/js/switch-settings.js"></script>
+
+  <div id="popup" style="visibility:hidden;" class="popup-background">
+    <div class="card card-color" style="width: 500px;">
+        <div class="card-body p-3 custom-card-height">
+            <div class="row justify-content-center align-items-center">
+
+              
+              <div style="display: flex; align-items: center;">
+                <i class="fas fa-search" style="margin-right: 5px;"></i> <!-- FontAwesome search icon -->
+                <input id="searchInput" style="outline: none; border: 0; font-size: 24px;width:100%" placeholder="What page do you want to visit?" required="" type="text" value="">
+            </div>
+            
+              <hr style="border: 1px solid black;">
+
+                <p style="font-size: 14px;">Try navigating to</p>
+
+                
+                <ul role="group" aria-labelledby="Try navigating to" id="optionsList" style="list-style-type:none">
+                    <li role="option" aria-selected="true" details="index" class="list-item">
+                        <div style="display: flex; align-items: center;">
+                            <span style="margin-right: 8px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <p style="margin: 0;">Dashboard</p>
+                        </div>
+                    </li>
+                    <li role="option" aria-selected="false" details="lessons" class="list-item">
+                        <div style="display: flex; align-items: center;">
+                            <span style="margin-right: 8px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <p style="margin: 0;">Lessons</p>
+                        </div>
+                    </li>
+
+                    <li role="option" aria-selected="false" details="resources" class="list-item">
+                      <div style="display: flex; align-items: center;">
+                          <span style="margin-right: 8px;">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                              </svg>
+                          </span>
+                          <p style="margin: 0;">Resources</p>
+                      </div>
+                  </li>
+
+                  <li role="option" aria-selected="false" details="favorites" class="list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <p style="margin: 0;">Favorites</p>
+                    </div>
+                </li>
+
+                <li role="option" aria-selected="false" details="profile" class="list-item">
+                  <div style="display: flex; align-items: center;">
+                      <span style="margin-right: 8px;">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                          </svg>
+                      </span>
+                      <p style="margin: 0;">Profile</p>
+                  </div>
+              </li>
+
+              <li role="option" aria-selected="false" details="feedback" class="list-item">
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 8px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    <p style="margin: 0;">Feedback</p>
+                </div>
+            </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
   {% include "includes/sidebar.html" %} 
+
 
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 
+
+    
     {% include "includes/navigation.html" %} 
 
-    {% block content %}{% endblock content %}
+    
+    {% block content %}
+    {% endblock content %}
+
 
   </main>
 
@@ -79,7 +184,9 @@
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>  
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="{{ config.ASSETS_ROOT }}/js/soft-ui-dashboard.min.js?v=1.0.6"></script>
+  <!-- <script src="{{ config.ASSETS_ROOT }}/js/soft-ui-dashboard.min.js?v=1.0.6"></script> -->
+  <script src="{{ config.ASSETS_ROOT }}/js/soft-ui-dashboard.js"></script>
+  <script src="{{ config.ASSETS_ROOT }}/js/mouse-less.js"></script>
 
 </body>
 </html>

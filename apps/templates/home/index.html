@@ -3,8 +3,10 @@
 <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:400,400i,700,700i" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <style>
-  /*fonts*/
+  /* Fonts */
   .custom-font {
     font-family: "Alegreya Sans SC", sans-serif;
   }
@@ -17,8 +19,8 @@
     font-family: 'Allerta', sans-serif;
   }
 
-  /*Welcome style*/
-  .hello-nadir {
+  /* Welcome style */
+  .hello {
     font-family: 'Alegreya Sans SC', sans-serif;
   }
 
@@ -26,7 +28,7 @@
     font-family: 'Roboto', sans-serif;
   }
 
-  /* Specific styles for "Today's Lesson" card */
+  /* "Today's Lesson" card */
   #todays-lesson-card {
     padding: 2rem;
   }
@@ -34,128 +36,535 @@
   #todays-lesson-card .font-weight-bolder {
     margin-top: 80px;
     font-size: 3.5rem;
-    /* Increase font size for the title */
   }
 
   #todays-lesson-card p.mb-5 {
     font-size: 1.4rem;
-    /* Increase font size for the content */
     padding-left: 10px;
     -webkit-text-stroke: 0.5px rgb(231, 179, 215);
   }
 
-  #todays-lesson-card .fas.fa-arrow-right {
-    /* Adjust the font-size to make the icon smaller or larger */
-    font-size: 0.4rem;
-    /* example to make the icon smaller */
+  #todays-lesson-card,
+  .card.h-100 {
+    min-height: 300px;
   }
 
-  .conference-icon {
-    width: 70%;
-    /* Adjust this value to the size you desire */
-    height: 60%;
-    /* This ensures that the aspect ratio is maintained */
-  }
-
-  /*4 top cards styles*/
+  /* Top cards styles */
   .custom-card-height {
     min-height: 120px;
+  }
+
+  .card-body {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 160px;
+    padding: 1rem;
+    background: #ACAACC;
+    border-radius: 0.5rem;
+    align-self: center;
+    margin-top: 18px;
+  }
+
+  .icon-container i {
+    font-size: 1.2rem;
+  }
+
+  .icon-general {
+    font-size: 1.5rem;
+    color: #ffffff;
   }
 
   .card-number {
     margin-top: 20px;
     font-size: 36px;
-    /* Large font size for the number */
     font-weight: bold;
-    line-height: 1;
-    /* Ensures the number is closely followed by the title */
-    font-weight: 700
   }
 
   .card-title {
-    font-size: 18px;
-    /* Smaller font size for the title */
-    color: #FFFFFF;
-    /* White color for the title text */
+    font-size: 14px;
+    color: #676974;
     font-weight: normal;
-    font-family: 'Allerta', sans-serif;
   }
 
-  .card-color-blue {
-    background-color: #ACAACC;
-    /* Example blue background color */
+  .card-color {
+    background-color: #FFFFFF;
   }
+
+  .featured-image {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  /* Persona styles */
+  .badge-card {
+    display: inline-block;
+    font-size: 1em;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 0.5rem;
+    color: #344767;
+    font-family: "Roboto", sans-serif;
+    margin-right: -9px;
+    padding: 0.10em 0.7em;
+    margin-bottom: 12px;
+    /* Space between each badge */
+  }
+
+  .badges-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    display: flex;
+    padding: 2px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .badge-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    vertical-align: left;
+    line-height: 1;
+    width: 45px;
+    height: 45px;
+    margin-right: 14px;
+    border-radius: 50%;
+    color: #ffffff;
+  }
+
+  .badge-text {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+  }
+
+  .personalized-card {
+    margin-top: 27px;
+  }
+
+  .personalized-card .card {
+    margin-right: 1rem;
+  }
+
+  .personalized-card:last-child .card {
+    margin-right: 0;
+  }
+
+  .personalized-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .personalized-badge-card {
+    display: flex;
+    flex-direction: column;
+    height: 92%;
+    margin-top: 27px;
+  }
+
+  .personalized-badge-card .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .personalized-badge-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+
+  .ql-container {
+    margin-top: 7px;
+  }
+
+  .ql-toolbar {
+    background: #cfb5db;
+    color: white;
+  }
+
+  .ql-snow .ql-toolbar button:hover,
+  .ql-snow .ql-toolbar button:focus,
+  .ql-snow .ql-toolbar .ql-picker-label:hover,
+  .ql-snow .ql-toolbar .ql-picker-label:focus,
+  .ql-snow .ql-toolbar .ql-picker-item:hover,
+  .ql-snow .ql-toolbar .ql-picker-item.ql-selected,
+  .ql-snow .ql-toolbar .ql-picker-item.ql-selected:hover {
+    background: #2100da;
+    color: white;
+  }
+
+  .ql-snow .ql-stroke {
+    stroke: white;
+  }
+
+  .ql-snow .ql-toolbar button:hover .ql-stroke,
+  .ql-snow .ql-toolbar button:focus .ql-stroke {
+    stroke: white;
+  }
+
+  .ql-snow .ql-tooltip {
+    background: #000000;
+    color: white;
+  }
+
+  /* Recent activity timeline */
+  .activity-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    position: relative;
+    padding-left: 10px;
+  }
+
+  .activity-time-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: #c09bd3;
+    border-radius: 50%;
+    position: absolute;
+    left: 22px;
+    top: 10px;
+  }
+
+  .activity-item::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: -20px;
+    border-left: 2px solid #dee2e6;
+  }
+
+  .activity-item:first-child::before {
+    top: 12px;
+  }
+
+  .activity-content {
+    flex-grow: 1;
+    padding-left: 37px;
+  }
+
+  .activity-title {
+    font-size: 14px;
+    color: #495057;
+    margin: 0;
+  }
+
+  .activity-time {
+    font-size: 12px;
+    color: #c4c9cd;
+  }
+
+  /*Leaderboard card*/
+  .leaderboard-badge-icon {
+    width: 35px;
+    height: auto;
+  }
+
+  .badge-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .badge-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .leaderboard-badge {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .table th,
+  .table td {
+    text-align: center;
+    vertical-align: middle;
+    overflow-x: auto;
+    padding: .8rem;
+    max-width: none;
+    word-wrap: break-word;
+  }
+
+  @media (max-width: 768px) {
+
+    .table th,
+    .table td {
+      padding: .9rem;
+      font-size: .8em;
+    }
+  }
+
+  .table-cell-overflow {
+    max-width: 110px;
+    /* example max-width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .badge-level-beginner {
+    background-color: #97D700;
+  }
+
+  .badge-level-intermediate {
+    background-color: #FFC107;
+  }
+
+  .badge-level-advanced {
+    background-color: #ed5d5d;
+  }
+
+  .badge-level {
+    display: inline-block;
+    font-family: "Roboto", sans-serif;
+    padding: 0.25em 0.6em;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    margin-right: 5px;
+    color: #ffffff;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  .progress-chart-container {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px
+  }
+
+  .progress-percentage {
+    z-index: 2; /* Ensure it is above other elements */
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #344767;
+    font-size: 0.9rem;
+    margin-left: 40px;
+    margin-top: 4px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+  }
+
+  .leaderboard-progress-chart {
+    width: 35px !important;
+    height: 35px !important;
+  }
+
+  .grayed-out {
+    background-color: #f4f5f7;
+    color: #f4f5f7;
+    pointer-events: none;
+    opacity: 0.5;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2b42c7; 
+  }
+  .username-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2b42c7;
+  }
+
+
+  .level-beginner {
+    background-color: #97D700;
+  }
+
+  /* Green for beginner */
+  .level-intermediate {
+    background-color: #FFC107;
+  }
+
+  /* Yellow for intermediate */
+  .level-advanced {
+    background-color: #ED5D5D;
+  }
+
+  .badge-level-undefined {
+    background-color: #CCCCCC; /* Example grey color */
+
+  }
+
+  /* Red/Orange for advanced */
+  .streak-orange {
+    background-color: #ff8000;
+  }
+
+  /* Orange for streak */
+  .rank-gold {
+    background-color: #FFD700;
+  }
+
+  /* Gold for 1st rank */
+  .rank-silver {
+    background-color: #C0C0C0;
+  }
+
+  /* Silver for 2nd rank */
+  .rank-bronze {
+    background-color: #CD7F32;
+  }
+
+  /* Bronze for 3rd rank */
+  .rank-normal {
+    background-color: #CCB5D7;
+  }
+
+  /* Purple for other ranks */
+
+  .dark-page .leaderboard-header, .dark-page .table td.username, .dark-page .progress-percentage {
+      color: #FFFFFF; 
+  }
+  .dark-page .username-link {
+      color: #FFFFFF; 
+  }
+  .dark-page .badge-number, .dark-page .score {
+      color: #FFFFFF; 
+  }
+
 </style> {% endblock stylesheets %} {% block content %} <div class="container-fluid py-4">
-  <div class="hello-nadir">
-    <h1>Hello Nadir! </h1>
+  <div class="hello">
+    {% if current_user.is_authenticated %}
+    <h1>Hello, {{current_user.username}}! </h1>
+    {% else %}
+    <h1>Welcome to Volume! </h1>
+    {% endif %}
   </div>
   <div class="empower-speech">
     <p>Empower your speech with Volume! </p>
   </div>
-  <!-- 4 cards on top -->
+  {% if current_user.is_authenticated %}
+  <!-- 3 cards on top -->
   <div class="row">
-    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
+    <!-- Card 1: Lessons Completed -->
+    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-2">
+      <div class="card card-color">
         <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 16 </h2>
+          <div class="row justify-content-between">
+            <div class="col text-left">
+              <div class="card-number">
+                <h3 id="lessons-completed" class="font-weight-bolder mb-0"></h3>
               </div>
-              <div class="card-title card-text-color"> Lessons Completed </div>
+              <div class="card-title card-text-color">Lessons Completed</div>
+            </div>
+            <div class="col-auto">
+              <div class="icon-container">
+                <i class="fas fa-trophy icon-general"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- Card 2: Lessons In Progress -->
     <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
+      <div class="card card-color">
         <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 02 </h2>
+          <div class="row justify-content-between">
+            <div class="col text-left">
+              <div class="card-number">
+                <h3 id="lessons-in-progress" class="font-weight-bolder mb-0"></h3>
               </div>
-              <div class="card-title card-text-color"> Lessons In Progress </div>
+              <div class="card-title card-text-color">Lessons In Progress</div>
+            </div>
+            <div class="col-auto">
+              <div class="icon-container">
+                <i class="fas fa-spinner icon-general"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- Card 3: Level Progress -->
     <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-      <div class="card card-color-blue">
+      <div class="card card-color">
         <div class="card-body p-3 custom-card-height">
-          <div class="row">
-            <div class="col-12 text-right">
-              <div class="card-number ">
-                <h2 class="font-weight-bolder mb-0"> 23 </h2>
+          <div class="row justify-content-between">
+            <div class="col text-left">
+              <div class="card-number">
+                <h3 id="level_progress" class="font-weight-bolder mb-0"></h3>
               </div>
-              <div class="card-title card-text-color"> Total Practice Hours </div>
+              <div class="card-title card-text-color">Level Progress</div>
+            </div>
+            <div class="col-auto">
+              <div class="icon-container">
+                <i class="fas fa-chart-line icon-general"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-  <!-- Lessons and resources-->
+  </div>
+  {% endif %}
+  <!-- Row for Lessons and Resources cards -->
   <div class="row mt-4">
+    <!-- Lessons -->
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card" id="todays-lesson-card">
         <div class="card-body p-3">
           <div class="row">
             <div class="col-lg-6">
-              <div class="d-flex flex-column h-100">
-                <h5 class="font-weight-bolder custom-font">Today's Lesson</h5>
-                <p class="mb-5 custom-text">Instilling Confidence</p>
+              <div class="d-flex flex-column h-auto">
+                <h5 class="font-weight-bolder custom-font" style="font-size: 45px;">Featured Lesson</h5>
+                <p class="mb-5 custom-text">{{ featured_lesson.title }}</p>
+                {% if current_user.is_authenticated %}
                 <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/lessons"> Get Started <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                 </a>
+                {% else %}
+                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/register"> Get Started by Signing Up <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                </a>
+                {% endif %}
               </div>
             </div>
-            <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
+            <div class="col-lg-6 ms-auto text-center mt-5 mt-lg-0">
               <div class="bg-gradient-primary border-radius-lg h-100">
-                <img src="{{ config.ASSETS_ROOT }}/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                  <img class="w-100 position-relative z-index-2 pt-4 conference-icon" src="{{ config.ASSETS_ROOT }}/img/conference.svg" alt="conference">
+                  <img id="dynamicSticker" src="{{ image_url }}" alt="Featured Lesson Image" class="featured-image" />
                 </div>
               </div>
             </div>
@@ -163,6 +572,7 @@
         </div>
       </div>
     </div>
+    <!-- Resources -->
     <div class="col-lg-5">
       <div class="card h-100 p-3">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('{{ config.ASSETS_ROOT }}/img/presentations-and-public-speaking.jpeg');">
@@ -170,267 +580,137 @@
           <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
             <h5 class="text-white font-weight-bolder mb-4 pt-2">Master Your Public Speaking</h5>
             <p class="text-white">Discover techniques to captivate your audience and deliver memorable speeches. Elevate your speaking skills with our expert-curated resources.</p>
-            <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/resource"> Explore Resources <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+            <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="/resources"> Explore Resources <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
             </a>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- charts -->
-  <div class="row mt-4">
-    <div class="col-lg-5 mb-lg-0 mb-4">
+  {% if current_user.is_authenticated %}
+  <!-- Row for Personalized Cards -->
+  <div class="row">
+    <!-- Volume Persona Card -->
+    <div class="col-lg-4 mb-lg-0 mb-2 personalized-card">
       <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h5>My Progress</h5>
+          <h6>Volume™ Persona</h6>
         </div>
         <div class="card-body p-3">
-          <canvas id="progressChart" class="chart-canvas" height="320"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-7 mb-lg-0 mb-4">
-      <div class="card z-index-2">
-        <div class="card-header pb-0">
-          <h5>Your Activity Over Time</h5>
-        </div>
-        <div class="card-body p-3">
-          <canvas id="activityChart" class="chart-canvas" height="110"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Recent Activity -->
-  <div class="row my-4">
-    <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-      <div class="card">
-        <div class="card-header pb-0">
-          <h6>Recent Activity</h6>
-        </div>
-        <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <tbody>
-                <!-- Activity 1 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Completed Lesson: "Introduction to Public Speaking"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-calendar me-1" aria-hidden="true"></i> 1st Mar - 10:00 AM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 2 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Joined Group: "Advanced Debaters"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-users me-1" aria-hidden="true"></i> 28th Feb - 3:30 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 3 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Practice Session: "Tone & Pitch Exercises"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-microphone me-1" aria-hidden="true"></i> 25th Feb - 2:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 4 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Received Badge: "Confident Communicator"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-trophy me-1" aria-hidden="true"></i> 20th Feb - 4:45 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <!-- Activity 5 -->
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Feedback Received: "Great Improvisation Skills"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-star me-1" aria-hidden="true"></i> 15th Feb - 1:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">Interactive Session: "Mastering the Art of Persuasion"</h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-comments me-1" aria-hidden="true"></i> 10th Mar - 5:00 PM
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="badges-container">
+            <!-- Current Level Badge -->
+            <div class="badge-card d-flex align-items-center mb-2">
+              <span id="user-level-icon" class="badge-icon">
+                <i class="fas fa-layer-group"></i>
+              </span>
+              <strong class="badge-text" style="margin-right: 7px;">Level: </strong>
+              <span id="user-level-text"></span>
+            </div>
+          </div>
+          <!-- Streak Badge -->
+          <div class="badges-container">
+            <div class="badge-card d-flex align-items-center mb-2">
+              <span id="user-streak-icon" class="badge-icon">
+                <i class="fas fa-fire"></i>
+              </span>
+              <strong class="badge-text" style="margin-right: 7px;">Streak: </strong>
+              <span id="user-streak-text"></span>
+            </div>
+          </div>
+          <!-- Rank Badge -->
+          <div class="badges-container">
+            <div class="badge-card d-flex align-items-center mb-2">
+              <span id="user-rank-icon" class="badge-icon">
+                <i class="fas fa-medal"></i>
+              </span>
+              <strong class="badge-text" style="margin-right: 7px;">Rank: </strong>
+              <span id="user-rank-text"></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Upcoming events -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
+    <!-- Personal Notes Card -->
+    <div class="col-lg-8 mb-lg-0 mb-4 personalized-card">
+      <div class="card z-index-2">
         <div class="card-header pb-0">
-          <h6>Upcoming Events</h6>
+          <h6>Personal Notes</h6>
         </div>
         <div class="card-body p-3">
-          <div class="timeline timeline-one-side">
-            <!-- Event 1 -->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-bell-55 text-success text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Public Speaking Workshop: "Speak Like a Pro!"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 27/9/2024, Time: 2:00 - 4:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Instructor: Jane Doe</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Enhance your public speaking skills with this interactive workshop.</p>
-              </div>
-            </div>
-            <!-- Event 2-->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-html5 text-danger text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Debate Club: "Argue It Out!"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 30/9/2024, Time: 5:00 - 7:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Coordinator: John Smith</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Join our debate club session and sharpen your argumentation skills.</p>
-              </div>
-            </div>
-            <!-- Event 3 -->
-            <div class="timeline-block mb-3">
-              <span class="timeline-step">
-                <i class="ni ni-cart text-info text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Leadership Seminar: "Lead the Way"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 5/10/2024, Time: 1:00 - 3:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Speaker: Emily Rose</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Develop your leadership skills with insights from industry leaders.</p>
-              </div>
-            </div>
-            <!-- Event 4-->
-            <div class="timeline-block">
-              <span class="timeline-step">
-                <i class="ni ni-key-25 text-primary text-gradient"></i>
-              </span>
-              <div class="timeline-content">
-                <h6 class="text-dark text-sm font-weight-bold mb-0">Networking Event: "Connect & Grow"</h6>
-                <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Date: 12/10/2024, Time: 6:00 - 9:00 PM</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Host: TechStartups Inc.</p>
-                <p class="text-secondary text-xs mt-1 mb-0">Expand your professional network at our annual networking event.</p>
-              </div>
+          <div id="editor-container" class="form-control" style="height: 107px;"></div>
+          <button class="btn btn-primary btn-sm mt-3" id="save-notes-btn">Save Current Notes</button>
+          <button class="btn btn-secondary btn-sm mt-3" onclick="window.location.href='/view-full-notes';">View Full Page</button>
+        </div>
+      </div>
+    </div>
+    <!-- Row for recent activities and test scores charts -->
+    <div class="row mt-4">
+      <!-- Recent Activity -->
+      <div class="col-lg-5 mb-lg-0 mb-4">
+        <div class="div class= card z-index-2 h-100 recent-activity-card">
+          <div class="card-header pb-0">
+            <h6>Recent Activity</h6>
+          </div>
+          <div id="recent-activity-container"></div>
+        </div>
+      </div>
+      <!-- Test Scores -->
+      <div class="col-lg-7 mb-lg-0 mb-4">
+        <div class="card z-index-2 test-scores-card">
+          <div class="card-header pb-0">
+            <h6>Test Scores Over Time</h6>
+          </div>
+          <div class="card-body p-3">
+            <canvas id="testScoresChart" class="chart-canvas" height="320"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <!-- Row for Leaderboard and upcoming events -->
+    <div class="row my-4">
+      <!-- Leader Board -->
+      <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Leaderboard</h6>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="leaderboard-header">Rank</th>
+                    <th class="leaderboard-header">Username</th>
+                    <th class="leaderboard-header">Score</th>
+                    <th class="leaderboard-header">Level</th>
+                    <th class="leaderboard-header">Progress</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                  <!-- JavaScript will populate this area with leaderboard data including progress charts -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-    </div> {% include "includes/footer.html" %}
-  </div> {% endblock content %}
-  <!-- Specific JS goes HERE --> {% block javascripts %} <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
-  <script>
-    Chart.defaults.font.family = 'Roboto'; // Set the font family globally
-    Chart.defaults.color = '#353B3C'; // Set the global font color
-    const progressCtx = document.getElementById('progressChart').getContext('2d');
-    const progressChart = new Chart(progressCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Clear Diction', 'Emotional Expression', 'Tone Consistency', 'Pace Regulation'],
-        datasets: [{
-          label: 'Current Progress',
-          data: [65, 59, 80, 81], // Replace these numbers with your actual data
-          backgroundColor: '#fe76a8',
-          borderWidth: 0,
-          borderRadius: 10, // Rounded corners for the bars (Chart.js 3.x and newer)
-        }, {
-          label: 'Goal',
-          data: [85, 90, 100, 100], // Replace these numbers with your actual data
-          backgroundColor: '#8ac9fe',
-          borderWidth: 0,
-          borderRadius: 10, // Rounded corners for the bars (Chart.js 3.x and newer)
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              font: {
-                size: 14, // You can adjust the size here
-              },
-              color: '#353B3C', // Y-axis ticks color
-            }
-          },
-          x: {
-            ticks: {
-              font: {
-                size: 14, // You can adjust the size here
-              },
-              color: '#353B3C', // X-axis ticks color
-            }
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                size: 14, // Legend font size
-              },
-              color: '#353B3C', // Legend font color
-            }
-          },
-        }
-      }
-    });
-    const activityCtx = document.getElementById('activityChart').getContext('2d');
-    const activityChart = new Chart(activityCtx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Replace with actual date labels
-        datasets: [{
-          label: 'User Activity',
-          data: [10, 6, 30, 70, 12, 80], // Replace with actual data
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script> {% endblock javascripts %}
+      <!-- Upcoming events -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Upcoming Events</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="events-container" class="timeline-event-spacing"></div>
+          </div>
+        </div>
+      </div> {% include "includes/footer.html" %}
+    </div> {% endblock content %}
+    <!-- Specific JS goes HERE --> {% block javascripts %} <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
+    <script src="{{ config.ASSETS_ROOT }}/js/dashboard/dashboard.js"></script>
+    <script>
+      var ASSETS_ROOT = "{{ url_for('static', filename='') }}";
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> {% endblock javascripts %}

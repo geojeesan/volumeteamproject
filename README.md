@@ -51,7 +51,7 @@ Volume is a full-stack web application designed to enhance individuals' public s
 2. Install dependencies: <br>
 `pip install -r requirements.txt` <br>
 3. Run the application: <br>
-`python run.py` <br>
+`python run_local.py` <br>
 4. Access the website on any modern browser at: <br>
 `http://127.0.0.1:5000`
 

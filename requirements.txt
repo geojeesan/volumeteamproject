@@ -21,13 +21,10 @@ PyJWT==2.4.0
 
 
 # New requirements
-SpeechRecognition
-ffmpeg-python
-pydub
-# tensorflow
-transformers
-
-#test
-
-# flask_mysqldb
-# psycopg2-binary
+SpeechRecognition==3.10.1
+ffmpeg-python==0.2.0
+pydub==0.25.1
+transformers==4.38.2
+praat-parselmouth==0.4.3
+numpy==1.24.4
+Pillow==10.1.0

@@ -1,29 +1,21 @@
-{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %} 
+{% extends 'layouts/base.html' %} {% block title %}Lessons{% endblock %} {% block stylesheets %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-
 <style>
   .main-content {
     flex: 1;
   }
 
-  .wave-graph-container {
-    height: auto;
-    margin-bottom: 0;
-    /* Adjust to the desired height */
-    background-color: #f7fafc;
-    /* Adjust the color to match your brand color */
-    border-radius: 20px;
-    padding: 1rem;
+  .grayed-out-message {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #f4f5f7;
+    color: #8898aa;
     text-align: center;
-    /* Center content if the graph is not as wide as the container */
-  }
-
-  .wave-graph {
-    width: 100%; /* Responsive to container size */
-    max-width: 600px; /* Maximum width */
-    height: 400px; /* Fixed height */
-    margin: auto; /* Centering if needed */
-    /* Adjust as necessary to maintain aspect ratio */
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
   }
 
   /* General page styles */
@@ -31,75 +23,60 @@
     max-width: 1200px;
   }
 
-  /*fonts*/
-.custom-font {
-  font-family: "Alegreya Sans SC", sans-serif;
-}
+  /* Card titles and numbers */
+  .card-number {
+    margin-top: 20px;
+    font-size: 36px;
+    /* Large font size for the number */
+    font-weight: bold;
+    line-height: 1;
+    /* Ensures the number is closely followed by the title */
+  }
 
-.custom-text {
-  font-family: "Roboto", sans-serif;
-}
+  .btn-success {
+    background-color: #28a745; /* Example green color */
+    color: white;
+    /* Add any additional styling as needed */
+  }
 
-.allerta-text {
-  font-family: 'Allerta', sans-serif;
-}
+  .card-title {
+    font-size: 18px;
+    /* Smaller font size for the title */
+    color: #344767;
+    font-weight: normal;
+    font-family: 'Open sans', sans-serif;
+  }
 
-/* Card styles from the home page */
-.custom-card-height {
-  min-height: 150px; /* Adjust the height as needed */
-}
+  /* Apply custom fonts to relevant elements on the lessons page */
+  #lesson-title,
+  #lesson-description,
+  #lesson-difficulty {
+    font-family: "Open sans", sans-serif;
+    /* This is assuming you want to use Alegreya for these elements */
+  }
 
-.card-color-blue {
-  background-color: #ACAACC; /* Your custom blue */
-}
+  /* You may need to adjust card paddings to match the home page */
+  .card-body {
+    padding: 2rem;
+    /* Adjust based on home page padding */
+  }
 
-/* Card titles and numbers */
-.card-number {
-  margin-top: 20px;
-  font-size: 36px; /* Large font size for the number */
-  font-weight: bold;
-  line-height: 1; /* Ensures the number is closely followed by the title */
-  font-weight: 700
-}
-
-.card-title {
-  font-size: 18px; /* Smaller font size for the title */
-  color: #344767; /* White color for the title text */
-  font-weight: normal;
-  font-family: 'Allerta', sans-serif;
-}
-
-/* Apply custom fonts to relevant elements on the lessons page */
-#lesson-title, #lesson-description, #lesson-difficulty {
-  font-family: "Alegreya Sans SC", sans-serif; /* This is assuming you want to use Alegreya for these elements */
-}
-
-/* You may need to adjust card paddings to match the home page */
-.card-body {
-  padding: 2rem; /* Adjust based on home page padding */
-}
-
-  /* Styles for the lessons and wave graph cards */
+  /* Styles for the lessons cards */
   .card {
     border: none;
     border-radius: 15px;
-    margin-bottom: 0; /* Reduce from larger values if necessary */
+    margin-bottom: 2rem;
   }
 
   .card-body {
     padding: 1rem;
-    padding-top: 0; /* Reduce or remove the top padding */
-    position: relative; /* If not already set, for positioning context */
-    overflow: hidden; /* Prevents content from spilling outside the card */
-
+    padding-top: 0;
+    /* Reduce or remove the top padding */
+    position: relative;
+    /* If not already set, for positioning context */
+    overflow: hidden;
+    /* Prevents content from spilling outside the card */
   }
-
-  #wave-placeholder {
-    width: 100%; /* Make canvas width responsive */
-    max-width: 400px; /* Max width to prevent excessive expansion */
-    height: 400px; /* Fixed height, adjust as needed */
-    margin: auto; /* Center the canvas element */
-}
 
   p {
     color: #8898aa;
@@ -107,28 +84,35 @@
   }
 
   .lesson {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px; /* Adds space between each lesson card if needed */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    /* Adds space between each lesson card if needed */
   }
 
   /* Styles for the lesson icon */
   .lesson-icon img {
-  max-width: 100px; /* Adjust the value as needed */
-  max-height: 100px; /* Adjust the value as needed */
-  height: auto;
-  width: auto; /* This will maintain the aspect ratio */
-  display: block; /* To remove any extra space below the image */
-  margin: 0 auto; /* This will center the image in its container */
-}
+    max-width: 100px;
+    /* Adjust the value as needed */
+    max-height: 100px;
+    /* Adjust the value as needed */
+    height: auto;
+    width: auto;
+    /* This will maintain the aspect ratio */
+    display: block;
+    /* To remove any extra space below the image */
+    margin: 0 auto;
+    /* This will center the image in its container */
+  }
 
-.lesson-card {
-  /* Add your existing styles here */
-  margin: auto; /* This centers the card in the flex container */
-  width: fit-content; /* Or a fixed width if you prefer */
-  text-align: center;
-
-}
+  .lesson-card {
+    /* Add your existing styles here */
+    margin: auto;
+    /* This centers the card in the flex container */
+    width: fit-content;
+    /* Or a fixed width if you prefer */
+    text-align: center;
+  }
 
   /* Styles for the buttons */
   .btn-primary {
@@ -156,19 +140,18 @@
     border-radius: 20px;
     padding: 1rem;
     text-align: center;
-    width: 100%; /* Responsive to container size */
-    max-width: 600px; /* Maximum width */
-    height: 400px; /* Fixed height */
-    margin: auto; /* Centering if needed */
+    width: 100%;
+    /* Responsive to container size */
+    max-width: 600px;
+    /* Maximum width */
+    height: 400px;
+    /* Fixed height */
+    margin: auto;
+    /* Centering if needed */
     /* Center content if the graph is not as wide as the container */
   }
 
-  /* Make sure the 'Analyze Progress' button is centered below the graph */
-  #analyze-btn {
-    display: block;
-    margin: 1.5rem auto 0;
-    /* Centers the button with top margin */
-  }
+
 
   /* Additional styles for alignment and responsiveness */
   @media (min-width: 992px) {
@@ -193,33 +176,57 @@
   }
 
   #skills-progress-container {
-  margin-top: 0; /* Remove top margin if there's unnecessary space inside the card */
+    margin-top: 0;
+    /* Remove top margin if there's unnecessary space inside the card */
   }
+
   .progress {
-  height: 20px; /* Adjust the height to make it more visible */
-  background-color: #e9ecef; /* Light grey background */
-  border-radius: 10px; /* Rounded corners */
-  overflow: hidden; /* Ensures that the inner bar doesn't overflow */
-}
+    height: 20px;
+    /* Adjust the height to make it more visible */
+    background-color: #e9ecef;
+    /* Light grey background */
+    border-radius: 10px;
+    /* Rounded corners */
+    overflow: hidden;
+    /* Ensures that the inner bar doesn't overflow */
+  }
 
-.progress-bar {
-  height: 100%; /* Fills the entire height of the progress container */
-  background-color: #ACAACC; /* The filled color part, same as your custom blue */
-  border-radius: 10px 0 0 10px; /* Rounded corners on the left side */
-  display: flex;
-  align-items: center; /* Centers text vertically */
-  justify-content: center; /* Centers text horizontally */
-  color: white; /* Text color */
-  font-weight: bold; /* Bold text */
-  transition: width 0.6s ease; /* Smooth transition for the bar loading */
-}
+  .progress-bar {
+    height: 100%;
+    /* Fills the entire height of the progress container */
+    background: #7571AD;
+    /* Bu /* The filled color part, same as your custom blue */
+    border-radius: 10px;
+    /* Rounded corners */
+    display: flex;
+    align-items: center;
+    /* Centers text vertically */
+    justify-content: center;
+    /* Centers text horizontally */
+    color: white;
+    /* Text color */
+    font-weight: bold;
+    /* Bold text */
+    position: relative;
+    min-width: 70px;
+    /* Relative position for percentage text */
+    overflow: hidden;
+    /* Hide the overflow to keep the text inside the bar */
+  }
 
+  .progress-bar-text {
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+  }
 
   .badge {
     display: inline-block;
     padding: 0.25em 0.6em;
     font-size: 75%;
-    font-weight: 700;
+    font-weight: bold;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
@@ -229,68 +236,68 @@
   }
 
   /* Styles for the progress card containing the badge */
-.progress-card {
-  text-align: center;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 2rem; /* Space between cards */
-  position: relative; /* For absolute positioning of the percentage */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+  .progress-card {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    /* Space between cards */
+    position: relative;
+    /* For absolute positioning of the percentage */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-/* Styles for the badge image container */
-.badge-container {
-  position: relative; /* To position the percentage text over the image */
-  display: inline-block; /* To fit the width of the content */
-}
+  /* Styles for the badge image container */
+  .badge-container {
+    position: relative;
+    /* To position the percentage text over the image */
+    display: block;
+    text-align: center;
+    /* To fit the width of the content */
+  }
 
-/* Styles for the badge image itself */
-.badge-image {
-  width: 100%; /* Adjust this to the size of your badge image */
-  height: auto;
-  margin-bottom: -50px; /* Adjust this value to position the percentage text */
-}
+  /* Styles for the badge image itself */
+  .badge-image {
+    width: 100%;
+    /* Adjust this to the size of your badge image */
+    height: auto;
+  }
 
-/* Position and style the percentage text */
-.completion-percentage {
-  position: absolute;
-  top: 65%; /* Center vertically - adjust if needed */
-  left: 50%; /* Center horizontally - adjust if needed */
-  transform: translate(-50%, -50%); /* Adjust for exact centering */
-  font-size: 2.5rem; /* Large font size for the number */
-  color: #344767; /* Adjust this color to suit your badge's color scheme */
-  font-weight: bold;
-}
-
-
-/* Styles for the progress card title */
-.progress-card-title {
-  font-size: 1.25rem;
-  color: #344767;
-  margin-top: 2rem; /* Space from the top of the badge */
-}
+  /* Styles for the progress card title */
+  .progress-card-title {
+    font-size: 1.25rem;
+    color: #344767;
+    margin-top: 2rem;
+    /* Space from the top of the badge */
+  }
 
   .badge-beginner {
     color: #fff;
-    background-color: #28a745; /* Green for beginner */
+    background-color: #28a745;
+    /* Green for beginner */
   }
 
   .badge-intermediate {
     color: #fff;
-    background-color: #ffc107; /* Yellow for intermediate */
+    background-color: #ffc107;
+    /* Yellow for intermediate */
   }
 
   .badge-advanced {
     color: #fff;
-    background-color: #dc3545; /* Red for advanced */
+    background-color: #dc3545;
+    /* Red for advanced */
   }
+
   #skills-progress-container {
-  margin-top: 0; /* Adjust this value if you want less space above the progress bars */
-}
+    margin-top: 0;
+    /* Adjust this value if you want less space above the progress bars */
+  }
+  
 
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
   <div class="row mb-4">
@@ -299,96 +306,63 @@
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
   </div>
-  <div class="row">
-    <!-- Left Column for Lessons -->
-    <div class="col-lg-8">
-
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Start a new challenge:</h5>
-          <br>
-          <div class="challenge-item">
-            <div id="lessons-display"></div>
-            <!-- <button id="start-confidence-boost" class="btn btn-secondary">Start Confidence Lesson</button> -->
-          </div>
-        </div>
-      </div>
-
-      <div class="card mb-4 text-center" style="margin-top:2%; opacity: 0.5;pointer-events: none;filter: grayscale(100%);">
-        <div class="card-body">
-          <!-- Static header to indicate the purpose of the section -->
-          <h5 class="card-title">Or perhaps, pick up where you left off:</h5>
-          <h6 id="lesson-title">Loading...</h6>
-          <p id="lesson-description">Loading description...</p> <!-- Add this line -->
-          <div id="lesson-difficulty" class="badge">Loading difficulty...</div> <!-- Add this line -->
-          <p id="lesson-progress">Loading progress...</p> <!-- Add this line -->
-          <div class="lesson-icon mb-3">
-    <img id="lesson-image" src="" alt="Loading lesson image...">
-</div>
-<!-- Continue Lesson button -->
-<button class="btn btn-primary" id="continue-lesson">Continue Lesson</button>
-        </div>
-      </div>
-
-    </div>
-
-          <!-- Lessons Completed Badge Card -->
-    <div class="col-lg-4">
-    <div class="card mb-4 text-center">
-      <div class="card-body">
-        <div class="badge-container">
-          <img src="{{ url_for('static', filename='/assets/img/banner1.png') }}" alt="Badge" class="badge-image">
-          <div class="completion-percentage" id="lessons-completion-percentage">0%</div>
-        </div>
-        <br>
-        <h5 class="progress-card-title">Lessons Completed</h5>
-      </div>
-    </div>
-    
-      <!-- Volume Wave Card -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-6">
       <div class="card mb-4 text-center">
-        <div class="card-body" style="height: 340px;">
-          <h5>Your Volume™ Wave:</h5>
-          <canvas id="wave-placeholder"></canvas>
-        </div>
-      </div>
-
-
-
-<!-- Your Progress Card -->
-<div class="card mb-4 text-center">
-  <div class="card-body">
-    <h5>Your Progress</h5>
-    <div id="skills-progress-container">
-      <div class="skill-progress">
-        <label for="articulation-progress">Articulation</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="articulation-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="volume-progress">Volume</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="volume-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="rhythm-progress">Rhythm</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="rhythm-progress"></div>
-        </div>
-      </div>
-      <div class="skill-progress">
-        <label for="expression-progress">Expression</label>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" id="expression-progress"></div>
+        <div class="card-body d-flex flex-column align-items-center">
+          <h4>Pick up where you left off:</h4>
+          <h5 id="lesson-title">Loading...</h5>
+          <p id="lesson-description">Loading description...</p>
+          <div id="lesson-difficulty" class="badge">Loading difficulty...</div>
+          <p id="lesson-progress">Loading progress...</p>
+          <div class="lesson-icon mb-3">
+            <img id="lesson-image" src="" alt="Loading lesson image...">
+          </div>
+          <!-- Continue Lesson button -->
+          <button class="btn btn-primary " id="continue-lesson">Continue Lesson</button>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-    
-</div> {% endblock %} {% block javascripts %} 
-<script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script> 
-<script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
+  <div class="row">
+    <!-- Lessons Cards -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <br>
+            <div class="challenge-item">
+              <div id="lessons-display" class="row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Volume Spectrum Card -->
+      <div class="row justify-content-around mb-4">
+        <div class="col-md-6">
+          <div class="card mb-4 text-center">
+            <div class="card-body d-flex flex-column" style="height: 400px;">
+              <h5>Your Volume™ Spectrum:</h5>
+              <p>Here's how your attitude spans with your Volume™ lessons.</p>
+              <!-- Container div for the canvas -->
+              <div style="flex-grow: 1; position: relative; height: calc(100% - 70px);">
+                <canvas id="sentimentSkillChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Your Progress Card -->
+        <div class="col-md-6">
+          <div class="card mb-4 text-center">
+            <div class="card-body">
+              <h5> Your Progression Tracker:</h5>
+              <p>Each bar represents your average performance score in each lesson.</p>
+              <div id="sentiments-progress-container">
+              </div>
+            </div>
+          </div>
+        </div> {% include "includes/footer.html" %}
+      </div> {% endblock %} {% block javascripts %}
+      <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
+      <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
