@@ -136,8 +136,6 @@ def test_scores():
 
 
 # Leaderboard Endpoint
-from flask import jsonify
-
 @blueprint.route("/leaderboard")
 def leaderboard():
     is_logged_in = current_user.is_authenticated
