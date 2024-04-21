@@ -19,6 +19,7 @@ import base64
 @blueprint.route("/favorites")
 @login_required  # Ensures that only authenticated users can access this page
 def favorites():
+    
     current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     if current_profile and current_profile.profile_picture:
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
