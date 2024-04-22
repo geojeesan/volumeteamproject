@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const usernameCell = row.insertCell();
             let usernameHtml = user.username || '-';
-            if (isLoggedIn && user.username) {
+            if (user.username) {
                 usernameHtml = `<a href="/profilepage/${user.username}" class="username-link${isDarkMode ? ' dark-page' : ''}">${user.username}</a>`;
             }
             usernameCell.innerHTML = usernameHtml;
