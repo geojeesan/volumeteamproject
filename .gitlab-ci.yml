@@ -29,7 +29,7 @@ lint:
 build:
   stage: build
   script:
-    - echo "No build step for Flask app"
+    - sudo apt install default-jdk
 
 test:
   stage: test
