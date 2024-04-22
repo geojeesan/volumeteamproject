@@ -1,5 +1,9 @@
 let lastAccessedLessonId = null;
 
+// To be accessed by the search bar
+let lessonsArray = []
+
+
 document.addEventListener('DOMContentLoaded', function() {
 	fetchLastLesson().then(() => {
 		fetchAllLessons().then(() => {
@@ -228,6 +232,9 @@ function displayLesson(lesson, lessonsContainer) {
             </button>
         </div>
     `;
+
+	lessonsArray.push([lesson.title, `${lesson.num}-${firstScenarioId}`])
+
 
     // Append the lesson card to the container
     lessonsContainer.appendChild(lessonElement);
