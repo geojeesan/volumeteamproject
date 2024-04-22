@@ -87,6 +87,8 @@
                             <p style="margin: 0;">Dashboard</p>
                         </div>
                     </li>
+
+                    {% if current_user.is_authenticated %}
                     <li role="option" aria-selected="false" details="lessons" class="list-item">
                         <div style="display: flex; align-items: center;">
                             <span style="margin-right: 8px;">
@@ -97,6 +99,7 @@
                             <p style="margin: 0;">Lessons</p>
                         </div>
                     </li>
+                    {% endif %}
 
                     <li role="option" aria-selected="false" details="resources" class="list-item">
                       <div style="display: flex; align-items: center;">
@@ -109,6 +112,7 @@
                       </div>
                   </li>
 
+                  {% if current_user.is_authenticated %}
                   <li role="option" aria-selected="false" details="favorites" class="list-item">
                     <div style="display: flex; align-items: center;">
                         <span style="margin-right: 8px;">
@@ -119,8 +123,10 @@
                         <p style="margin: 0;">Favorites</p>
                     </div>
                 </li>
+                {% endif %}
 
-                <li role="option" aria-selected="false" details="profile" class="list-item">
+                {% if current_user.is_authenticated %}
+                <li role="option" aria-selected="false" details="profilepage/{{ current_user.username }}" class="list-item">
                   <div style="display: flex; align-items: center;">
                       <span style="margin-right: 8px;">
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,7 +136,20 @@
                       <p style="margin: 0;">Profile</p>
                   </div>
               </li>
-
+              {% else %}
+              <li role="option" aria-selected="false" details="searchprofile" class="list-item">
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 8px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m15 5-1.41 1.41L18.17 11H2v2h16.17l-4.59 4.59L15 19l7-7-7-7Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    <p style="margin: 0;">Search Profile</p>
+                </div>
+            </li>
+              {% endif %}
+            
+              {% if current_user.is_authenticated %}
               <li role="option" aria-selected="false" details="feedback" class="list-item">
                 <div style="display: flex; align-items: center;">
                     <span style="margin-right: 8px;">
@@ -141,6 +160,7 @@
                     <p style="margin: 0;">Feedback</p>
                 </div>
             </li>
+            {% endif %}
                 </ul>
             </div>
         </div>
