@@ -156,7 +156,7 @@ def calculate_score(scenario_num, lesson, sentiments):
             score -= difference
             first_item = False
         else:
-            score += max(0, 0.2 - difference)  # Adjusted scoring logic
+            score += max(0, 0.2 - difference)  
 
     return max(score, 0) * 10
 
@@ -198,7 +198,7 @@ def get_sentiments(text):
         # We will attempt 5 times, with each attempt waiting 3 times more than the last one.
         while "error" in output and num_attempts < 5:
             print("Error in sentiment analysis, trying again...")
-            time.sleep(3 * num_attempts)
+            time.sleep(2 * num_attempts)
             num_attempts += 1
             output = attempt_query()
 
@@ -350,7 +350,6 @@ def analyze_speech():
                 "tone_data": pitch_values,
                 "tone_times": pitch_times,
                 "audio_length": audio_length,
-                # Need to do this in a different function
                 "progress": progress_percentage,
             }
         )
