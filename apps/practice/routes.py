@@ -52,7 +52,7 @@ def get_lesson():
 
     scenarios = SubLesson.query.filter_by(lesson_id=lesson.id).all()
     # Sort scenarios based on the "order_in_lesson" attribute
-    sorted_scenarios = sorted(scenarios, key=lambda x: x.order_in_lesson)
+    sorted_scenarios = sorted(scenarios, key=lambda x: x.order_in_lesson if x.order_in_lesson is not None else float('inf'))
 
     # Create a dictionary where the keys are the order_in_lesson and values are scenario dictionaries
     scenarios_data = {

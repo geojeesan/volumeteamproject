@@ -35,6 +35,21 @@ def editprofile():
         current_base64_encoded_image = None
     return render_template('profilepage/editprofile.html', segment='editprofile', current_base64_encoded_image=current_base64_encoded_image, profile=current_profile)
 
+@blueprint.route('/searchprofile')
+def searchprofile():
+    return render_template('profilepage/searchprofile.html', segment='searchprofile')
+
+@blueprint.route('/searchUser', methods=['POST'])
+def searchUser():
+    search_term = request.form.get('searchTerm', '')  # Assuming search term is sent via POST
+    print(search_term+" search term")
+    search_results = Users.query.filter(Users.username.ilike(f"%{search_term}%")).all()
+
+    # Format search results to send back to the frontend
+    formatted_results = [{'id': user.id, 'username': user.username} for user in search_results]
+
+    return jsonify(formatted_results)
+
 @blueprint.route('/update_profile', methods=['POST'])
 def update_profile():
     user_id = current_user.get_id()
