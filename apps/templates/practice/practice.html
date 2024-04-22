@@ -18,6 +18,40 @@
 
 <style>
 
+.progress-bar {
+    height: 100%;
+    /* Fills the entire height of the progress container */
+    background: #7571AD;
+    /* Bu /* The filled color part, same as your custom blue */
+    border-radius: 10px;
+    /* Rounded corners */
+    display: flex;
+    align-items: center;
+    /* Centers text vertically */
+    justify-content: center;
+    /* Centers text horizontally */
+    color: white;
+    /* Text color */
+    font-weight: bold;
+    /* Bold text */
+    position: relative;
+    min-width: 70px;
+    /* Relative position for percentage text */
+    overflow: hidden;
+    /* Hide the overflow to keep the text inside the bar */
+  }
+
+  .progress {
+    height: 20px;
+    /* Adjust the height to make it more visible */
+    background-color: #e9ecef;
+    /* Light grey background */
+    border-radius: 10px;
+    /* Rounded corners */
+    overflow: hidden;
+    /* Ensures that the inner bar doesn't overflow */
+  }
+
     .large-button-container {
       display: flex;
       flex-direction: column;
@@ -140,6 +174,9 @@
     <div class="card mb-4 text-center">
 
 <div display="block" class="text-center">
+  <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="Hover over a pre-recorded audio to listen. Click the audio to perform speech analysis on selected audio.">
+    <i class="bi bi-info-circle"></i>
+  </span>
   <p class="mb-0">Pre-recorded Attempts (for testing)</p>
   <div class="card-body d-flex justify-content-center">
     <button class="small-button" style="margin-right: 7%;" id="pre-1">
@@ -160,41 +197,102 @@
 </div>
 
 
-<div id="scenario-results" style="display:none">
+<div id="scenario-results" style="display:none;margin-right: 20px;">
 
-  <h2 class="fw-bold text-center">Here's how you did</h2>
-  <h4 class="text-center fw-bold" id="scenario-score">Score:./10</h4>
+  <h2 class="fw-bold text-center mb-4">Here's how you did</h2>
+
+
+  <div class="col-md-6 mx-auto mb-4 position-relative">
+    <div class="card z-index-2 h-100">
+        <div class="card-header pb-0">
+            <h6 class="text-center">Score</h6>
+            <p class="text-sm"></p>
+            <!-- Tooltip trigger -->
+            <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="Your attitude, tone, pace, and diction are taken into account to calculate your score.">
+                <i class="bi bi-info-circle"></i>
+            </span>
+        </div>
+        <div class="card-body p-3">
+          <h4 class="text-center fw-bold" id="scenario-score">./10</h4>
+        </div>
+    </div>
+</div>
+
+
 
   <div class="row justify-content-center">
     <div class="col-lg-6">
+        <div class="card z-index-2 h-100">
+            <div class="card-header pb-0">
+                <h6 class="text-center">Attitude Analysis</h6>
+                <p class="text-sm"></p>
+                <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="These are the sentiments that your speech had.">
+                  <i class="bi bi-info-circle"></i>
+              </span>
+            </div>
+            <div class="card-body p-3">
+                <div class="chart d-flex justify-content-center">
+                    <canvas id="chart-bar" class="chart-canvas" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <div class="card z-index-2 h-100">
+            <div class="card-header pb-0">
+                <h6 class="text-center">Tone Analysis</h6>
+                <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="This is the variability in your pitch during your speech.">
+                  <i class="bi bi-info-circle"></i>
+              </span>
+                <p class="text-sm"></p>
+            </div>
+            <div class="card-body p-3">
+                <div class="chart d-flex justify-content-center">
+                    <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Charts -->
+<div class="row justify-content-center">
+    <div class="col-lg-6 mt-4">
       <div class="card z-index-2 h-100">
         <div class="card-header pb-0">
-          <h6 class="text-center">Attitude Analysis</h6>
+          <h6 class="text-center">Pace Analysis</h6>
+          <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="This score is affected by how often you paused during your speech.">
+            <i class="bi bi-info-circle"></i>
+        </span>
           <p class="text-sm"></p>
         </div>
         <div class="card-body p-3">
-          <div class="chart d-flex justify-content-center">
-            <canvas id="chart-bar" class="chart-canvas" height="200"></canvas>
-          </div>
+          <div  class="progress"><div id="progress-bar-pace" class="progress-bar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%; min-width: 70px;"><div class="progress-bar-text">4.0 / 10.0</div></div></div>
+
         </div>
       </div>
     </div>
 
-    <div class="col-lg-6 mt-4 mt-lg-0">
+    <div class="col-lg-6 mt-4">
       <div class="card z-index-2 h-100">
         <div class="card-header pb-0">
-          <h6 class="text-center">Pace Analysis</h6>
-          <p class="text-sm">
-       
-          </p>
+          <h6 class="text-center">Diction Analysis</h6>
+          <span class="position-absolute top-0 end-0 mt-1 me-1" data-bs-toggle="tooltip" title="This score is affected by your grammar errors and word complexity.">
+            <i class="bi bi-info-circle"></i>
+        </span>
+          <p class="text-sm"></p>
         </div>
         <div class="card-body p-3">
-          <div class="chart d-flex justify-content-center">
-            <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-          </div>
+          <div class="progress"><div id="progress-bar-diction" class="progress-bar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%; min-width: 70px;"><div class="progress-bar-text">4.0 / 10.0</div></div></div>
+
         </div>
       </div>
     </div>
+</div>
+
+
+    
 
     <div class="text-center mt-4">
       <button class="btn btn-primary btn-sm mb-0" id="prev-scenario-btn" style="margin-right: 1%;pointer-events: none;opacity: 0.5;">Prev Scenario</button>

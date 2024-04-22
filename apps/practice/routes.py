@@ -16,6 +16,7 @@ import numpy as np
 import time
 import base64
 import json
+import language_tool_python
 
 current_lesson = None
 user_sentiments = None
@@ -238,6 +239,53 @@ def get_wav_path(file):
     return new_path
 
 
+# Initialize the language tool
+tool = language_tool_python.LanguageTool('en-US')
+
+def calculate_diction_score(text):
+    # Get matches (grammar errors) in the text
+    matches = tool.check(text)
+    
+
+    
+    # Tokenize the text to count the number of words
+    words = text.split()
+    
+    print("errors:", len(matches))
+    print("text:", text)
+    
+    # Calculate the number of grammar errors
+    grammar_errors_index = len(matches)/len(words)
+    
+    total_word_length = sum(len(word) for word in words)
+    
+    # Calculate the average word length
+    if len(words) != 0:
+        average_word_length = total_word_length / len(words)
+    else:
+        average_word_length = 0
+        
+    # Calculate the score based on grammar errors and word count
+    # You can adjust the weights for grammar errors and word count based on your preference
+    score = 100 * (1-grammar_errors_index)  * (average_word_length/6)
+    
+    # Maximum possible score
+    max_score = 100
+    
+    
+    # Normalize the score to range from 0 to 1
+    normalized_score = score / max_score
+    
+    if normalized_score > 1:
+        normalized_score = 1
+    elif normalized_score < 0:
+        normalized_score = 0
+    
+    return normalized_score
+
+
+
+
 def analyze_tone(audio_file_path):
     """
     Calculate pitch variability in speech using the fundamental frequency (F0).
@@ -267,8 +315,10 @@ def analyze_tone(audio_file_path):
     # Calculate standard deviation of pitch values
     pitch_std_dev = np.std(pitch_values)
 
-    return pitch_std_dev, pitch_values, times
+                                                  # small val to prevent division by 0
+    pace_val = 1 - np.count_nonzero(pitch_values == 0) / ( 0.00005 + (np.count_nonzero(pitch_values != 0) * 5))
 
+    return pitch_std_dev, pitch_values, times, pace_val
 
 def get_audio_length(audio_file_path):
     # Load the audio file
@@ -309,12 +359,14 @@ def analyze_speech():
 
         new_path = get_wav_path(file)
 
-        pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
-
+        pitch_variability, pitch_values, pitch_times, pace_val = analyze_tone(new_path)
+        
         pitch_values = list(pitch_values)
         pitch_times = list(pitch_times)
 
         audio_length = get_audio_length(new_path)
+        
+        
 
         try:
             text = transcribe_text(new_path)
@@ -332,6 +384,7 @@ def analyze_speech():
         os.remove(new_path)  # Clean up after successful transcription
 
         sentiments = get_sentiments(text)
+        diction_val = calculate_diction_score(text)
 
         if not sentiments or "error" in sentiments:
             return (
@@ -345,8 +398,17 @@ def analyze_speech():
             )
 
         # Assuming your existing functions to calculate score and update progress...
-        score = calculate_score(scenario_num, lesson, sentiments)
-        update_user_scenario_progress(current_user.id, scenario.id, score)
+        sentiment_score = calculate_score(scenario_num, lesson, sentiments)
+        
+        
+        total_score = ((sentiment_score) + (diction_val*10) + (pace_val*10))/3
+        
+        if total_score > 10:
+            total_score = 10
+        elif total_score < 0:
+            total_score = 0
+        
+        update_user_scenario_progress(current_user.id, scenario.id, total_score)
         progress_percentage = calculate_user_progress(current_user.id, lesson.id)
 
         # Update user's data after scenario completion.
@@ -356,11 +418,13 @@ def analyze_speech():
             {
                 "user_speech": text,
                 "user_sentiments": sentiments,
-                "score": score,
+                "score": total_score,
                 "tone_data": pitch_values,
                 "tone_times": pitch_times,
                 "audio_length": audio_length,
                 "progress": progress_percentage,
+                "pace_val": pace_val,
+                "diction_val": diction_val
             }
         )
     except Exception as e:
@@ -492,7 +556,7 @@ def analyze_speech_api():
 
         new_path = get_wav_path(file)
 
-        pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
+        pitch_variability, pitch_values, pitch_times, pace_val = analyze_tone(new_path)
 
         pitch_values = list(pitch_values)
         pitch_times = list(pitch_times)
@@ -528,14 +592,19 @@ def analyze_speech_api():
             )
 
         # Assuming your existing functions to calculate score and update progress...
-        score = calculate_score(None, None, sentiments, expected_sentiments=expected_sentiments)
-
+        sentiment_score = calculate_score(None, None, sentiments, expected_sentiments=expected_sentiments)
+        diction_val = calculate_diction_score(text)
+        
+        total_score = ((sentiment_score) + (diction_val*10) + (pace_val*10))/3
 
         return jsonify(
             {
                 "user_speech": text,
                 "user_sentiments": sentiments,
-                "score": score,
+                "total_score": total_score,
+                "diction_score": diction_val,
+                "pace_score": pace_val,
+                "sentiment_score": sentiment_score,
                 "tone_data": pitch_values,
                 "tone_times": pitch_times,
                 "audio_length": audio_length,
