@@ -2,12 +2,10 @@ let popupElement;
 let items;
 let selectedIndex
 let popupVisibility = false
-
 var searchInput
 var optionsList
-
 var sidenavCard
-
+let filteredItems = [];
 
 function isUserOnPC() {
     // Get the user agent string
@@ -34,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
    // Event listener for input events on the search bar
 searchInput.addEventListener('input', filterOptions);
+
+filterOptions()
+
+
 });
 
 
@@ -47,12 +49,12 @@ document.addEventListener('keydown', function(event) {
     if (popupVisibility){
     if (event.key === 'ArrowUp') {
         event.preventDefault(); // Prevent default behavior (scrolling)
-        if (selectedIndex > 0) {
+        if (filteredItems.includes(selectedIndex-1)) {
             selectItem(selectedIndex - 1);
         }
     } else if (event.key === 'ArrowDown') {
         event.preventDefault(); // Prevent default behavior (scrolling)
-        if (selectedIndex < items.length - 1) {
+        if (filteredItems.includes(selectedIndex+1)) {
             selectItem(selectedIndex + 1);
         }
     }
@@ -70,6 +72,10 @@ document.addEventListener('keydown', function(event) {
 
 
 });
+
+
+
+
 
 
 function goTo(option){
@@ -94,7 +100,14 @@ function goTo(option){
         
     }
 
+    
+    if(filteredItems.length != 0){
+        document.getElementById("shortcut-desc").textContent = "Try navigating to"
     selectItem(filteredItems[0]);
+    }
+    else{
+        document.getElementById("shortcut-desc").textContent = "No results found"
+    }
 }
 
 

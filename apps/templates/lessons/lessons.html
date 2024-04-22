@@ -300,12 +300,29 @@
   
 
 </style> {% endblock %} {% block content %} <div class="container-fluid py-4">
+
+
   <div class="row mb-4">
-    <div class="col-12">
+    <div class="col-md-6"> <!-- Left column for text -->
       <h1 class="fw-bold">Lessons</h1>
       <p>With Volume, tailoring your lessons was always part of the plan!</p>
     </div>
+  
+    <div class="col-md-3 offset-md-2 mb-3 text-end"> <!-- Adjusted width column for card and aligned to the right -->
+      <div class="card lesson-card tutorial-card text-center" style="background-color: #f0f4f7;"> <!-- Use a light background to stand out -->
+        <div class="card-body">
+          <p class="card-text">Get to know your way around with a quick guide.</p>
+          <a href="/practice/0-1"><button class="btn btn-sm btn-primary" id="start-tutorial-btn">Start Tutorial</button></a> <!-- Reduced size button -->
+        </div>
+      </div>
+    </div>
   </div>
+  
+  
+  
+  
+  
+
   <div class="row justify-content-center mb-5">
     <div class="col-md-6">
       <div class="card mb-4 text-center">
@@ -328,18 +345,37 @@
     <!-- Lessons Cards -->
     <div class="row justify-content-center mb-5">
       <div class="col-lg-12">
-        <div class="card">
+        <div class="tab-group-2" role="group">
+          <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#lessons-tab">Lessons</button>
+          <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#progress-tab">Progress</button>
+      </div>
+
+        <div class="card tab-pane-2" id="lessons-tab">
           <div class="card-body">
             <h5 class="card-title"></h5>
             <br>
             <div class="challenge-item">
-              <div id="lessons-display" class="row"></div>
+              <!-- <button class="btn btn-primary" id="beginner-btn">Beginner</button>
+              <button class="btn btn-primary" id="intermediate-btn">Intermediate</button>
+              <button class="btn btn-primary" id="advanced-btn">Advanced</button> -->
+
+              <div class="tab-group-1" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#beginner-tab">Beginner</button>
+                <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#intermediate-tab">Intermediate</button>
+                <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#advanced-tab">Advanced</button>
+            </div>
+
+              <div id="lessons-display" class="row">
+
+              </div>
+
             </div>
           </div>
         </div>
+
       </div>
       <!-- Volume Spectrum Card -->
-      <div class="row justify-content-around mb-4">
+      <div class="row justify-content-around mb-4 tab-pane-2" id="progress-tab">
         <div class="col-md-6">
           <div class="card mb-4 text-center">
             <div class="card-body d-flex flex-column" style="height: 400px;">
@@ -365,4 +401,5 @@
         </div> {% include "includes/footer.html" %}
       </div> {% endblock %} {% block javascripts %}
       <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
-      <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>{% endblock %}
+      <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
+      {% endblock %}
