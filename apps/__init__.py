@@ -10,6 +10,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -36,7 +37,8 @@ def register_blueprints(app):
         "profilepage",
         "privacypolicy",
         "acknowledgements",
-        "contact"
+        "contact",
+        "access-api"
     ):
         module = import_module("apps.{}.routes".format(module_name))
         app.register_blueprint(module.blueprint, name=module_name)
@@ -74,6 +76,7 @@ from apps.authentication.oauth import github_blueprint
 def create_app(config):
     """Application factory to create Flask app instances with given configs."""
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
