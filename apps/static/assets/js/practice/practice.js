@@ -11,6 +11,8 @@ let lesson_num
 let paceChart
 let attitudeChart
 let audio_length
+let pace_val
+let diction_val
 
 
 // Tutorial related elements
@@ -53,7 +55,6 @@ tutData = {1:["Hi, I'm Speako! I'm going to teach you how to use Volume.", scena
 6:["Volume will then process your recording and give you your results!", scenarioDescElement, 0.7, 0.9],
 7:["Okay! That's all. You can retry the tutorial again in the lessons page!", null]
 }
-
 
 recordButton.addEventListener('click', handleRecording);
 toggleBlinking(recordButton)
@@ -296,6 +297,8 @@ function processData(data){
   user_speech = data['user_speech']
   scenario_score = data['score']
   audio_length = data['audio_length']
+  pace_val = data['pace_val']
+  diction_val = data['diction_val']
 }
 
 
@@ -396,14 +399,14 @@ function endScenario(){
 
   scenarioViewElement.style.display = "none";
   scenarioResultsElement.style.display = "block";
-  scenarioScoreElement.innerText = "Score: " + scenario_score.toFixed(1).toString() + "/10";
+  scenarioScoreElement.innerText = scenario_score.toFixed(1).toString() + "/10";
   
-console.log(user_sentiments)
-console.log(tone_data)
 
   // These functions should create new chart instances with the latest data
   populateAttitudeChart(user_sentiments);
   populateToneChart(tone_data); // Make sure this function is updated to use the latest data
+  populatePaceBar(pace_val)
+  populateDictionBar(diction_val)
 }
 
 
@@ -713,6 +716,7 @@ Array.from(small_buttons).forEach(function(button) {
             .then(response => response.blob())
             .then(blob => {
                 sendRecording(blob)
+                audio.currentTime = 0
             })
             .catch(error => console.error('Error fetching image blob:', error));
     });
@@ -936,4 +940,25 @@ function prevTut(){
   updateTutData(dialogueCount)
 }
 
+
+function populatePaceBar(value) {
+  // Calculate the percentage
+  var percentage = value * 100;
+
+  // Update the progress bar width and text
+  var progressBar = document.getElementById('progress-bar-pace');
+  progressBar.style.width = percentage + '%';
+  progressBar.innerText = (percentage/10).toFixed(1) + '/10';  // Display value out of 10
+}
+
+
+function populateDictionBar(value) {
+  // Calculate the percentage
+  var percentage = value * 100;
+
+  // Update the progress bar width and text
+  var progressBar = document.getElementById('progress-bar-diction');
+  progressBar.style.width = percentage + '%';
+  progressBar.innerText = (percentage/10).toFixed(1) + '/10';  // Display value out of 10
+}
 

@@ -47,7 +47,10 @@
             <h4>Return Values</h4>
             <p>Upon sending the MP3 file and expected sentiments, the API returns the following information:</p>
             <ul>
-                <li><strong>score:</strong> A score out of 10, indicating the overall quality of the speech in terms of meeting the expected sentiments. Example: <code>5.7</code></li>
+              <li><strong>sentiment_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of meeting the expected sentiments. Example: <code>8.4</code></li>
+              <li><strong>pace_score:</strong> A score out of 10, indicating the overall pace or speed of the speech. Higher scores suggest a faster pace, while lower scores suggest a slower pace. Example: <code>5.7</code></li>
+              <li><strong>diction_score:</strong> A score out of 10, indicating the overall quality of the word choice and vocabulary used in the speech. Higher scores suggest more effective and appropriate use of language, while lower scores suggest poorer word choice and bad grammar. Example: <code>4.5</code></li>              
+                <li><strong>total_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of overall speech. Example: <code>9.0</code></li>
                 <li><strong>tone_data:</strong> An array of tone data points indicating the pitch variations in the speech. Example: <code>[0, 60, 50, ...]</code></li>
                 <li><strong>tone_times:</strong> An array of tone times indicating the time stamps for the pitch variations in the speech. Example: <code>[0, 0.25, 0.5, ...]</code></li>
                 <li><strong>user_sentiments (SamLowe's Model):</strong> An array of objects representing the actual emotional content of the speech. Each object contains a <code>label</code> indicating the sentiment label (e.g., "caring") and a <code>score</code> indicating the sentiment score ranging from 0 to 1. Example:</li>
