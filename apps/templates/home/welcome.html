@@ -105,9 +105,20 @@
       <img src="{{ url_for('static', filename='assets/img/audio-waves-light.svg') }}" alt="Volume Logo" class="logo">
       <h1 class="fade-in custom-font">Volume!</h1>
       <p class="lead fade-in-delay">Your path to confident speaking starts here.</p>
-      <a href="/login" class="btn btn-primary btn-entrance">Get Started</a>
+      <!-- <a href="/login" class="btn btn-primary btn-entrance">Get Started</a> -->
     </div>
   </div>
 </div>
+
+
+<script>
+      function redirectToAnotherPage() {
+      // Change the href attribute to the new page URL
+      window.location.href = "/index";
+    }
+
+    // Call redirectToAnotherPage function after 1 second
+    setTimeout(redirectToAnotherPage, 3000); // 1000 milliseconds = 1 second
+</script>
 
 {% endblock content %}
