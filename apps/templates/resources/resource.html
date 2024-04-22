@@ -345,28 +345,33 @@
         <div class="featured-section">
             <div class="subsection-title">FEATURED</div>
             <div class="featured-links-container">
-                <!-- Large box on the left-->
+                <!-- Large box on the left for the most favorited item -->
+                {% if top_resources|length > 0 %}
                 <div class="featured-link-box large-box">
-                    <img src="/static/assets/img/pb-images/pb4.jpg" class="featured-image">
-                    <a href="https://icebreakerspeech.com/public-speaking-quotes/" class="featured-link"
-                        target="_blank">
-                        50 Inspiring Public Speaking Quotes to Help You Conquer Your Fear
+                    <img src="{{ top_resources[0].image_url }}" class="featured-image">
+                    <a href="{{ top_resources[0].link }}" class="featured-link" target="_blank">
+                        {{ top_resources[0].name }}
                     </a>
                 </div>
-                <!-- Wrapper for the two smaller boxes on the right-->
+                {% endif %}
+                <!-- Wrapper for the two smaller boxes on the right -->
                 <div class="small-boxes-wrapper">
+                    {% if top_resources|length > 1 %}
                     <div class="featured-link-box small-box">
-                        <img src="/static/assets/img/pb-images/pb1.jpg" class="featured-image">
-                        <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link"
-                            target="_blank">
-                            16 Science-Based Public Speaking Tips To Be a Master Speaker </a>
-                    </div>
-                    <div class="featured-link-box small-box">
-                        <img src="/static/assets/img/pb-images/pb3.jpg" class="featured-image">
-                        <a href="https://www.scienceofpeople.com/stage-fright/" class="featured-link" target="_blank">
-                            Stage Fright: How to Overcome It in 7 Easy Steps
+                        <img src="{{ top_resources[1].image_url }}" class="featured-image">
+                        <a href="{{ top_resources[1].link }}" class="featured-link" target="_blank">
+                            {{ top_resources[1].name }}
                         </a>
                     </div>
+                    {% endif %}
+                    {% if top_resources|length > 2 %}
+                    <div class="featured-link-box small-box">
+                        <img src="{{ top_resources[2].image_url }}" class="featured-image">
+                        <a href="{{ top_resources[2].link }}" class="featured-link" target="_blank">
+                            {{ top_resources[2].name }}
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
