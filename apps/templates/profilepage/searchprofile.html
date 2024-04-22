@@ -1,0 +1,66 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Search Profile {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">Search for a Profile</h1>
+            <p>Find a profile by entering the username below.</p>
+            <div class="input-group mb-3" style="height:40px;">
+                <input type="text" id="profileSearchInput" style="height:40px;" class="form-control" placeholder="Search for users">
+                <button class="btn btn-primary" id="searchButton">Search</button>
+              </div>
+              <ul id="searchResults" class="list-group mb-3">
+                <!-- Search results will be dynamically added here -->
+
+              </ul>
+        </div>
+    </div>
+</div>
+            
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  // Function to handle search
+  function searchUsers() {
+    var profileSearchInput = document.getElementById('profileSearchInput').value;
+
+
+    // Send AJAX request to Flask endpoint
+    $.ajax({
+        url: '/profilepage/<user_id>',  // Update with correct user_id
+        method: 'POST',
+        data: {searchTerm: profileSearchInput},
+        success: function(response) {
+            var searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = ''; // Clear previous search results
+
+            // Append search results to the list
+            response.forEach(function(user) {
+                var listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = user.username;
+                searchResults.appendChild(listItem);
+            });
+        }
+    });
+}
+
+// Event listener for search button click
+document.getElementById('searchButton').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    searchUsers();
+});
+</script>
+<script src="{{ config.ASSETS_ROOT }}/js/profilepage/profilepage.js"></script>
+{% endblock javascripts %}

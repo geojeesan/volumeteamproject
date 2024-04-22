@@ -547,67 +547,25 @@ function speakText(text) {
 }
 
 // Function to create and show the popup
-function showPopup(message) {
-  // Create popup element
-  var popup = document.createElement('div');
-  popup.id = 'popup';
-  popup.textContent = message;
-
-  // Apply styles
-  popup.style.position = 'absolute';
-  popup.style.backgroundColor = '#f9f9f9';
-  popup.style.border = '1px solid #ccc';
-  popup.style.padding = '15px';
-  popup.style.zIndex = '1';
-  popup.style.borderRadius = '10px';
-
-  // Position the popup near the link
-  var linkRect = document.getElementById('profile-link').getBoundingClientRect();
-  popup.style.top = (linkRect.top) + 'px';
-  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
-
-  // Append to body
-  document.body.appendChild(popup);
-
-  // Function to hide popup
-  function hidePopup() {
-      popup.parentNode.removeChild(popup);
-  }
-
-  // Hide popup when mouse leaves link or popup
-  popup.addEventListener('mouseleave', hidePopup);
-  document.getElementById('profile-link').addEventListener('mouseleave', hidePopup);
-
-  return hidePopup;
-}
-
-// Add event listener to profile link
-document.getElementById('profile-link').addEventListener('mouseenter', function() {
-
-      // Show popup if user is not authenticated
-      showPopup('You need to be signed in to access the Profile Page');
-
-});
-
-// Function to create and show the popup
 function showPopup2(message) {
   // Create popup element
   var popup = document.createElement('div');
   popup.id = 'popup';
   popup.textContent = message;
+  popup.classList.add('shadow');
 
   // Apply styles
   popup.style.position = 'absolute';
-  popup.style.backgroundColor = '#f9f9f9';
-  popup.style.border = '1px solid #ccc';
+  popup.style.backgroundColor = '#ffffff';
   popup.style.padding = '15px';
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
+  popup.style.zIndex = '9999';
 
   // Position the popup near the link
   var linkRect = document.getElementById('lesson-link').getBoundingClientRect();
   popup.style.top = (linkRect.top) + 'px';
-  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width) + 'px';
 
   // Append to body
   document.body.appendChild(popup);
@@ -628,7 +586,7 @@ function showPopup2(message) {
 document.getElementById('lesson-link').addEventListener('mouseenter', function() {
 
       // Show popup if user is not authenticated
-      showPopup2('You need to be signed in to access the Lessons Page');
+      showPopup2('You must be signed in to access the Lessons Page');
 
 });
 
@@ -638,19 +596,20 @@ function showPopup3(message) {
   var popup = document.createElement('div');
   popup.id = 'popup';
   popup.textContent = message;
+  popup.classList.add('shadow');
 
   // Apply styles
   popup.style.position = 'absolute';
-  popup.style.backgroundColor = '#f9f9f9';
-  popup.style.border = '1px solid #ccc';
+  popup.style.backgroundColor = '#ffffff';
   popup.style.padding = '15px';
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
+  popup.style.zIndex = '9999';
 
   // Position the popup near the link
   var linkRect = document.getElementById('feedback-link').getBoundingClientRect();
   popup.style.top = (linkRect.top) + 'px';
-  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width) + 'px';
 
   // Append to body
   document.body.appendChild(popup);
@@ -671,7 +630,7 @@ function showPopup3(message) {
 document.getElementById('feedback-link').addEventListener('mouseenter', function() {
 
       // Show popup if user is not authenticated
-      showPopup3('You need to be signed in to access the Feedback Page');
+      showPopup3('You must be signed in to access the Feedback Page');
 
 });
 
@@ -681,19 +640,20 @@ function showPopup4(message) {
   var popup = document.createElement('div');
   popup.id = 'popup';
   popup.textContent = message;
+  popup.classList.add('shadow');
 
   // Apply styles
   popup.style.position = 'absolute';
-  popup.style.backgroundColor = '#f9f9f9';
-  popup.style.border = '1px solid #ccc';
+  popup.style.backgroundColor = '#ffffff';
   popup.style.padding = '15px';
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
+  popup.style.zIndex = '9999';
 
   // Position the popup near the link
   var linkRect = document.getElementById('favorites-link').getBoundingClientRect();
   popup.style.top = (linkRect.top) + 'px';
-  popup.style.left = (linkRect.left + linkRect.width - 60) + 'px';
+  popup.style.left = (linkRect.left + linkRect.width) + 'px';
 
   // Append to body
   document.body.appendChild(popup);
@@ -714,6 +674,6 @@ function showPopup4(message) {
 document.getElementById('favorites-link').addEventListener('mouseenter', function() {
 
       // Show popup if user is not authenticated
-      showPopup4('You need to be signed in to access the Favorites Page');
+      showPopup4('You must be signed in to access the Favorites Page');
 
 });

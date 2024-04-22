@@ -15,21 +15,20 @@ function viewProfile(username) {
 
 // Function to handle search
 function searchUsers() {
-  var searchInput = document.getElementById('searchInput').value;
-  var username = 'hassan';
+  var profileSearchInput = document.getElementById('profileSearchInput').value;
 
   // Check if search input is empty
-  if (!searchInput.trim()) {
-    var searchResults = document.getElementById('searchResults');
-    searchResults.innerHTML = '<p style="color: red;">Please enter a search term</p>';
-    return; // Exit the function early if search input is empty
-  }
+  // if (!searchInput.trim()) {
+  //   var searchResults = document.getElementById('searchResults');
+  //   searchResults.innerHTML = '<p style="color: red;">Please enter a search term</p>';
+  //   return; // Exit the function early if search input is empty
+  // }
 
   // Send AJAX request to Flask endpoint
   $.ajax({
-      url: '/profilepage/' + username,  // Dynamically generate URL with the correct user ID
+      url: '/searchUser',  // Dynamically generate URL with the correct user ID
       method: 'POST',
-      data: {searchTerm: searchInput},
+      data: {searchTerm: profileSearchInput},
       success: function(response) {
           var searchResults = document.getElementById('searchResults');
           searchResults.innerHTML = ''; // Clear previous search results
@@ -59,19 +58,7 @@ function searchUsers() {
   });
 }
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   fetch('/profile-user-progress')
-//       .then(response => response.json())
-//       .then(data => {
-        
-//           document.getElementById('user-lessons-completed').textContent = data.user_lessons_completed;
-//           document.getElementById('user-lessons-in-progress').textContent = data.user_lessons_in_progress;
-//           document.getElementById('user-level_progress').textContent = data.user_level_progress.toFixed(0) + '%';
-//       })
-//       .catch(error => {
-//           console.error('Error fetching user progress:', error);
-//       });
-//     });
+
     
 // Event handler for viewing user profile
 function viewUserProfile(event) {

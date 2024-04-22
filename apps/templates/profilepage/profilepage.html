@@ -365,7 +365,7 @@
             </div>
             <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
               <div class="input-group mb-3" style="height:40px;">
-                <input type="text" id="searchInput" style="height:40px;" class="form-control" placeholder="Search for users">
+                <input type="text" id="profileSearchInput" style="height:40px;" class="form-control" placeholder="Search for users">
                 <button class="btn btn-primary" id="searchButton">Search</button>
               </div>
               <ul id="searchResults" class="list-group mb-3">
@@ -679,13 +679,13 @@
 <script>
   // Function to handle search
   function searchUsers() {
-    var searchInput = document.getElementById('searchInput').value;
+    var searchInput = document.getElementById('profileSearchInput').value;
 
     // Send AJAX request to Flask endpoint
     $.ajax({
-        url: '/profilepage/<user_id>',  // Update with correct user_id
+        url: '/searchUser',  // Update with correct user_id
         method: 'POST',
-        data: {searchTerm: searchInput},
+        data: {searchTerm: profileSearchInput},
         success: function(response) {
             var searchResults = document.getElementById('searchResults');
             searchResults.innerHTML = ''; // Clear previous search results
