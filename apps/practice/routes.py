@@ -4,7 +4,7 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
 from flask import request, jsonify
-from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress, Profile
+from apps.models import db, Lesson, SubLesson, UserScenarioProgress, UserProgress, Profile, ApiKeys
 from speech_recognition import UnknownValueError
 import speech_recognition as sr
 import traceback
@@ -15,6 +15,7 @@ import parselmouth
 import numpy as np
 import time
 import base64
+import json
 
 current_lesson = None
 user_sentiments = None
@@ -147,7 +148,7 @@ def calculate_score(scenario_num, lesson, sentiments, expected_sentiments=None):
 
     # Process sentiments (remaining logic stays the same)
     formatted_user_sentiments = {}
-    for sentiment in sentiments:
+    for sentiment in sentiments[0]:
         if "label" in sentiment and "score" in sentiment:
             formatted_user_sentiments[sentiment["label"]] = sentiment["score"]
 
@@ -155,14 +156,19 @@ def calculate_score(scenario_num, lesson, sentiments, expected_sentiments=None):
     for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
         user_sentiment_score = formatted_user_sentiments.get(exp_sentiment_label, 0)
         difference = abs(exp_sentiment_score - user_sentiment_score)
-
+                
         if first_item:
-            score -= difference
+            score -= difference 
             first_item = False
         else:
             score += max(0, 0.2 - difference)  
-
-    return max(score, 0) * 10
+            
+            
+    final = max(score, 0) * 10
+    
+    if final > 10:
+        final = 10
+    return final
 
 
 def transcribe_text(new_path):
@@ -471,11 +477,18 @@ def get_segment(request):
 def analyze_speech_api():
     try:
         file = request.files.get("file")
-        expected_sentiments = request.form.get("expected_sentiments", type=dict)
+        
+        expected_sentiments_str = request.form.get("expected_sentiments")
+        expected_sentiments = json.loads(expected_sentiments_str)
+     
         api_key = request.form.get("api_key")
         
-        print(expected_sentiments, api_key)
-
+        api_key_entry = ApiKeys.query.filter_by(api_key=api_key).first()
+        if not api_key_entry:
+            return jsonify({"success": False, "message": "Invalid API key"})
+        
+        
+        # return jsonify("test")
 
         new_path = get_wav_path(file)
 
@@ -517,9 +530,6 @@ def analyze_speech_api():
         # Assuming your existing functions to calculate score and update progress...
         score = calculate_score(None, None, sentiments, expected_sentiments=expected_sentiments)
 
-
-        # Update user's data after scenario completion.
-        UserProgress.update_progress(current_user.id)
 
         return jsonify(
             {

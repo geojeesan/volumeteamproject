@@ -197,9 +197,12 @@
     </div>
 
     <div class="text-center mt-4">
-    <button class="btn btn-primary btn-sm mb-0" onclick="retryScenario()">Retry</button>
-    <button class="btn btn-primary btn-sm mb-0" id="next-scenario-btn">Next Scenario</button>
+      <button class="btn btn-primary btn-sm mb-0" id="prev-scenario-btn" style="margin-right: 1%;pointer-events: none;opacity: 0.5;">Prev Scenario</button>
+    <button class="btn btn-primary btn-sm mb-0" onclick="retryScenario()" style="margin-right: 1%;">Retry</button>
+    <button class="btn btn-primary btn-sm mb-0" id="next-scenario-btn" style="margin-right: 1%;">Next Scenario</button>
   </div>
+
+  <h2 class="fw-bold text-center" style="margin-top:2%;visibility: hidden;" id="scenarios-complete">Scenarios Complete</h2>
 
 </div>
 
