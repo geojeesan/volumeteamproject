@@ -16,7 +16,8 @@ import numpy as np
 import time
 import base64
 import json
-import language_tool_python
+import re
+
 
 current_lesson = None
 user_sentiments = None
@@ -238,36 +239,101 @@ def get_wav_path(file):
     sound.export(new_path, format="wav")
     return new_path
 
+def levenshtein_distance(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_distance(s2, s1)
 
-# Initialize the language tool
-tool = language_tool_python.LanguageTool('en-US')
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1
+            deletions = current_row[j] + 1
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+
+        previous_row = current_row
+
+    return previous_row[-1]
+
+def levenshtein_similarity(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_similarity(s2, s1)
+
+    if len(s2) == 0:
+        return 0.0
+
+    max_length = max(len(s1), len(s2))
+    distance = levenshtein_distance(s1, s2)
+
+    similarity = 1 - (distance / max_length)
+    return max(similarity, 0.0)  # Ensure similarity is not negative
+
 
 def calculate_diction_score(text):
-    # Get matches (grammar errors) in the text
-    matches = tool.check(text)
     
+    
+    API_URL = "https://api-inference.huggingface.co/models/pszemraj/flan-t5-large-grammar-synthesis"
+    headers = {"Authorization": "Bearer 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"}
+
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+        
+    def attempt_query():
+        return query(
+            {
+                "inputs": text,
+            }
+        )
 
     
-    # Tokenize the text to count the number of words
-    words = text.split()
+    output = attempt_query()
+    num_attempts = 1
+    # We will attempt 5 times, with each attempt waiting 3 times more than the last one.
+    while "error" in output and num_attempts < 5:
+        time.sleep(2 * num_attempts)
+        num_attempts += 1
+        output = attempt_query()
     
-    print("errors:", len(matches))
-    print("text:", text)
+    if num_attempts > 5:
+        return None
+
     
+    words = output[0]["generated_text"]
+    
+    
+    # Remove all symbols from output and make it lowercase
+    # words = re.sub(r'[^a-zA-Z\s]', '', words).lower()
+    # text = re.sub(r'[^a-zA-Z\s]', '', text).lower()
+    
+    
+        
     # Calculate the number of grammar errors
-    grammar_errors_index = len(matches)/len(words)
+    grammar_errors_index = levenshtein_similarity(text, words)
     
-    total_word_length = sum(len(word) for word in words)
+    
+    print(grammar_errors_index, text)
+    print(words)
+    
+    total_word_length = sum(len(word) for word in words.split(" "))
     
     # Calculate the average word length
     if len(words) != 0:
-        average_word_length = total_word_length / len(words)
+        average_word_length = total_word_length / len(words.split(" "))
     else:
         average_word_length = 0
         
+    print((average_word_length/6), average_word_length)
+        
     # Calculate the score based on grammar errors and word count
     # You can adjust the weights for grammar errors and word count based on your preference
-    score = 100 * (1-grammar_errors_index)  * (average_word_length/6)
+    score = 100 * (grammar_errors_index)  * (average_word_length/6)
     
     # Maximum possible score
     max_score = 100
@@ -385,6 +451,18 @@ def analyze_speech():
 
         sentiments = get_sentiments(text)
         diction_val = calculate_diction_score(text)
+        
+        if not diction_val:
+                    return (
+                jsonify(
+                    {
+                        "error": "Failed to get diction from the analysis API. Please try again",
+                        "code": 309,
+                    }
+                ),
+                400,
+            )
+            
 
         if not sentiments or "error" in sentiments:
             return (
@@ -602,8 +680,8 @@ def analyze_speech_api():
                 "user_speech": text,
                 "user_sentiments": sentiments,
                 "total_score": total_score,
-                "diction_score": diction_val,
-                "pace_score": pace_val,
+                "diction_score": diction_val*10,
+                "pace_score": pace_val*10,
                 "sentiment_score": sentiment_score,
                 "tone_data": pitch_values,
                 "tone_times": pitch_times,
