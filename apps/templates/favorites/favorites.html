@@ -9,7 +9,7 @@
         background-color: #f4f1f8;
     }
     .container {
-        width: 90%;  /* Main container width */
+        width: 90%;  
         margin: auto;
         color: #4A274F;
     }
@@ -17,7 +17,7 @@
         margin-bottom: 40px;
         padding-bottom: 40px;
         border-bottom: 2px solid #EDE7F6;
-        display: none; /* Initially hide all sections */
+        display: none; 
     }
     .content-container {
         width: 90%;
@@ -80,34 +80,40 @@
         margin-bottom: 50px;
         margin-left: 5%;
     }
-    .navigation a {
+    .navigation button, button[type="submit"], button[type="button"] {
         display: inline-block;
-        background-color: var(--button-bg); /* Using variable for button background */
-        color: var(--button-text); /* Using variable for text color */
+        background-color: var(--button-bg); 
+        color: var(--button-text); 
         padding: 10px 20px;
-        font-size: 1.2em;
+        font-size: 1.0em;
+        border: none;
         border-radius: 5px;
         text-decoration: none;
         transition: background-color 0.3s;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        margin-right: 10px; 
     }
-    .navigation a:hover {
-        background-color: var(--button-hover-bg); /* Using variable for hover background */
-        text-decoration: none; /* No underline on hover */
+    .navigation button:hover, button[type="submit"]:hover, button[type="button"]:hover {
+        background-color: var(--button-hover-bg); 
+        text-decoration: none; 
+    }
+    .navigation button.active {
+        border: 2px solid #ffffff; 
     }
     :root {
         --container-bg: #ffffff;
         --text-color: #12174c;
-        --button-bg: #c4a1e4; /* Light purple background */
-        --button-text: #ffffff; /* White text for buttons */
-        --button-hover-bg: #8449ac; /* Slightly darker purple on hover */
+        --button-bg: #ACAACC; 
+        --button-text: #ffffff; 
+        --button-hover-bg: #8449ac; 
     }
     body.dark-page {
         --container-bg: #404B69;
         --text-color: #d7d7d7;
-        --button-bg: #404B69; /* Darker purple for dark mode */
-        --button-text: #d7d7d7; /* Light text for dark mode */
-        --button-hover-bg: #8a8b8f; /* Even darker purple for hover state in dark mode */
+        --button-bg: #404B69; 
+        --button-text: #d7d7d7; 
+        --button-hover-bg: #8a8b8f; 
     }
     form {
         display: flex;
@@ -115,26 +121,27 @@
         margin-bottom: 20px;
     }
     input[type="text"] {
-        width: 30%;  /* Adjusted width */
+        width: 30%;  
         padding: 10px;
         margin-right: 10px;
         border: 2px solid #ccc;
         border-radius: 5px;
+        color: var(--text-color); 
     }
-    button {
-        width: 7%;  /* Adjusted width to match the input field's height */
-        padding: 10px 0px;  /* Adjust padding to maintain aspect */
-        background-color: var(--button-bg);  /* Using variable for background */
-        color: var(--button-text); /* Using variable for text color */
+    button[type="submit"] {
+        width: 7%;  
+        padding: 10px 0px;  
+        background-color: var(--button-bg);  
+        color: var(--button-text); 
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 1em;  /* Ensure text size is appropriate */
+        font-size: 1em;  
         transition: background-color 0.3s;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
-    button:hover {
-        background-color: var(--button-hover-bg);  /* Using variable for hover background */
+    button[type="submit"]:hover {
+        background-color: var(--button-hover-bg);  
     }
 </style>
 {% endblock stylesheets %}
@@ -144,15 +151,15 @@
 <div class="container-fluid py-4">
     <h1>Favorites</h1>
     <p>Review all your favorite resources collected here.</p>
-     <!-- Search Form -->
      <form method="GET" action="/favorites">
         <input type="text" name="search" placeholder="Search favorites..." autocomplete="off">
         <button type="submit">Search</button>
+        <button type="button" onclick="window.location.href='/favorites';">Clear</button>
     </form>
     <div class="navigation">
-        <a href="javascript:void(0);" onclick="showSection('favorite-articles')">Articles</a>
-        <a href="javascript:void(0);" onclick="showSection('favorite-videos')">Videos</a>
-        <a href="javascript:void(0);" onclick="showSection('favorite-expert-insights')">Expert Insights</a>
+        <button onclick="showSection('favorite-articles')" data-target="favorite-articles">Articles</button>
+        <button onclick="showSection('favorite-videos')" data-target="favorite-videos">Videos</button>
+        <button onclick="showSection('favorite-expert-insights')" data-target="favorite-expert-insights">Expert Insights</button>
     </div>
     <div id="favorites-sections">
         <section id="favorite-articles" style="display:block;">
@@ -224,12 +231,17 @@
 {% block javascripts %}
 <script>
 function showSection(sectionId) {
-    // Hide all sections
+    
     document.querySelectorAll('section').forEach(function(section) {
         section.style.display = 'none';
     });
-    // Show the requested section
     document.getElementById(sectionId).style.display = 'block';
+    document.querySelectorAll('.navigation button').forEach(button => {
+        button.classList.remove('active');
+        if (button.getAttribute('data-target') === sectionId) {
+            button.classList.add('active');
+        }
+    });
 }
 </script>
 {% endblock %}
