@@ -125,21 +125,25 @@ def convert_lesson_to_dict(lesson, user_id=None):
     return lesson_dict
 
 
-def calculate_score(scenario_num, lesson, sentiments):
+def calculate_score(scenario_num, lesson, sentiments, expected_sentiments=None):
     score = 1
-    scenarios = sorted(
-        lesson.scenarios, key=lambda x: x.id
-    )  # Sort scenarios by ID for consistent ordering
+    
+    if not scenario_num or not lesson:
+        expected_sentiments = expected_sentiments
+    else:
+        scenarios = sorted(
+            lesson.scenarios, key=lambda x: x.id
+        )  # Sort scenarios by ID for consistent ordering
 
-    # Convert scenario_num from 1-based to 0-based index for Python list indexing
-    index = scenario_num - 1
+        # Convert scenario_num from 1-based to 0-based index for Python list indexing
+        index = scenario_num - 1
 
-    if index >= len(scenarios) or index < 0:
-        raise ValueError("Scenario number out of range.")
+        if index >= len(scenarios) or index < 0:
+            raise ValueError("Scenario number out of range.")
 
-    scenario_data = scenarios[index]
+        scenario_data = scenarios[index]
 
-    expected_sentiments = scenario_data.expected_sentiments
+        expected_sentiments = scenario_data.expected_sentiments
 
     # Process sentiments (remaining logic stays the same)
     formatted_user_sentiments = {}
@@ -455,3 +459,83 @@ def get_segment(request):
 
     except:
         return None
+
+
+
+
+
+
+
+# For public API calls
+@blueprint.route("/api/analyze_speech", methods=["POST"])
+def analyze_speech_api():
+    try:
+        file = request.files.get("file")
+        expected_sentiments = request.form.get("expected_sentiments", type=dict)
+        api_key = request.form.get("api_key")
+        
+        print(expected_sentiments, api_key)
+
+
+        new_path = get_wav_path(file)
+
+        pitch_variability, pitch_values, pitch_times = analyze_tone(new_path)
+
+        pitch_values = list(pitch_values)
+        pitch_times = list(pitch_times)
+
+        audio_length = get_audio_length(new_path)
+
+        try:
+            text = transcribe_text(new_path)
+        except UnknownValueError:
+            os.remove(new_path)  # Clean up even in case of transcription failure
+            return (
+                jsonify(
+                    {
+                        "error": "Speech recognition could not understand the audio. Please try again.",
+                        "code": 209,
+                    }
+                ),
+                400,
+            )
+        os.remove(new_path)  # Clean up after successful transcription
+
+        sentiments = get_sentiments(text)
+
+        if not sentiments or "error" in sentiments:
+            return (
+                jsonify(
+                    {
+                        "error": "Failed to get sentiments from the analysis API. Please try again",
+                        "code": 309,
+                    }
+                ),
+                400,
+            )
+
+        # Assuming your existing functions to calculate score and update progress...
+        score = calculate_score(None, None, sentiments, expected_sentiments=expected_sentiments)
+
+
+        # Update user's data after scenario completion.
+        UserProgress.update_progress(current_user.id)
+
+        return jsonify(
+            {
+                "user_speech": text,
+                "user_sentiments": sentiments,
+                "score": score,
+                "tone_data": pitch_values,
+                "tone_times": pitch_times,
+                "audio_length": audio_length,
+            }
+        )
+    except Exception as e:
+        traceback.print_exc()
+        return (
+            jsonify(
+                {"error": "An unknown error occurred", "code": 500, "details": str(e)}
+            ),
+            500,
+        )
