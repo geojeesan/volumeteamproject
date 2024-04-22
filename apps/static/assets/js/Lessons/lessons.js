@@ -1,4 +1,10 @@
 let lastAccessedLessonId = null;
+var beginnerTab
+var intermediateTab
+var advancedTab 
+var beginnerLessonsButton
+var intermediateLessonsButton
+var advancedLessonsButton
 
 // To be accessed by the search bar
 let lessonsArray = []
@@ -7,7 +13,6 @@ let lessonsArray = []
 document.addEventListener('DOMContentLoaded', function() {
 	fetchLastLesson().then(() => {
 		fetchAllLessons().then(() => {
-			insertTutorialCard();
 			updateLessonsCompletion();
 			updatePerformanceProgressBars();
 		});
@@ -23,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.log('Next scenario button clicked');
 		});
 	}
+
+
 });
 
 async function fetchLastLesson() {
@@ -175,6 +182,8 @@ function displayLessons(lessons) {
     const intermediateContainer = createDifficultyContainer('Intermediate');
     const advancedContainer = createDifficultyContainer('Advanced');
 
+
+
     // Append the containers to the main container
     lessonsContainer.appendChild(beginnerContainer);
     lessonsContainer.appendChild(createDivider());
@@ -192,16 +201,56 @@ function displayLessons(lessons) {
             displayLesson(lesson, advancedContainer);
         }
     });
+
+	setupTabs()
 }
 
 function createDifficultyContainer(difficulty) {
     const container = document.createElement('div');
     container.className = `lessons-${difficulty.toLowerCase()}`;
+
+	container.classList.add("tab-pane-1")
+
+	container.id = difficulty.toLowerCase() + "-tab"
     const title = document.createElement('h4');
-    title.innerText = `${difficulty} Lessons:`;
+    // title.innerText = `${difficulty} Lessons`;
     container.appendChild(title);
+	console.log("Created", container.id)
     return container;
+
+	
 }
+
+
+
+
+function setupTabs(){
+
+    $('.tab-group-1 button[data-target]').on('click', function(){
+        var target = $(this).data('target');
+        // Make all buttons clickable and fully opaque
+        $('.tab-group-1 button[data-target]').removeClass('unclickable').css('opacity', '1');
+        // Make the clicked button unclickable and set opacity to 0.5
+        $(this).addClass('unclickable').css('opacity', '0.5');
+        $('.tab-pane-1').addClass('d-none');
+        $(target).removeClass('d-none');
+    });
+
+	$('.tab-group-2 button[data-target]').on('click', function(){
+        var target = $(this).data('target');
+        // Make all buttons clickable and fully opaque
+        $('.tab-group-2 button[data-target]').removeClass('unclickable').css('opacity', '1');
+        // Make the clicked button unclickable and set opacity to 0.5
+        $(this).addClass('unclickable').css('opacity', '0.5');
+        $('.tab-pane-2').addClass('d-none');
+        $(target).removeClass('d-none');
+    });
+
+	// Select first tab from each group
+    $('.tab-group-1 button[data-target]:first').trigger('click');
+    $('.tab-group-2 button[data-target]:first').trigger('click');
+}
+
 
 function createDivider() {
     const divider = document.createElement('hr');
@@ -436,31 +485,7 @@ function populateSentimentSkillChart(sentimentData) {
 	});
 }
 
-function insertTutorialCard() {
-    const lessonsContainer = document.getElementById('lessons-display');
-    
-    const tutorialButtonContainer = document.createElement('div');
-    tutorialButtonContainer.className = 'col-12 mb-4'; // Adjust classes for consistent spacing
-    tutorialButtonContainer.innerHTML = `
-        <div class="card lesson-card tutorial-card text-center" style="background-color: #f0f4f7;"> <!-- Use a light background to stand out -->
-            <div class="card-body">
-                <h5 class="card-title" style="color: #305097;">🌟 Start Here: Tutorial 🌟</h5> <!-- Add some emoji for visual appeal -->
-                <p class="card-text">Get to know your way around with a quick guide.</p>
-                <button class="btn btn-primary" id="start-tutorial-btn">Start Tutorial</button>
-            </div>
-        </div>
-    `;
 
-    // Prepend the tutorial button to the beginning of the lessonsContainer
-    lessonsContainer.prepend(tutorialButtonContainer);
-
-    // Event listener for the tutorial button
-    const startTutorialBtn = document.getElementById('start-tutorial-btn');
-    startTutorialBtn.addEventListener('click', function() {
-        // Navigate to the tutorial when this button is clicked
-        window.location.href = '/practice/0-1';
-    });
-}
 function grayOutChartArea() {
     const canvas = document.getElementById("sentimentSkillChart");
     const ctx = canvas.getContext("2d");
@@ -493,3 +518,6 @@ function grayOutSentimentsProgressContainer() {
     // Apply consistent styles to the container
     container.classList.add('grayed-out-message'); // Adding a class for styling
 }
+
+
+

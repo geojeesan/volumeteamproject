@@ -88,6 +88,8 @@
   }
 }
 
+
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -4812,6 +4814,12 @@ textarea.form-control-lg {
   border-color: var(--bs-accordion-btn-focus-border-color);
   outline: 0;
   box-shadow: var(--bs-accordion-btn-focus-box-shadow);
+}
+
+
+.unclickable {
+  pointer-events: none; /* Make the button unclickable */
+  opacity: 0.5; /* Set opacity to 0.5 */
 }
 
 .accordion-header {
