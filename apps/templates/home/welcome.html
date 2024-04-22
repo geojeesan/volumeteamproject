@@ -1,0 +1,113 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:400,400i,700,700i" rel="stylesheet">
+<style> 
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Rest of your CSS */
+
+.logo-background {
+  width: 170px; /* This should be larger than the logo size */
+  height: 170px; /* This should be larger than the logo size */
+  background-color: white;
+  border-radius: 50%; /* This makes it a circle */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0; /* Ensures that it's behind the logo but above the background */
+  top: calc(50% - 138px); /* Increase the pixel value to move the circle up more */
+}
+
+.logo {
+  position: relative;
+  z-index: 1; /* Ensures the logo is above the white circle */
+  max-width: 120px; /* Adjust size as needed */
+  margin-bottom: 50px;
+  opacity: 0; /* Make sure the logo is fully visible */
+  animation: fadeInRotate 2s ease forwards; /* Adjust time as needed */
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.fade-in-delay {
+  animation: fadeIn 1.5s ease-out;
+  animation-delay: 0.5s; /* Starts this animation after the h1 */
+  animation-fill-mode: both; /* Keeps the style properties set by the last keyframe */
+}
+
+.btn-entrance {
+  animation: fadeIn 2s ease-out;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and transform */
+}
+
+.btn-entrance:hover {
+    background-color: #ff7e5f; /* New color for hover state */
+    transform: translateY(-3px); /* Slight lift effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+.container {
+  background-color: transparent; /* Optional: Adds a slight white overlay to increase text readability over background */
+}
+
+.custom-font {
+    font-family: "Alegreya Sans SC", sans-serif;
+    font-size: 70px; /* Increased font size for more visibility */
+    font-weight: bold; /* Make it bold */
+    text-transform: uppercase; /* UPPERCASE lettering for more impact */
+    text-shadow: 2px 2px 4px #000000; /* Add a subtle shadow to lift the text off the background */
+    margin-bottom: 40px; /* Space below the title */
+    transition: transform 0.3s ease-in-out; /* Smooth transformation on hover */
+}
+
+.custom-font:hover {
+    transform: scale(1.05); /* Slightly larger scale on hover */
+}
+
+
+@keyframes fadeInRotate {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+
+
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-8 text-center">
+      <div class="logo-background"></div> <!-- White circle behind the logo -->
+      <img src="{{ url_for('static', filename='assets/img/audio-waves-light.svg') }}" alt="Volume Logo" class="logo">
+      <h1 class="fade-in custom-font">Volume!</h1>
+      <p class="lead fade-in-delay">Your path to confident speaking starts here.</p>
+      <a href="/login" class="btn btn-primary btn-entrance">Get Started</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
