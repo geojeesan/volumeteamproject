@@ -32,7 +32,7 @@
 }
 
 .custom-radio:checked:after {
-  background-color: #9162cf;
+  background-color: #9391c1;
 }
 
 #feedbackMessage {
@@ -57,7 +57,10 @@
 
         .rating > input:checked ~ label:before,
         .rating > input:checked ~ label ~ label:before {
-            color: #9162cf; /* Filled star color */
+          color: #9391c1; /* Filled star color */
+        }
+        .rating > label:focus {
+           outline: none; /* Remove outline when label is clicked */
         }
 
   .main-content {
@@ -235,15 +238,15 @@
   {% endwith %}
   <div class="row mb-30">
     <div class="col-12">
-      <h1>Share your Feedback</h1>
-      <h4>Your Voice Shapes Our Volume: Elevating Speaking Skills Together!</h4>
-      <h6>The Volume feedback page is your platform to voice your opinions, helping us enhance your speaking skills experience through collaboration and continuous improvement.</h6>
+      <h2>Share your Feedback</h2>
+      <h4>Your Voice Shapes Our Volume: Elevating Speaking Skills Together</h4>
+      <p>Your feedback is invaluable to us in continually enriching your learning experience!</p>
     </div>
   </div>
 </div>
 
 <div class="container-fluid py-4">
-  <div class="col-12">
+  <div class="col-11">
     <div class="card mb-4">
       <div class="card-body">
 
@@ -253,11 +256,6 @@
       
 
         <h6>a) How would you rate your overall experience with Volume?</h6>
-        <style>
-          .no-outline {
-            outline: none;
-          }
-        </style>
           <div class="rating">
             <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
             <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
@@ -476,35 +474,6 @@
 
 {% block javascripts %}
 <script src="{{ url_for('static', filename='assets/js/feedback/feedback.js') }}"></script>
-
-<script>
-  let lastClickedRadioButton = null;
-  let lastClickTimestamp = null;
-
-  function handleClick(radioButton) {
-    const currentClickTimestamp = Date.now();
-    if (radioButton === lastClickedRadioButton && currentClickTimestamp - lastClickTimestamp < 500) {
-      // Prevent the default action if the same radio button is clicked again within 500ms
-      event.preventDefault();
-    } else {
-      lastClickedRadioButton = radioButton;
-      lastClickTimestamp = currentClickTimestamp;
-    }
-  }
-</script>
-
-<script>
-  document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {
-      radio.addEventListener('click', function() {
-          if (this.previousValue === this.value) {
-              this.checked = false;
-              this.previousValue = null;
-          } else {
-              this.previousValue = this.value;
-          }
-      });
-  });
-</script>
 
 
 <script>
