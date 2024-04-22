@@ -3,7 +3,7 @@
 from apps.home import blueprint
 from flask import render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import CheckConstraint
+from sqlalchemy import CheckConstraint, union_all, desc, select
 from apps import db
 from flask_login import login_required, current_user
 from flask import redirect, url_for
@@ -19,8 +19,28 @@ def resources():
         current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
     else:
         current_base64_encoded_image = None
-    
-    return render_template('resources/resource.html', segment='resources', current_base64_encoded_image=current_base64_encoded_image)
+
+    # Fetch the top 10 of each type based on favorite count
+    articles = Article.query.order_by(desc(Article.favorite_count)).limit(10).all()
+    videos = Video.query.order_by(desc(Video.favorite_count)).limit(10).all()
+    expert_insights = ExpertInsight.query.order_by(desc(ExpertInsight.favorite_count)).limit(10).all()
+
+    # Combine lists and sort by favorite_count
+    combined_resources = articles + videos + expert_insights
+    sorted_resources = sorted(combined_resources, key=lambda x: x.favorite_count, reverse=True)[:3]
+
+    # Prepare data for template
+    top_resources = [{
+        'name': resource.name,
+        'link': resource.link,
+        'image_url': resource.image_url
+    } for resource in sorted_resources]
+
+    return render_template('resources/resource.html', 
+                           segment='resources',
+                           current_base64_encoded_image=current_base64_encoded_image,
+                           top_resources=top_resources)
+
 
 @blueprint.route('/api/articles')
 def get_articles():
@@ -228,6 +248,8 @@ def all_expert_insights():
         current_base64_encoded_image = None
     UserActionLog.log_user_action('Viewed Expert Insights')
     return render_template('resources/expert_insights_all.html', expert_insights=expert_insights_data, segment='expert_insights_all', current_base64_encoded_image=current_base64_encoded_image)
+
+#----------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------------------------------------------
 # Function to toggle favorite
