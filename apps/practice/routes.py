@@ -148,7 +148,7 @@ def calculate_score(scenario_num, lesson, sentiments, expected_sentiments=None):
 
     # Process sentiments (remaining logic stays the same)
     formatted_user_sentiments = {}
-    for sentiment in sentiments:
+    for sentiment in sentiments[0]:
         if "label" in sentiment and "score" in sentiment:
             formatted_user_sentiments[sentiment["label"]] = sentiment["score"]
 
@@ -156,14 +156,19 @@ def calculate_score(scenario_num, lesson, sentiments, expected_sentiments=None):
     for exp_sentiment_label, exp_sentiment_score in expected_sentiments.items():
         user_sentiment_score = formatted_user_sentiments.get(exp_sentiment_label, 0)
         difference = abs(exp_sentiment_score - user_sentiment_score)
-
+                
         if first_item:
-            score -= difference
+            score -= difference 
             first_item = False
         else:
             score += max(0, 0.2 - difference)  
-
-    return max(score, 0) * 10
+            
+            
+    final = max(score, 0) * 10
+    
+    if final > 10:
+        final = 10
+    return final
 
 
 def transcribe_text(new_path):
