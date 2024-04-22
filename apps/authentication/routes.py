@@ -24,7 +24,10 @@ api = Api(blueprint)
 
 @blueprint.route("/")
 def route_default():
-    return redirect("/index")
+    if current_user.is_authenticated:
+        return redirect(url_for("home.index"))  # Redirect authenticated users to the main page
+    return render_template("home/welcome.html")  # Show welcome page to non-authenticated users
+
 
 
 # Login & Registration
