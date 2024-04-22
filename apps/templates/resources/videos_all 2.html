@@ -1,0 +1,160 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Videos{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+    .container {
+        margin: auto;
+        text-align: left;
+    }
+
+    h1 {
+        text-align: left;
+    }
+
+    .list-container {
+        margin-top: 20px;
+    }
+
+    .link-container {
+        display: flex;
+        align-items: flex-start;
+        background-color: var(--container-bg); /* Use theme-based background */
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-image img {
+        width: 200px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 15px;
+    }
+
+    .video-info h2 {
+        font-size: 1em;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+    }
+
+    .video-info p {
+        font-size: 0.9em;
+        margin: 5px 0;
+        text-align: left;
+    }
+
+    .video-info a {
+        color: var(--text-color); /* Adjusts based on theme */
+        text-decoration: none;
+    }
+
+    .video-info a:hover {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .favorite-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for contrast */
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        padding: 3px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .favorite-count {
+        margin-right: 5px;
+        font-size: 1em;
+        color: #12174c; /* Text color based on theme */
+    }
+
+    .favorite-button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .favorite-button i {
+        color: #12174c; /* Icon color based on theme */
+        transition: color 0.3s ease-in-out;
+    }
+
+    .favorite-button.active i {
+        color: #12174c; /* Highlight color when active */
+    }
+
+    /* Theme variables */
+    :root {
+        --container-bg: #ffffff; /* White background for light mode */
+        --text-color: #12174c; /* Dark blue text for light mode */
+    }
+
+    body.dark-page {
+        --container-bg: #404B69; /* Dark blue background for dark mode */
+        --text-color: #d7d7d7; /* Light gray text for dark mode */
+    }
+
+    hr {
+        border: 0;
+        height: 2px;
+        width: 90%;
+        margin: 50px 50px;
+        opacity: 0.1;
+    }
+
+</style>
+
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Videos</h1>
+    <div class="list-container">
+        {% for video in videos %}
+        <div class="link-container">
+            {% if video.image_url %}
+            <div class="video-image">
+                <img src="{{ video.image_url }}" alt="{{ video.name }}">
+            </div>
+            {% endif %}
+            <div class="video-info">
+                <h2><a href="{{ video.link }}" target="_blank">{{ video.name }}</a></h2>
+                <p>{{ video.description }}</p>
+                <p>Time to Complete: {{ video.time_to_completion }}utes</p>
+                <p>Content Level: {{ video.content_level }}</p>
+            </div>
+            <div class="favorite-container" onclick="toggleFavorite('{{ video.id }}', 'videos', this);">
+                <span class="favorite-count">{{ video.favorite_count }}</span>
+                <button class="favorite-button {% if video.is_favorited %}active{% endif %}">
+                    <i class="{{ 'fas' if video.is_favorited else 'far' }} fa-heart"></i>
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <p>No videos found.</p>
+        {% endfor %}
+    </div>
+    <hr>
+</div>
+<hr>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
+{% endblock %}

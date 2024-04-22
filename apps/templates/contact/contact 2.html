@@ -1,0 +1,224 @@
+# {% extends 'layouts/base.html' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block stylesheets %}
+     
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px; /* Ensuring consistent font size */
+        }
+
+        textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            color: #ce37ad;
+        }
+
+        .faq {
+            margin-bottom: 20px;
+        }
+
+        .faq h5 {
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .faq p {
+            display: none;
+        }
+
+        .faq p.active {
+            display: block;
+        }
+
+        .faq li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-secondary mt-4" style="background-color: purple; color: white;">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; right: 2%; top: 35%;"></button>
+        {% for message in messages %}
+          <p style="top: 35%;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="fw-bold">Contact Us</h1>
+            <p>Let's get this conversation started. Tell us a bit about yourself, and we'll get in touch pretty soon!</p>
+          </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12">
+              <div class="card mb-4">
+                <div class="card-body">
+        <form id="contactForm" action="/submit_contact" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" style="color: black; background-color: white;" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" style="color: black; background-color: white;" name="email" required>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" style="color: black; background-color: white;" name="subject" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button id="contactbtn" class="btn btn-primary" onclick="validateForm()">Submit Input</button>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+<section id="faq">
+<div class="row">
+    <div class="col-lg-12">
+      <div class="card mb-4">
+        <div class="card-body">
+        <div class="faq">
+            <h4>Frequently Asked Questions</h4>
+            <ul>
+                <li>
+                    <h5>What is Volume? <span>&#9660;</span></h5>
+                    <p>Volume is a website designed to help individuals improve their speaking skills through interactive lessons, personalized feedback, and performance tracking.</p>
+                </li>
+                
+                <li>
+                    <h5>Is Volume accessible? <span>&#9660;</span></h5>
+                    <p>Yes, Volume offers both dark and light themes, as well as three different font sizes for accessibility.</p>
+                </li>
+                <li>
+                    <h5>Are there any fees for using Volume? <span>&#9660;</span></h5>
+                    <p>No, Volume is completely free to use for all users.</p>
+                </li>
+                <li>
+                    <h5>Can I customize my profile on Volume? <span>&#9660;</span></h5>
+                    <p>Yes, Volume allows users to customize their profiles with personal information, profile pictures, and preferences.</p>
+                </li>
+                <li>
+                    <h5>What resources are available on Volume? <span>&#9660;</span></h5>
+                    <p>Volume offers a comprehensive resource page with articles, videos, and expert insights tailored to users of all skill levels.</p>
+                </li>
+                <li>
+                    <h5>How can I provide feedback or share my concerns about Volume? <span>&#9660;</span></h5>
+                    <p>We value your input! Share your thoughts or concerns about Volume on our dedicated feedback page, helping us continue to improve and serve you better.</p>
+                </li>
+                
+            </ul>
+        </div>
+
+        <h4>Contact Information</h4>
+        <p>If you have any further questions or concerns, please don't hesitate to contact us:</p>
+        <ul>
+            <li>Ameer Firas Alhashemi: <a href="mailto:afa192@student.bham.ac.uk">afa192@student.bham.ac.uk</a></li>
+
+            <li>Geo Noel Jeesan: <a href="mailto:gnj224@student.bham.ac.uk">gnj224@student.bham.ac.uk</a></li>
+
+            <li>Jovin Joseph: <a href="mailto:jxj243@student.bham.ac.uk">jxj243@student.bham.ac.uk</a></li>
+
+            <li>Hassan AlJuboori: <a href="mailto:hga101@student.bham.ac.uk">hga101@student.bham.ac.uk</a></li>
+
+            <li>Maha F.M Adwan: <a href="mailto:mfa147@student.bham.ac.uk">mfa147@student.bham.ac.uk</a></li>
+
+            <li>Sajia Balkees Sayed: <a href="mailto:sbs255@student.bham.ac.uk">sbs255@student.bham.ac.uk</a></li>
+
+            <li>Adnan Alfatouhi Aljundi: <a href="mailto:axa1888@student.bham.ac.uk">axa1888@student.bham.ac.uk</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<div class="container-fluid py-4">
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const faqQuestions = document.querySelectorAll('.faq h5');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function () {
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('active');
+            });
+        });
+    });
+</script>
+{% endblock javascripts %}
+

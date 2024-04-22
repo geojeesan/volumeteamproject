@@ -1,0 +1,485 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Resources{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+    }
+
+    /* Applying dark and light themes */
+    body.light-page {
+        background-color: #d7d7d7; /* Light background for light mode */
+        color: #12174c; /* Dark blue text for light background */
+    }
+
+    body.dark-page {
+        background-color: #283149; /* Dark blue background for dark mode */
+        color: #d7d7d7; /* Light gray text for dark mode */
+    }
+
+    /* General style adjustments for buttons, links, and hover states */
+    .category-button, .scroll-btn, .view-all-btn {
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+    }
+
+
+    .category-button {
+        background-color: #ffffff; /* Default light background */
+        color: #12174c; /* Dark text */
+        border: 1px solid #12174c; /* Border uses the text color for contrast */
+        border-radius: 5px;
+        padding: 20px 30px;
+        margin: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    .category-button:hover, .category-button.active {
+        background-color: #ACAACC; 
+        color: #283149;
+    }
+
+    .category-button.active {
+        font-weight: bold;
+    }
+
+    .featured-section {
+        margin-top: 20px;
+        padding: 20px;
+        text-align: left;
+    }
+
+    .featured-links-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+
+    .featured-link-box {
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .large-box {
+        flex-basis: 60%;
+        /* Adjust based on desired size */
+        height: auto;
+    }
+
+    .small-boxes-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-basis: 35%;
+        gap: 20px;
+    }
+
+    .small-box {
+        flex: 1;
+        /* Each small box takes up half the height of the container */
+        /* Height will automatically adjust based on the content and the large box height */
+    }
+
+    .featured-image {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        border-radius: 10px;
+        opacity: 0.7;
+    }
+
+
+    .featured-link {
+        position: absolute;
+        /* Position the link absolutely within the box */
+        width: 30%;
+        /* Ensure the link covers the width of the box */
+        text-align: center;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        z-index: 2;
+    }
+
+    .featured-link:hover {
+        color: #ffffff;
+        text-decoration: underline;
+        font-weight: bolder;
+    }
+
+    hr {
+        border: 0;
+        height: 2px;
+        background-color: #000000;
+        width: 90%;
+        margin: 50px 50px;
+        opacity: 0.1;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-bottom: 15px;
+    }
+
+    .subsection-title {
+        font-size: 1.5em;
+        color: #12174c;
+        font-weight: bolder;
+        margin-right: 50px;
+    }
+
+    .view-all-btn {
+        font-size: 1em;
+        color: inherit;
+        text-decoration: underline;
+        padding: 5px 10px;
+        text-align: right;
+    }
+
+    .view-all-btn:hover {
+        color: inherit;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .scrollable-section {
+        display: flex;
+        align-items: top;
+        width: 100%;
+    }
+
+    
+
+    /* Styles for containers that need to be distinct from the background */
+    .scroll-item, .scroll-box, .featured-link-box {
+        background-color: #404B69; /* Dark blue for boxes in dark mode */
+        color: inherit; /* Light gray text in dark mode */
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 20px 0;
+        gap: 20px;
+        min-width: 190px;
+        min-height: 140px;
+    }
+
+    .scroll-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scroll-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: 200px;
+        min-height: 150px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        margin-right: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .scroll-item img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .scroll-item a {
+        margin-bottom: auto;
+        color: #12174c;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    .scroll-item a:hover {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .scroll-btn {
+        background-color: inherit; /* Dark blue background for buttons */
+        border: none;
+        font-size: 90px;
+        padding: 10px;
+        margin: 0 5px;
+        border-radius: 5px;
+    }
+
+    /* Adapting to dark theme */
+    body.dark-page .category-button, body.dark-page .scroll-btn, body.dark-page .view-all-btn{
+        background-color: #283149; /* Darker background for dark mode */
+        color: #d7d7d7; /* Light text for dark mode */
+    }
+
+    body.dark-page .scroll-item a, body.dark-page .time-to-complete, body.dark-page .subsection-title  {
+        color: #ffffff; /* Dark blue text for dark mode */
+    }
+
+    body.dark-page .category-button:hover, body.dark-page .category-button.active {
+        background-color: #404B69; /* Lighter purple for hover/active in dark mode */
+        color: #ffffff; /* White text for hover/active */
+    }
+
+    body.dark-page .scroll-item, body.dark-page .scroll-box, body.dark-page .featured-link-box {
+        background-color: #404B69; /* Consistent dark blue for all containers in dark mode */
+    }
+
+
+    .scroll-btn.left {
+        margin-right: 25px;
+    }
+
+    .scroll-btn.right {
+        margin-left: 20px;
+    }
+
+
+    .time-to-complete {
+        margin-bottom: 10px;
+        margin-right: 130px;
+        color: #12174c;
+        font-weight: bold;
+        padding: 5px;
+        font-size: 0.9em;
+    }
+
+
+    /* new changes */
+
+    .favorite-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        padding: 3px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .favorite-count {
+        margin-right: 5px;
+        font-size: 1em;
+        color: #12174c;
+    }
+
+    .favorite-button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .favorite-button i {
+        color: #12174c; /* Default non-favorite color */
+        transition: color 0.3s ease-in-out;
+    }
+
+    .favorite-button.active i {
+        color: #12174c; /* Favorite color */
+    }
+
+
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Page</title>
+    <script src="/static/assets/js/resource/resource.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold">Resources</h1>
+                <p>Explore our vast collection of resources to improve your public speaking and communication skills.
+                </p>
+            </div>
+        </div>
+
+        <!-- Featured Section -->
+        <div class="featured-section">
+            <div class="subsection-title">FEATURED</div>
+            <div class="featured-links-container">
+                <!-- Large box on the left-->
+                <div class="featured-link-box large-box">
+                    <img src="/static/assets/img/pb-images/pb4.jpg" class="featured-image">
+                    <a href="https://icebreakerspeech.com/public-speaking-quotes/" class="featured-link"
+                        target="_blank">
+                        50 Inspiring Public Speaking Quotes to Help You Conquer Your Fear
+                    </a>
+                </div>
+                <!-- Wrapper for the two smaller boxes on the right-->
+                <div class="small-boxes-wrapper">
+                    <div class="featured-link-box small-box">
+                        <img src="/static/assets/img/pb-images/pb1.jpg" class="featured-image">
+                        <a href="https://www.scienceofpeople.com/public-speaking-tips/" class="featured-link"
+                            target="_blank">
+                            16 Science-Based Public Speaking Tips To Be a Master Speaker </a>
+                    </div>
+                    <div class="featured-link-box small-box">
+                        <img src="/static/assets/img/pb-images/pb3.jpg" class="featured-image">
+                        <a href="https://www.scienceofpeople.com/stage-fright/" class="featured-link" target="_blank">
+                            Stage Fright: How to Overcome It in 7 Easy Steps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Articles Section -->
+        <div id="articles-section" class="articles-section">
+            <div class="section-header">
+                <span class="subsection-title">ARTICLES</span>
+                {% if current_user.is_authenticated %}
+                <a href="/articles/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all articles</a>
+                {% endif %}
+            </div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-level="beginner" data-section="articles"
+                    onclick="setCategoryActive(this)">Beginner</button>
+                <button class="category-button" data-content-level="intermediate" data-section="articles"
+                    onclick="setCategoryActive(this)">Intermediate</button>
+                <button class="category-button" data-content-level="advanced" data-section="articles"
+                    onclick="setCategoryActive(this)">Advanced</button>
+            </div>
+            <!-- Scrollable Container -->
+            <div class="scrollable-section">
+                <button class="scroll-btn left"
+                    onclick="scrollHorizontal('left', 'articles-scroll-container')">‹</button>
+                <div class="scroll-container" id="articles-scroll-container">
+                    <!-- Dynamic articles will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'articles-scroll-container')">›</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Videos Section -->
+        <div id="videos-section" class="videos-section">
+            <div class="section-header">
+                <span class="subsection-title">VIDEOS</span>
+                {% if current_user.is_authenticated %}
+                <a href="/videos/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all videos</a>
+                {% endif %}
+            </div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-level="beginner" data-section="videos"
+                    onclick="setCategoryActive(this)">Beginner</button>
+                <button class="category-button" data-content-level="intermediate" data-section="videos"
+                    onclick="setCategoryActive(this)">Intermediate</button>
+                <button class="category-button" data-content-level="advanced" data-section="videos"
+                    onclick="setCategoryActive(this)">Advanced</button>
+            </div>
+            <div class="scrollable-section">
+                <button class="scroll-btn left" onclick="scrollHorizontal('left', 'videos-scroll-container')">‹</button>
+                <div class="scroll-container" id="videos-scroll-container">
+                    <!-- Dynamic videos will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'videos-scroll-container')">›</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Expert Insights Section -->
+        <div id="expert-section" class="expert-insights-section">
+            <div class="section-header">
+                <span class="subsection-title">EXPERT INSIGHTS</span>
+                {% if current_user.is_authenticated %}
+                <a href="/expert/all" class="view-all-btn">VIEW ALL</a>
+                {% else %}
+                <a href="/login" class="view-all-btn">Sign In</a><a>to view all expert insights</a>
+                {% endif %}
+            </div>
+            <div class="category-buttons">
+                <button class="category-button" data-content-type="article" data-section="expert"
+                    onclick="setCategoryActive(this)">Articles</button>
+                <button class="category-button" data-content-type="video" data-section="expert"
+                    onclick="setCategoryActive(this)">Videos</button>
+            </div>
+            <div class="scrollable-section">
+                <button class="scroll-btn left" onclick="scrollHorizontal('left', 'expert-scroll-container')">‹</button>
+                <div class="scroll-container" id="expert-scroll-container">
+                    <!-- Dynamic expert insights will be injected here -->
+                </div>
+                <button class="scroll-btn right"
+                    onclick="scrollHorizontal('right', 'expert-scroll-container')">›</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div>
+            {% include "includes/footer.html" %}
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
+<!-- <script>
+    var isAuthenticated = {{ current_user.is_authenticated | tojson }};
+</script> -->
+{% endblock %}
