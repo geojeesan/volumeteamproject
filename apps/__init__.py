@@ -76,12 +76,15 @@ from apps.authentication.oauth import github_blueprint
 def create_app(config):
     """Application factory to create Flask app instances with given configs."""
     app = Flask(__name__)
+    
+    # Allow analyze_speech from any origin
     CORS(app)
+
+    
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
     # Register the GitHub OAuth blueprint with a URL prefix
-    app.register_blueprint(github_blueprint, url_prefix="/login")
     # Configure and initialize the database
     configure_database(app)
     return app

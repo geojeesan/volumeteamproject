@@ -76,6 +76,38 @@ document.getElementById('next-scenario-btn').addEventListener('click', function(
   // Increment the scenario number
   scenario_num += 1;
   updateScenario();
+
+  scenario_data_length = Object.keys(scenario_data).length;
+
+  document.getElementById('prev-scenario-btn').style.opacity = 1
+  document.getElementById('prev-scenario-btn').style.pointerEvents = 'auto'
+
+  if(scenario_num >= scenario_data_length){
+    document.getElementById('next-scenario-btn').textContent = "Back to lessons"
+    document.getElementById('scenarios-complete').style.visibility = 'visible'
+  }
+
+  console.log("scen num", scenario_num)
+});
+
+document.getElementById('prev-scenario-btn').addEventListener('click', function() {
+  // Increment the scenario number
+  scenario_num -= 1;
+
+  if(scenario_num != 0){
+  updateScenario();
+  }
+
+  document.getElementById('next-scenario-btn').textContent = "Next Scenario"
+  document.getElementById('scenarios-complete').style.visibility = 'hidden'
+  
+  if(scenario_num - 1 == 0){
+    document.getElementById('prev-scenario-btn').style.opacity = 0.5
+    document.getElementById('prev-scenario-btn').style.pointerEvents = 'none'
+  }
+
+  console.log("scen num", scenario_num)
+
 });
 
 // We will dynamically get the lesson num in the future using Flask's template system
@@ -397,13 +429,7 @@ function updateScenario() {
     scenarioViewElement.style.display = "block";
     scenarioResultsElement.style.display = "none";
   } else {
-    // If the next scenario doesn't exist, you might want to fetch new lesson data or handle the end of scenarios
-    console.log('No more scenarios. Consider fetching new lesson data or handling completion.');
-    displayCongratulationsPage();
-    // For example, you could call getLesson(lesson_num) to refresh or handle completion
-    // getLesson(lesson_num); // Uncomment or modify as needed
-    // Alternatively, display a completion message or navigate to another page
-    // displayCongratulationsPage(); // This is already your method for handling lesson completion
+    window.location.href = "/lessons"
   }
 }
 

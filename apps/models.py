@@ -432,3 +432,10 @@ class Feedback(db.Model):
     interface_design = db.Column(db.String(50))
 
 
+class ApiKeys(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    api_key = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    
+
+

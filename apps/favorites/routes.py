@@ -22,7 +22,6 @@ def favorites():
     if request.method == 'POST':
         resource_id = request.json['resource_id']
         resource_type = request.json['resource_type']
-        # Check if the resource is currently favorited
         favorite = UserFavorite.query.filter_by(
             user_id=current_user.id,
             resource_id=resource_id,
@@ -30,12 +29,10 @@ def favorites():
         ).first()
 
         if favorite:
-            # Unfavorite if already favorited
             db.session.delete(favorite)
             db.session.commit()
             return jsonify({'success': True, 'favorited': False})
         else:
-            # Favorite if not already favorited
             new_favorite = UserFavorite(
                 user_id=current_user.id,
                 resource_id=resource_id,
@@ -49,7 +46,6 @@ def favorites():
     current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
     current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8') if current_profile and current_profile.profile_picture else None
 
-    # Filter articles, videos, and expert insights based on the search query
     articles = Article.query.join(
         UserFavorite, (UserFavorite.resource_id == Article.id) & (UserFavorite.user_id == current_user.id)
     ).filter(UserFavorite.resource_type == 'articles',
@@ -74,7 +70,6 @@ def favorites():
 
 
     
-# Helper - Extract current page name from request
 def get_segment(request):
 
     try:
