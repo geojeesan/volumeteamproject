@@ -18,6 +18,7 @@ Flask-Minify==0.37
 
 Flask-Dance==7.0.0
 PyJWT==2.4.0
+flask_cors==4.0.0
 
 
 # New requirements
