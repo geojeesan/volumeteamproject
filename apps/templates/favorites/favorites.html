@@ -17,54 +17,55 @@
         margin-bottom: 40px;
         padding-bottom: 40px;
         border-bottom: 2px solid #EDE7F6;
+        display: none; /* Initially hide all sections */
     }
     .content-container {
-        width: 90%; /* Increase overall content width */
-        max-width: none; /* Removes the max width restriction */
-        margin: 0 auto; /* Centers the container horizontally */
+        width: 90%;
+        max-width: none;
+        margin: 0 auto;
         display: flex;
-        flex-wrap: wrap; /* Ensures that elements wrap */
-        justify-content: space-between; /* Distributes space evenly */
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
     .link-container {
         display: flex;
-        width: 32%; /* Adjusts the width for three items per row */
-        height: auto; /* Adjust height to fit content */
-        flex-direction: row; /* Align items in a row */
-        align-items: center; /* Center items vertically */
+        width: 32%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
         background-color: var(--container-bg);
         color: var(--text-color);
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 20px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        overflow: hidden; /* Ensures no overflow */
+        overflow: hidden;
     }
     .resource-image {
-        flex: 0 0 35%; /* Allocates 35% of the space to the image, does not grow or shrink */
-        padding-right: 10px; /* Adds spacing between the image and the text */
+        flex: 0 0 35%;
+        padding-right: 10px;
     }
     .resource-image img {
-        width: 100%; /* Uses 100% of the .resource-image div */
+        width: 100%;
         height: auto;
         object-fit: cover;
         border-radius: 20px;
     }
     .resource-info {
-        flex: 1; /* Takes up the remaining space */
+        flex: 1;
         display: flex;
-        flex-direction: column; /* Align text elements vertically */
-        justify-content: center; /* Center text elements */
-        text-align: left; /* Left align text */
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
     }
     .resource-info h2, .resource-info p {
-        margin: 4px 0; /* Reduced margin for compact view */
-        font-size: 0.8em; /* Smaller text size for better readability and space management */
+        margin: 4px 0;
+        font-size: 0.8em;
     }
     .resource-info a {
         color: var(--text-color);
         text-decoration: none;
-        font-size: 1.5em; /* Smaller link text size */
+        font-size: 1.5em;
     }
     .resource-info a:hover {
         text-decoration: underline;
@@ -73,7 +74,7 @@
     .navigation {
         display: flex;
         justify-content: flex-start;
-        gap: 50px; /* Spacing between links */
+        gap: 50px;
         text-align: left;
         margin-top: 50px;
         margin-bottom: 50px;
@@ -96,33 +97,50 @@
         --container-bg: #404B69;
         --text-color: #d7d7d7;
     }
-    :root {
-        --container-bg: #ffffff;
-        --text-color: #12174c;
+    form {
+        display: flex;
+        justify-content: left;
+        margin-bottom: 20px;
     }
-    body.dark-page {
-        --container-bg: #404B69;
-        --text-color: #d7d7d7;
+    input[type="text"] {
+        width: 30%;  /* Adjusted width */
+        padding: 10px;
+        margin-right: 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
     }
-</style>
+    button {
+        width: 7%;  /* Adjusted width to match the input field's height */
+        padding: 10px 0px;  /* Adjust padding to maintain aspect */
+        background-color: #a665e2;  /* Lighter purple color */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;  /* Ensure text size is appropriate */
+    }
+    button:hover {
+        background-color: #7412b6;  /* Slightly darker on hover */
+    }
 </style>
 {% endblock stylesheets %}
-
-
 
 {% block content %}
 <div class="container-fluid py-4">
     <h1>Favorites</h1>
     <p>Review all your favorite resources collected here.</p>
-    <div class="navigation">  
-        <a href="#favorite-articles" class="scroll-link">Articles</a>
-        <a href="#favorite-videos" class="scroll-link">Videos</a>
-        <a href="#favorite-expert-insights" class="scroll-link">Expert Insights</a>
+     <!-- Search Form -->
+     <form method="GET" action="/favorites">
+        <input type="text" name="search" placeholder="Search favorites..." autocomplete="off">
+        <button type="submit">Search</button>
+    </form>
+    <div class="navigation">
+        <a href="javascript:void(0);" onclick="showSection('favorite-articles')">Articles</a>
+        <a href="javascript:void(0);" onclick="showSection('favorite-videos')">Videos</a>
+        <a href="javascript:void(0);" onclick="showSection('favorite-expert-insights')">Expert Insights</a>
     </div>
     <div id="favorites-sections">
-        
-        <!-- Articles Section -->
-        <section id="favorite-articles">
+        <section id="favorite-articles" style="display:block;">
             <h2>Favorite Articles</h2>
             <div class="content-container" id="favorite-articles-container">
                 {% for article in articles %}
@@ -142,8 +160,6 @@
                 {% endfor %}
             </div>
         </section>
-
-        <!-- Videos Section -->
         <section id="favorite-videos">
             <h2>Favorite Videos</h2>
             <div class="content-container" id="favorite-videos-container">
@@ -164,8 +180,6 @@
                 {% endfor %}
             </div>
         </section>
-
-        <!-- Expert Insights Section -->
         <section id="favorite-expert-insights">
             <h2>Favorite Expert Insights</h2>
             <div class="content-container" id="favorite-expert-insights-container">
@@ -189,7 +203,18 @@
     </div>
 </div>
 <a href="#" id="back-to-top" title="Back to Top" style="display: none;">&#8679;</a>
-
 <div>{% include "includes/footer.html" %} 
 </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('section').forEach(function(section) {
+        section.style.display = 'none';
+    });
+    // Show the requested section
+    document.getElementById(sectionId).style.display = 'block';
+}
+</script>
 {% endblock %}
