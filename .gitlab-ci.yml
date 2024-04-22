@@ -29,7 +29,7 @@ lint:
 build:
   stage: build
   script:
-    - sudo apt install default-jdk
+    - sudo apt install -y default-jdk
 
 test:
   stage: test
