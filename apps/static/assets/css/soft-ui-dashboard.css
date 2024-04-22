@@ -2672,6 +2672,10 @@ textarea.form-control-lg {
   opacity: 0.5;
 }
 
+#text-to-speech .form-check, #navbar-fixed .form-check {
+  margin-top: -10px; /* adjust the value as needed */
+}
+
 .form-switch {
   padding-left: 3rem;
 }
@@ -21035,6 +21039,12 @@ p, .p {
   font-weight: 400;
   line-height: 1.6;
 }
+
+.p-size {
+  font-size: 13px; /* Set the font size to your preference */
+  line-height: 1.6; /* Recommended for readability */
+}
+
 
 .lead {
   font-size: 1.25rem;
