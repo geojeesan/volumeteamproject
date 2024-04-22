@@ -9,6 +9,14 @@ var optionsList
 var sidenavCard
 
 
+function isUserOnPC() {
+    // Get the user agent string
+    var userAgent = navigator.userAgent;
+
+    // Check if the user agent string contains "Windows", "Macintosh", or "Linux"
+    return /Windows|Macintosh|Linux/.test(userAgent);
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     // Get the popup element
@@ -20,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
    sidenavCard = document.getElementById("sidenavCard")
 
 
-   if (!isUserOnPc) {
+   if (!isUserOnPC()) {
     sidenavCard.style.display = "none"
    }
 
@@ -63,13 +71,6 @@ document.addEventListener('keydown', function(event) {
 
 });
 
-function isUserOnPC() {
-    // Get the user agent string
-    var userAgent = navigator.userAgent;
-
-    // Check if the user agent string contains "Windows", "Macintosh", or "Linux"
-    return /Windows|Macintosh|Linux/.test(userAgent);
-}
 
 function goTo(option){
     window.location.href = "/" + option
@@ -95,9 +96,6 @@ function goTo(option){
 
     selectItem(filteredItems[0]);
 }
-
-
-
 
 
 

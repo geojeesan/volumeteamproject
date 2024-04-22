@@ -1,0 +1,176 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+    
+    .container {
+        margin: auto;
+        text-align: left;
+    }
+
+    h1 {
+        text-align: left;
+    }
+
+    .list-container {
+        margin-top: 20px;
+    }
+
+    .link-container {
+        display: flex;
+        align-items: flex-start;
+        background-color: var(--container-bg); /* Use theme-based background */
+        color: var(--text-color); /* Use theme-based text color */
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    }
+
+    .article-image img {
+        width: 200px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 20px;
+        margin-right: 15px;
+    }
+
+    .article-info h2 {
+        font-size: 1em;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+    }
+
+    .article-info p {
+        font-size: 0.9em;
+        margin: 5px 0;
+        text-align: left;
+    }
+
+    .article-info a {
+        color: var(--text-color); /* Text color based on theme */
+        text-decoration: none;
+    }
+
+    .article-info a:hover {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .favorite-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for contrast */
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        padding: 3px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .favorite-count {
+        margin-right: 5px;
+        font-size: 1em;
+        color: #12174c; /* Text color based on theme */
+    }
+
+    .favorite-button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .favorite-button i {
+        color: #12174c; /* Icon color based on theme */
+        transition: color 0.3s ease-in-out;
+    }
+
+    .favorite-button.active i {
+        color: #12174c; /* Highlight color when active */
+    }
+
+    /* Theme variables */
+    :root {
+        --container-bg: #ffffff; /* White background for light mode */
+        --text-color: #12174c; /* Dark blue text for light mode */
+    }
+
+    body.dark-page {
+        --container-bg: #404B69; /* Dark blue background for dark mode */
+        --text-color: #d7d7d7; /* Light gray text for dark mode */
+    }
+    
+    hr {
+        border: 0;
+        height: 2px;
+        width: 90%;
+        margin: 50px 50px;
+        opacity: 0.1;
+    }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <script src="/static/assets/js/resource/resource.js" defer></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Articles</h1>
+            <div class="list-container">
+                {% for article in articles %}
+                <div class="link-container">
+                    <div class="article-image">
+                        {% if article.image_url %}
+                        <img src="{{ article.image_url }}" alt="{{ article.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="article-info">
+                        <h2><a href="{{ article.link }}" target="_blank">{{ article.name }}</a></h2>
+                        <p>{{ article.description }}</p>
+                        <p>Time to Complete: {{ article.time_to_completion }}utes</p>
+                        <p>Content Level: {{ article.content_level }}</p>
+                    </div>
+                    <div class="favorite-container" onclick="toggleFavorite('{{ article.id }}', 'articles', this)">
+                        <span class="favorite-count">{{ article.favorite_count }}</span>
+                        <button class="favorite-button {% if article.is_favorited %}active{% endif %}">
+                            <i class="{{ 'fas' if article.is_favorited else 'far' }} fa-heart"></i>
+                        </button>
+                    </div>
+
+                </div>
+                {% else %}
+                <p>No articles found.</p>
+                {% endfor %}
+            </div>
+            <hr>
+        </div>
+        <hr>
+    </body>
+
+</html>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ url_for('static', filename='assets/js/resource/resource.js') }}"></script>
+{% endblock %}
