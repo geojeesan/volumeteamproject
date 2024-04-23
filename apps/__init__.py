@@ -38,7 +38,8 @@ def register_blueprints(app):
         "privacypolicy",
         "acknowledgements",
         "contact",
-        "access-api"
+        "access-api",
+        "download-app"
     ):
         module = import_module("apps.{}.routes".format(module_name))
         app.register_blueprint(module.blueprint, name=module_name)
