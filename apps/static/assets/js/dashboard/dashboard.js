@@ -37,6 +37,7 @@ function formatTimestampToLocal(utcTimestamp) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = localStorage.getItem('theme') === 'dark';
+
     // Fetches and displays the leaderboard
     fetch('/leaderboard')
     .then(response => response.json())
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             usernameCell.innerHTML = usernameHtml;
 
             const scoreCell = row.insertCell();
-            scoreCell.textContent = user.score || '-';
+            scoreCell.textContent = (user.score && user.score !== '-') ? parseFloat(user.score).toFixed(1) : '-';            
             if (isDarkMode) {
                 scoreCell.classList.add('score', 'dark-page'); 
             }
