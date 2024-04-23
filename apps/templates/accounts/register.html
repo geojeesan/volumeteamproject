@@ -53,7 +53,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-5 text-center mx-auto">
-            <h1 class="text-white mb-2 mt-5 custom-font">Welcome!</h1>
+            <h1 class="text-white mb-0 mt-7 custom-font">Welcome!</h1>
           </div>
         </div>
       </div>
@@ -93,6 +93,7 @@
                     <p id="passwordCriteriaNumber">At least one number</p>
                     <p id="passwordCriteriaUpperCase">At least one uppercase letter</p>
                     <p id="passwordCriteriaLetter">At least one letter</p>
+                    <p id="passwordCriteriaSpecialChar">At least one special character</p>
                   </div>
                 </div>
                 <div class="mb-1">
@@ -124,12 +125,16 @@
     var hasUpperCase = /[A-Z]/.test(password);
     var hasNumber = /[0-9]/.test(password);
     var hasLetter = /[a-zA-Z]/.test(password);
+    var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Regular expression to match special characters
     var isValidLength = password.length >= 8;
     document.getElementById('passwordCriteriaLength').className = isValidLength ? 'valid' : 'invalid';
     document.getElementById('passwordCriteriaUpperCase').className = hasUpperCase ? 'valid' : 'invalid';
     document.getElementById('passwordCriteriaNumber').className = hasNumber ? 'valid' : 'invalid';
     document.getElementById('passwordCriteriaLetter').className = hasLetter ? 'valid' : 'invalid';
-    return isValidLength && hasUpperCase && hasNumber && hasLetter;
+    document.getElementById('passwordCriteriaSpecialChar').className = hasSpecialChar ? 'valid' : 'invalid'; // Update the class for special character criteria
+
+    
+    return isValidLength && hasUpperCase && hasNumber && hasLetter && hasSpecialChar;
   }
   
   document.addEventListener('DOMContentLoaded', function() {

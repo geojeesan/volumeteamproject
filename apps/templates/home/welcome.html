@@ -11,7 +11,6 @@
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-/* Keyframes for slide-down animation */
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
@@ -21,8 +20,6 @@
     transform: translateY(0);
   }
 }
-
-/* Keyframes for slide-up animation */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
@@ -35,23 +32,21 @@
 @media (min-width: 992px) {
   .col-lg-3 {
     flex: 0 0 auto;
-    max-width: 24%; /* Slightly less than 25% to fit 4 cards in a row with margin */
+    max-width: 24%; 
   }
 }
 
-/* Apply the animation to your navbar */
 .navbar {
   animation: slideDown 1.0s ease-out forwards;
 }
 
-/* Rest of your CSS */
 .card {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
-  width: auto; /* Adjust the width as necessary, auto will make it responsive */
-  min-height: 300px; /* You can set a minimum height */
+  width: auto; 
+  min-height: 300px; 
 }
 
 .card:hover {
@@ -59,29 +54,28 @@
 }
 
 .card-icon {
-  font-size: 2em; /* Adjust the size of the icons */
+  font-size: 2em; 
   margin: 15px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  height: 30px; /* Adjust size as needed */
+  height: 30px; 
   margin-top: 30px;
-  color: #ACAACC; /* Replace with your preferred icon color */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* This adds a shadow to the icon */
+  color: #ACAACC;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
-/* Additional style for hovering over cards */
 .card:hover .card-icon {
-  color: #502564; /* Darker shade for icon on hover */
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); /* Slightly larger shadow for a "lifted" effect */
+  color: #502564; 
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); 
 }
 
 .card-title {
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 15px;
-  color: #344767; /* Replace with your preferred text color */
+  color: #344767;
   font-family: 'Montserrat', sans-serif;
 
 
@@ -90,44 +84,32 @@
 .card-text {
   font-family: 'Montserrat', sans-serif;
   line-height: 24px;
-  color: #344767; /* Replace with your preferred text color */
+  color: #344767; 
 }
 
 .card-body {
   text-align: center;
-  padding: 30px; /* Increase padding inside the cards */
+  padding: 30px; 
+  
 }
-/* Add a negative margin to pull the card container upwards */
+
 .card-container {
-  margin-top: -100px; /* Adjust the value as needed to move the cards up */
+  margin-top: -100px;
   animation: slideUp 1.0s ease-out forwards;
 }
 
-/* Ensure the card isn't too close to the text above */
 .get-started-container {
-  margin-bottom:10px; /* Add some space below the Get Started button */
+  margin-bottom:10px; 
 }
 
-.logo-background {
-  width: 170px; /* This should be larger than the logo size */
-  height: 170px; /* This should be larger than the logo size */
-  background-color: white;
-  border-radius: 50%; /* This makes it a circle */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0; /* Ensures that it's behind the logo but above the background */
-  top: calc(50% - 138px); /* Increase the pixel value to move the circle up more */
-}
 
 .logo {
   position: relative;
-  z-index: 1; /* Ensures the logo is above the white circle */
-  max-width: 120px; /* Adjust size as needed */
+  z-index: 1; 
+  max-width: 120px; 
   margin-bottom: 50px;
-  opacity: 0; /* Make sure the logo is fully visible */
-  animation: fadeInRotate 2s ease forwards; /* Adjust time as needed */
+  opacity: 0; 
+  animation: fadeInRotate 2s ease forwards;
 }
 
 .fade-in {
@@ -136,41 +118,40 @@
 
 .fade-in-delay {
   animation: fadeIn 1.5s ease-out;
-  animation-delay: 0.5s; /* Starts this animation after the h1 */
-  animation-fill-mode: both; /* Keeps the style properties set by the last keyframe */
+  animation-delay: 0.5s; 
+  animation-fill-mode: both; 
 }
 
 .btn-entrance {
   animation: fadeIn 2s ease-out;
   animation-delay: 1s;
   animation-fill-mode: both;
-  transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and transform */
+  transition: background-color 0.3s, transform 0.3s; 
 }
 
 .btn-entrance:hover {
-    background-color: #ff7e5f; /* New color for hover state */
-    transform: translateY(-3px); /* Slight lift effect */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    background-color: #ff7e5f; 
+    transform: translateY(-3px); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .container {
-  background-color: transparent; /* Optional: Adds a slight white overlay to increase text readability over background */
+  background-color: transparent; 
 }
 
 .custom-font {
     font-family: "Alegreya Sans SC", sans-serif;
-    font-size: 70px; /* Increased font size for more visibility */
-    font-weight: bold; /* Make it bold */
-    text-transform: uppercase; /* UPPERCASE lettering for more impact */
-    text-shadow: 2px 2px 4px #000000; /* Add a subtle shadow to lift the text off the background */
-    margin-bottom: 40px; /* Space below the title */
-    transition: transform 0.3s ease-in-out; /* Smooth transformation on hover */
+    font-size: 70px; 
+    font-weight: bold; 
+    text-transform: uppercase; 
+    text-shadow: 2px 2px 4px #000000; 
+    margin-bottom: 40px; 
+    transition: transform 0.3s ease-in-out; 
 }
 
 .custom-font:hover {
-    transform: scale(1.05); /* Slightly larger scale on hover */
+    transform: scale(1.05); 
 }
-
 
 .section-heading {
   font-family: "Alegreya Sans SC", sans-serif;
@@ -179,13 +160,25 @@
   margin-bottom: 1rem;
 }
 
+.feedback-card-body {
+  text-align: center;
+  padding: 10px; 
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  padding-top: 50px;
+}
+
 .feedback-card {
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   font-family: 'Montserrat', sans-serif;
+  height: 400px; 
+  display: flex;
+  flex-direction: column;
 }
 
-/* Styling blockquotes */
+/* Existing styles for the blockquote */
 blockquote {
   position: relative;
   font-size: 1rem;
@@ -194,34 +187,67 @@ blockquote {
   background: #f9f9f9;
   border-left: 5px solid #507DBC;
   margin: 1.5rem 10px;
-  padding: 1.5rem;
+  padding: 1.5rem; 
+  height: 140px;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; 
+  -webkit-box-orient: vertical;
+}
+
+blockquote:before,
+blockquote:after {
+  color: #804e9d;
+  font-size: 3em; 
+  position: absolute;
+  z-index: 1;
 }
 
 blockquote:before {
-  content: '\201C'; /* Unicode for left double quote */
-  color: #507DBC;
-  font-size: 4em;
-  position: absolute;
-  left: 10px;
-  top: -10px;
+  content: '\201C'; 
+  top: -10px; 
+  left: 4px; 
 }
 
 blockquote:after {
-  content: '\201D'; /* Unicode for right double quote */
-  color: #507DBC;
-  font-size: 4em;
-  position: absolute;
-  right: 10px;
-  bottom: -10px;
+  content: '\201D'; 
+  bottom: -10px; 
+  right: 4px
 }
 
-blockquote-footer {
-  color: #555;
-  font-size: 0.85em;
+blockquote p {
+  position: relative;
+  z-index: 2; 
+  padding: 0 30px; 
 }
 
-.cite {
-  font-style: normal;
+/* Styling for the rating stars */
+.rating-stars ul {
+  list-style-type: none;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  display: inline-block;
+  color: #ffd700;
+}
+
+.rating-stars ul > li {
+  display: inline;
+  font-size: 1.5em; 
+  margin-right: 5px;
+}
+
+.card-section {
+  margin-bottom: 10px; 
+  max-height: 150px;
+}
+
+.user-info {
+  font-style: italic;
+  color: #344767; /
+}
+
+.user-title {
+  color: #707070; 
 }
 
 @keyframes fadeInRotate {
@@ -237,70 +263,6 @@ blockquote-footer {
         transform: scale(1) rotate(360deg);
     }
 }
-/* CSS classes for the carousel */
-.carousel {
-  position: relative;
-}
-
-.carousel-inner {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.carousel-item {
-  position: relative;
-  display: none;
-  align-items: center;
-  transition: transform 0.6s ease;
-}
-
-.carousel-item.active {
-  display: block;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-size: 100% 100%;
-}
-
-.carousel-control-prev {
-  left: 10px;
-}
-
-.carousel-control-next {
-  right: 10px;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-
-
-
 </style>
 
 {% endblock stylesheets %}
@@ -321,7 +283,6 @@ blockquote-footer {
 <div class="container">
   <div class="row justify-content-center align-items-center" style="height: 100vh;">
     <div class="col-md-8 text-center">
-      <div class="logo-background"></div> <!-- White circle behind the logo -->
       <img src="{{ url_for('static', filename='assets/img/audio-waves-light.svg') }}" alt="Volume Logo" class="logo">
       <h1 class="fade-in custom-font">Welcome to Volume!</h1>
       <p class="lead fade-in-delay">Discover your potential with our expert-guided speaking programs.</p>
@@ -336,7 +297,7 @@ blockquote-footer {
     <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
       <div class="card">
         <div class="card-icon">
-          <i class="fas fa-chalkboard-teacher"></i> <!-- Icon for Lessons -->
+          <i class="fas fa-chalkboard-teacher"></i> 
         </div>
         <div class="card-body">
           <h5 class="card-title">Master Public Speaking</h5>
@@ -348,7 +309,7 @@ blockquote-footer {
     <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
       <div class="card">
         <div class="card-icon">
-          <i class="fas fa-chart-line"></i> <!-- Icon for Dashboard -->
+          <i class="fas fa-chart-line"></i>
         </div>
         <div class="card-body">
           <h5 class="card-title">Your Progress Dashboard</h5>
@@ -360,7 +321,7 @@ blockquote-footer {
     <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
       <div class="card">
         <div class="card-icon">
-          <i class="fas fa-book-open"></i> <!-- Icon for Resources -->
+          <i class="fas fa-book-open"></i> 
         </div>
         <div class="card-body">
           <h5 class="card-title">Curated Resources</h5>
@@ -372,7 +333,7 @@ blockquote-footer {
     <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
       <div class="card">
         <div class="card-icon">
-          <i class="fas fa-comments"></i> <!-- Icon for Feedback -->
+          <i class="fas fa-comments"></i> 
         </div>
         <div class="card-body">
           <h5 class="card-title">Share Your Feedback</h5>
@@ -383,94 +344,85 @@ blockquote-footer {
   </div>
 </div>
 <section class="bg-light py-5 mt-7">
-<div class="container mt-5">
-  <div class="row text-center">
-    <div class="col-12">
-      <h2 class="section-heading ">User Feedback</h2>
-      <p class="lead">Hear from our users and how Volume has impacted their speaking journey.</p>
+  <div class="container mt-5">
+    <div class="row text-center">
+      <div class="col-12">
+        <h2 class="section-heading">User Feedback</h2>
+        <p class="lead">Hear from our users and how Volume has impacted their speaking journey.</p>
+      </div>
     </div>
-  </div>
-  <div class="row mt-4">
-<!-- Feedback Carousel -->
-<div class="container">
-  <div id="feedbackCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
+    <div class="row justify-content-center">
+
       <!-- Feedback Cards -->
-      <div class="carousel-item active">
-        <div class="row justify-content-center">
-          <!-- First Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"Volume has been transformative for my communication skills, especially in public speaking contexts."</p>
-                  <footer class="blockquote-footer">Michael Roberts, <cite title="Source Title">Professional Speaker</cite></footer>
-                </blockquote>
-              </div>
+      <div class="col-md-4">
+        <div class="feedback-card card my-3 mx-auto">
+          <div class="feedback-card-body">
+            <div class="rating-stars">
+              <ul>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+              </ul>
             </div>
-          </div>
-          <!-- Second Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"The lessons and resources are top-notch, and the community feedback is invaluable!"</p>
-                  <footer class="blockquote-footer">Samantha Lee, <cite title="Source Title">Conference Presenter</cite></footer>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-          <!-- Third Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"I love how each session is tailored. Seeing my progress over time is incredibly rewarding."</p>
-                  <footer class="blockquote-footer">Alex Johnson, <cite title="Source Title">Emerging Leader</cite></footer>
-                </blockquote>
-              </div>
-            </div>
+            <blockquote class="blockquote card-section">
+              <p class="mb-0">Volume has been transformative for my communication skills, especially in public speaking contexts.</p>
+            </blockquote>
+            <div class="user-info card-section font-weight-bold">Noor Majid Altmemi</div>
+            <div class="user-title card-section">Medical Student</div>
           </div>
         </div>
       </div>
-      <!-- Additional Feedback Cards -->
-      <!-- You can add more carousel-item blocks with additional feedback cards here -->
-      
+      <div class="col-md-4">
+        <div class="feedback-card card my-3 mx-auto">
+          <div class="feedback-card-body">
+            <div class="rating-stars">
+              <ul>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+              </ul>
+            </div>
+            <blockquote class="blockquote card-section">
+              <p class="mb-0">Joining Volume has significantly improved my ability to articulate my thoughts clearly and effectively in front of an audience.</p>
+            </blockquote>
+            <div class="user-info card-section font-weight-bold">Naya Hani Zeno</div>
+            <div class="user-title card-section">Law Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feedback-card card my-3 mx-auto">
+          <div class="feedback-card-body">
+            <div class="rating-stars">
+              <ul>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+                <li class="fa fa-star"></li>
+              </ul>
+            </div>
+            <blockquote class="blockquote card-section">
+              <p class="mb-0">The supportive environment and the quality of the resources provided have made learning not just effective but also enjoyable.</p>
+            </blockquote>
+            <div class="user-info card-section font-weight-bold">Abdullah Firas Alhashimi</div>
+            <div class="user-title card-section"> Mechanical Engineering student</div>
+          </div>
+        </div>
+      </div>      
     </div>
-    <!-- Next Button -->
-    <a class="carousel-control-prev" href="#feedbackCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <!-- Previous Button -->
-    <a class="carousel-control-next" href="#feedbackCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
   </div>
-</div>
 </section>
 
-<!-- Additional JavaScript for Carousel Functionality -->
 <script>
     function redirectToAnotherPage() {
-      // Change the href attribute to the new page URL
       window.location.href = "/index";
     }
-
-    // Call redirectToAnotherPage function after 1 second
-    // setTimeout(redirectToAnotherPage, 3000); // 1000 milliseconds = 1 second
-  // Activate the carousel
-  $('.carousel').carousel();
-
-  // Customize carousel behavior
-  $('#feedbackCarousel').on('slid.bs.carousel', function () {
-    // Optionally, add custom JavaScript to execute after each slide transition
-    console.log('Slide transition completed');
-  });
 </script>
-
-
 
 
 {% include "includes/footer-fullscreen.html" %}
