@@ -1,8 +1,5 @@
 # -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-# Relevant imports
+
 import os
 
 from flask import Flask
@@ -85,7 +82,5 @@ def create_app(config):
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
-    # Register the GitHub OAuth blueprint with a URL prefix
-    # Configure and initialize the database
     configure_database(app)
     return app
