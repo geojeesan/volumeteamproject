@@ -2,11 +2,6 @@
 $table-border-color: #55779a47;
 $primary-bg-dark: #283149;
 $secondary-bg-dark: #404B69;
-$background-color: #283149;
-$text-color: #d7d7d7;
-$dark-text-color: #d7d7d7;
-$light-text-color: #333;
-
 
 
 @mixin darkBackgroundColor() {
@@ -26,27 +21,11 @@ $light-text-color: #333;
     color: #fff !important;
 }
 
-@mixin apply-badge-style($background-color, $text-color) {
-    background-color: $background-color;
-    color: $text-color;
-  }
-  
 
 body {
     transition: background-color 200ms ease-in;
 }
 
-// Light Mode
-.light-text-color {
-    color: $light-text-color;
-  }
-  
-  // Score specific
-  .score-dark-mode {
-    @include darkBackgroundColor;
-    color: $dark-text-color;
-  }
-  
 body.dark-page {
     //Overwrite General Colors
     @include darkBackgroundColor;
@@ -79,18 +58,13 @@ body.dark-page {
 
     //Overwrite Card Styles
     .card, .card-header {
-        @include headingLikeTextColor();
         @include darkItemBackground;
     }
 
     //General heading color overwrite
-    h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1, p, .p {
+    h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1, {
         @include headingLikeTextColor;
     }
-
-    #badge-text, #user-level-text, #user-streak-text, #user-rank-text {
-        @include regularTextColor;
-      }
 
     //General text overwrite
     .text-dark {
@@ -120,37 +94,6 @@ body.dark-page {
 
         .dropdown-item:hover, .dropdown-item:focus {
             background-color: $secondary-bg-dark;
-        }
-    }
-
-    .badge-number, .leaderboard-badge-icon {
-        color: #ffffff; // for light mode
-        @include darkBackgroundColor; // for dark mode
-    }
-
-    .badge-level {
-        &-beginner, &-intermediate, &-advanced {
-            @include apply-badge-style($background-color, $text-color); // Set these variables for light mode
-        }
-        
-        // Define dark mode colors for badges
-        body.dark-page {
-            &.badge-level-beginner {
-                @include apply-badge-style(darken(#97D700, 20%), $text-color); // Darken for dark mode
-            }
-            &.badge-level-intermediate {
-                @include apply-badge-style(darken(#FFC107, 20%), $text-color);
-            }
-            &.badge-level-advanced {
-                @include apply-badge-style(darken(#ED5D5D, 20%), $text-color);
-            }
-        }
-    }
-
-    .score {
-        color: #000; // for light mode
-        body.dark-page & {
-            @include regularTextColor; // for dark mode
         }
     }
 
@@ -276,31 +219,10 @@ body.dark-page {
     .progress {
         background-color: #273047ab !important;
     }
-    
 
     //dark button styles{
     .btn-outline-dark{
         color: white;
         border-color: white;
     }
-
-    .badge-number {
-        color: #ffffff; // This will now only apply when dark mode is active
-    }
-
-    
-    .badge-level-beginner {
-        background-color: darken(#97D700, 20%); // Darker variant for dark mode
-    }
-    .badge-level-intermediate {
-        background-color: darken(#FFC107, 20%);
-    }
-    .badge-level-advanced {
-        background-color: darken(#ED5D5D, 20%);
-    }
-
-      
-    
-      
-
 }
