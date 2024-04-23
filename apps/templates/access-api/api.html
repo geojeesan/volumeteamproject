@@ -1,4 +1,8 @@
+{% if current_user.is_authenticated %}
 {% extends 'layouts/base.html' %}
+{% else %}
+{% extends 'layouts/base-fullscreen.html' %}
+{% endif %}
 
 {% block title %}API Documentation{% endblock %}
 
@@ -8,9 +12,31 @@
 {% endblock %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col-md-8">
+
+            
+            {% else %}
+            <div class="container position-sticky z-index-sticky top-1">
+                <div class="row">
+                  <div class="col-12">
+            
+                    {% include "includes/navigation-fullscreen.html" %}
+            
+                  </div>
+                </div>
+              </div>
+            
+                <div class="container-fluid">
+                    <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
+                        <span class="mask bg-gradient-primary opacity-6"></span>
+                      </div>
+                      <div class="card card-body blur shadow-blur mx-7 mt-n10 overflow-hidden">
+                        <div class="row gx-4">
+                          <div class="col-12">
+            {% endif %}
 
             <h1 class="fw-bold">API Documentation</h1>
 
@@ -18,12 +44,17 @@
             <hr style="border: 1px solid black;">
 
             <h2>API Key</h2>
-
+            {% if current_user.is_authenticated %}
             {% if api_key %}
             <p>Your API key: <span style="font-weight: bold;">{{ api_key.api_key }}</span></p>
             {% else %}
             <p>An API key is required to call the API. You can register for an API key by clicking the button below:</p>
             <a href="{{ url_for('access-api.register_api') }}" class="btn btn-primary">Register API Key</a>
+            {% endif %}
+            {% else %}
+            <p>An API key is required to call the API. Please Sign in or Sign Up to generate an API key. Reload this page after signing in.</p>
+            <a href="/login" class="btn btn-primary" target="_blank">Sign In</a>
+            <a href="/register" class="btn btn-secondary" target="_blank">Sign Up</a>
             {% endif %}
 
             <hr style="border: 1px solid black;">
@@ -47,10 +78,10 @@
             <h4>Return Values</h4>
             <p>Upon sending the MP3 file and expected sentiments, the API returns the following information:</p>
             <ul>
-              <li><strong>sentiment_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of meeting the expected sentiments. Example: <code>8.4</code></li>
-              <li><strong>pace_score:</strong> A score out of 10, indicating the overall pace or speed of the speech. Higher scores suggest a faster pace, while lower scores suggest a slower pace. Example: <code>5.7</code></li>
-              <li><strong>diction_score:</strong> A score out of 10, indicating the overall quality of the word choice and vocabulary used in the speech. Higher scores suggest more effective and appropriate use of language, while lower scores suggest poorer word choice and bad grammar. Example: <code>4.5</code></li>              
-                <li><strong>total_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of overall speech. Example: <code>9.0</code></li>
+                <li><strong>sentiment_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of meeting the expected sentiments. Example: <code>8.4</code></li>
+                <li><strong>pace_score:</strong> A score out of 10, indicating the overall pace or speed of the speech. Higher scores suggest a faster pace, while lower scores suggest a slower pace. Example: <code>5.7</code></li>
+                <li><strong>diction_score:</strong> A score out of 10, indicating the overall quality of the word choice and vocabulary used in the speech. Higher scores suggest more effective and appropriate use of language, while lower scores suggest poorer word choice and bad grammar. Example: <code>4.5</code></li>              
+                  <li><strong>total_score:</strong> A score out of 10, indicating the overall quality of the speech in terms of overall speech. Example: <code>9.0</code></li>
                 <li><strong>tone_data:</strong> An array of tone data points indicating the pitch variations in the speech. Example: <code>[0, 60, 50, ...]</code></li>
                 <li><strong>tone_times:</strong> An array of tone times indicating the time stamps for the pitch variations in the speech. Example: <code>[0, 0.25, 0.5, ...]</code></li>
                 <li><strong>user_sentiments (SamLowe's Model):</strong> An array of objects representing the actual emotional content of the speech. Each object contains a <code>label</code> indicating the sentiment label (e.g., "caring") and a <code>score</code> indicating the sentiment score ranging from 0 to 1. Example:</li>
@@ -120,12 +151,25 @@ function handleFile() {
 
 <p>To use this code, replace <code>'YOUR_API_KEY'</code> with your actual API key and adjust the <code>expectedSentiments</code> object according to your desired sentiments. Call the <code>handleFile</code> function when you want to send a file to the API.</p>
 
-
+{% if current_user.is_authenticated %}
         </div>
     </div>
     <!-- Your Progress Card -->
     {% include "includes/footer.html" %}
 </div>
+{% else %}
+</div>
+</div>
+</div> 
+
+</div>
+
+<div class="container-fluid py-4">
+
+{% include "includes/footer-fullscreen.html" %}
+
+</div>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}
