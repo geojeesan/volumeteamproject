@@ -7,11 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 
-input[type="radio"],
-label {
-  outline: none;
-}
-
 .custom-radio {
   display: inline-block;
   width: 20px;
@@ -220,7 +215,6 @@ label {
 {% endblock %}
 
 {% block content %}
-
 <div class="container-fluid py-4">
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -470,32 +464,6 @@ label {
 {% block javascripts %}
 <script src="{{ url_for('static', filename='assets/js/feedback/feedback.js') }}"></script>
 
-<script>
-  const ratingInputs = document.querySelectorAll('input[name="rating"]');
-    let lastCheckedRadio = null;
-  
-    ratingInputs.forEach((input) => {
-      input.addEventListener('click', () => {
-        // Deselect all stars if the same star is clicked twice
-        if (input === lastCheckedRadio) {
-          handleRatingClick();
-          lastCheckedRadio = null;
-        } else {
-          // Select the clicked star and update lastCheckedRadio
-          lastCheckedRadio = input;
-        }
-      });
-    });
-  
-    function handleRatingClick() {
-      // Remove 'checked' from all rating inputs
-      ratingInputs.forEach((input) => {
-        input.checked = false;
-      });
-    }
-  </script>
-  
-  
 <script>
     document.querySelector('#feedbackForm').addEventListener('submit', function(event) {
       const rating = document.querySelector('input[name="rating"]:checked');
