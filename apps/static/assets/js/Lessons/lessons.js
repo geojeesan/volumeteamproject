@@ -263,8 +263,10 @@ function displayLesson(lesson, lessonsContainer) {
         return;
     }
 
+    // Assuming the first scenario logic remains the same
     const firstScenarioId = lesson.scenarios && lesson.scenarios.length > 0 ? lesson.scenarios[0].id : 1;
 
+    // Create the lesson card element
     const lessonElement = document.createElement('div');
     lessonElement.className = 'lesson';
     lessonElement.innerHTML = `
@@ -280,22 +282,24 @@ function displayLesson(lesson, lessonsContainer) {
         </div>
     `;
 
-    lessonsArray.push([lesson.title, `${lesson.num}-${firstScenarioId}`]);
+	lessonsArray.push([lesson.title, `${lesson.num}-${firstScenarioId}`])
 
+
+    // Append the lesson card to the container
     lessonsContainer.appendChild(lessonElement);
 
+    // Add click event listener to the button
     const button = lessonElement.querySelector('button');
     button.addEventListener('click', () => {
         if (lesson.progress === 100) {
-            // Redirect to the first scenario or refresh the lesson
-            window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
+            // You can decide what should happen when a completed lesson is clicked.
+            // For example, reload the first scenario or show a confirmation dialog.
         } else {
             // Redirect to the first scenario of this lesson
             window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
         }
     });
 }
-
 
 
 
@@ -336,7 +340,14 @@ function updateLessonsCompletion() {
 			return response.json();
 		})
 		.then(data => {
-			
+			const completionPercentageElement = document.getElementById('lessons-completion-percentage');
+			// Check if completionPercentageElement exists, without checking the value
+			if (completionPercentageElement) {
+				completionPercentageElement.textContent = `Lessons Completed: ${data.completionPercentage}%`;
+			} else {
+				// Log an error if the element is not found
+				console.error('Completion percentage element not found.');
+			}
 		})
 		.catch(error => {
 			console.error('Error fetching lessons completion:', error);
