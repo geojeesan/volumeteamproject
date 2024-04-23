@@ -1,0 +1,84 @@
+{% if current_user.is_authenticated %}
+{% extends 'layouts/base.html' %}
+{% else %}
+{% extends 'layouts/base-fullscreen.html' %}
+{% endif %}
+
+{% block title %}Download App{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+
+            
+            {% else %}
+            <div class="container position-sticky z-index-sticky top-1">
+                <div class="row">
+                  <div class="col-12">
+            
+                    {% include "includes/navigation-fullscreen.html" %}
+            
+                  </div>
+                </div>
+              </div>
+            
+                <div class="container-fluid">
+                    <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
+                        <span class="mask bg-gradient-primary opacity-6"></span>
+                      </div>
+                      <div class="card card-body blur shadow-blur mx-7 mt-n9 overflow-hidden">
+                        <div class="row gx-4">
+                          <div class="col-12">
+            {% endif %}
+
+            <h1 class="fw-bold">Download our App</h1>
+
+            <div class="text-center">
+                <div class="mb-3">
+                <img src="{{ config.ASSETS_ROOT }}/img/android_logo.png" alt="Android" class="img-fluid" width="150" height="150">
+                </div>
+                <p>Our app is available for download on Android. Click the button below to download the APK file.</p>
+                <a href="{{ config.ASSETS_ROOT }}/volume.apk" download class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download APK
+                </a>
+            </div>
+
+            
+            <div class="text-center">
+                <img src="{{ config.ASSETS_ROOT }}/img/iOS_logo.png" alt="Android" class="img-fluid" width="150" height="150">
+                <p>Unfortunately, the app is available only on android. You can add a shortcut to Volume on iOS. <br>
+                    Click the share sheet and tap 'Add to Home Screen'. Then tap 'Add'.</p>
+                <img src="{{ config.ASSETS_ROOT }}/img/iphoneimage1.png" alt="iOS Shortcut" class="img-fluid" width="200" height="200">
+                <img src="{{ config.ASSETS_ROOT }}/img/iphoneimage2.png" alt="iOS Shortcut" class="img-fluid" width="200" height="200">
+            </div>
+
+
+
+{% if current_user.is_authenticated %}
+        </div>
+    </div>
+    <!-- Your Progress Card -->
+    {% include "includes/footer.html" %}
+</div>
+{% else %}
+</div>
+</div>
+</div> 
+
+</div>
+
+<div class="container-fluid py-4">
+
+{% include "includes/footer-fullscreen.html" %}
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
