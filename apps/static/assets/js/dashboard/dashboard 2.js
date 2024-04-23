@@ -34,9 +34,7 @@ function formatTimestampToLocal(utcTimestamp) {
     return date.toLocaleString();
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
-    const isDarkMode = localStorage.getItem('theme') === 'dark';
     // Fetches and displays the leaderboard
     fetch('/leaderboard')
     .then(response => response.json())
@@ -46,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Retrieve the login status from the server's response.
         const isLoggedIn = data.is_logged_in; // Ensure this value is being sent from the server
         const leaderboardData = data.leaderboard; // Assuming leaderboard data is under 'leaderboard' key
+        const isDarkMode = localStorage.getItem('theme') === 'dark';
         
         for (let i = 0; i < leaderboardData.length; i++) {
             const row = leaderboardBody.insertRow();
@@ -63,13 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             row.insertCell().innerHTML = badgeHTML;
 
-            if (isDarkMode && i >= 3) {
-                row.classList.add('dark-text-color');
-            }
-
             const usernameCell = row.insertCell();
             let usernameHtml = user.username || '-';
-            if (user.username) {
+            if (isLoggedIn && user.username) {
                 usernameHtml = `<a href="/profilepage/${user.username}" class="username-link${isDarkMode ? ' dark-page' : ''}">${user.username}</a>`;
             }
             usernameCell.innerHTML = usernameHtml;
@@ -176,60 +171,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fetches and displays user's persona information
     fetch('/user-persona')
-    .then(response => response.json())
-    .then(personaData => {
-        console.log(personaData);
-        let levelColorClass = `level-${personaData.level.toLowerCase()}`;
-        let levelIcon = document.getElementById('user-level-icon');
-        levelIcon ? levelIcon.classList = `badge-icon ${levelColorClass}` : console.error('Level icon not found');
-        let streakIcon = document.getElementById('user-streak-icon');
-        streakIcon ? streakIcon.classList = 'badge-icon streak-orange' : console.error('Streak icon not found');
-        let rankIcon = document.getElementById('user-rank-icon');
-        if (rankIcon) {
-            let rankColorClass;
-            switch (personaData.rank) {
-                case 1:
-                    rankColorClass = 'rank-gold';
-                    break;
-                case 2:
-                    rankColorClass = 'rank-silver';
-                    break;
-                case 3:
-                    rankColorClass = 'rank-bronze';
-                    break;
-                default:
-                    rankColorClass = 'rank-normal';
-                    break;
+        .then(response => response.json())
+        .then(personaData => {
+            console.log(personaData);
+            let levelColorClass = `level-${personaData.level.toLowerCase()}`;
+            let levelIcon = document.getElementById('user-level-icon');
+            levelIcon ? levelIcon.classList = `badge-icon ${levelColorClass}` : console.error('Level icon not found');
+            let streakIcon = document.getElementById('user-streak-icon');
+            streakIcon ? streakIcon.classList = 'badge-icon streak-orange' : console.error('Streak icon not found');
+            let rankIcon = document.getElementById('user-rank-icon');
+            if (rankIcon) {
+                let rankColorClass;
+                switch (personaData.rank) {
+                    case 1:
+                        rankColorClass = 'rank-gold';
+                        break;
+                    case 2:
+                        rankColorClass = 'rank-silver';
+                        break;
+                    case 3:
+                        rankColorClass = 'rank-bronze';
+                        break;
+                    default:
+                        rankColorClass = 'rank-normal';
+                        break;
+                }
+                rankIcon.classList = `badge-icon ${rankColorClass}`;
+            } else {
+                console.error('Rank icon not found');
             }
-            rankIcon.classList = `badge-icon ${rankColorClass}`;
-        } else {
-            console.error('Rank icon not found');
-        }
-        document.getElementById('user-level-text').textContent = personaData.level.charAt(0).toUpperCase() + personaData.level.slice(1);
-        document.getElementById('user-streak-text').textContent = personaData.streak;
-        document.getElementById('user-rank-text').textContent = personaData.rank;
-
-        // Check if dark mode is active
-        const badgesContainers = document.querySelectorAll('.badges-container');
-        const badgeIcons = document.querySelectorAll('.badge-icon');
-        const badgeTexts = document.querySelectorAll('.badge-text');
-
-        // Toggle dark mode styles based on isDarkMode flag
-        badgesContainers.forEach(container => {
-            container.classList.toggle('dark-mode-background', isDarkMode);
+            document.getElementById('user-level-text').textContent = personaData.level.charAt(0).toUpperCase() + personaData.level.slice(1);
+            document.getElementById('user-streak-text').textContent = personaData.streak;
+            document.getElementById('user-rank-text').textContent = personaData.rank;
+        })
+        .catch(error => {
+            console.error('Error fetching user persona data:', error);
         });
-        badgeIcons.forEach(icon => {
-            icon.classList.toggle('dark-mode-text', isDarkMode);
-        });
-        badgeTexts.forEach(text => {
-            text.classList.toggle('dark-mode-text', isDarkMode);
-        });
-
-    })
-    .catch(error => {
-        console.error('Error fetching user persona data:', error);
-    });
-
 
     var quillToolbarOptions = [
         [{

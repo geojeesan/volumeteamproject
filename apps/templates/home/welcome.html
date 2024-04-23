@@ -2,8 +2,6 @@
 
 {% block stylesheets %}
 <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:400,400i,700,700i" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 <style> 
 
 
@@ -11,102 +9,8 @@
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-/* Keyframes for slide-down animation */
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    visibility: visible;
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-/* Keyframes for slide-up animation */
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    visibility: visible;
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-@media (min-width: 992px) {
-  .col-lg-3 {
-    flex: 0 0 auto;
-    max-width: 24%; /* Slightly less than 25% to fit 4 cards in a row with margin */
-  }
-}
-
-/* Apply the animation to your navbar */
-.navbar {
-  animation: slideDown 1.0s ease-out forwards;
-}
 
 /* Rest of your CSS */
-.card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
-  width: auto; /* Adjust the width as necessary, auto will make it responsive */
-  min-height: 300px; /* You can set a minimum height */
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card-icon {
-  font-size: 2em; /* Adjust the size of the icons */
-  margin: 15px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2em;
-  height: 30px; /* Adjust size as needed */
-  margin-top: 30px;
-  color: #ACAACC; /* Replace with your preferred icon color */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* This adds a shadow to the icon */
-}
-
-/* Additional style for hovering over cards */
-.card:hover .card-icon {
-  color: #502564; /* Darker shade for icon on hover */
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); /* Slightly larger shadow for a "lifted" effect */
-}
-
-.card-title {
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #344767; /* Replace with your preferred text color */
-  font-family: 'Montserrat', sans-serif;
-
-
-}
-
-.card-text {
-  font-family: 'Montserrat', sans-serif;
-  line-height: 24px;
-  color: #344767; /* Replace with your preferred text color */
-}
-
-.card-body {
-  text-align: center;
-  padding: 30px; /* Increase padding inside the cards */
-}
-/* Add a negative margin to pull the card container upwards */
-.card-container {
-  margin-top: -100px; /* Adjust the value as needed to move the cards up */
-  animation: slideUp 1.0s ease-out forwards;
-}
-
-/* Ensure the card isn't too close to the text above */
-.get-started-container {
-  margin-bottom:10px; /* Add some space below the Get Started button */
-}
 
 .logo-background {
   width: 170px; /* This should be larger than the logo size */
@@ -172,58 +76,6 @@
 }
 
 
-.section-heading {
-  font-family: "Alegreya Sans SC", sans-serif;
-  font-size: 3.8rem;
-  color: #344767;
-  margin-bottom: 1rem;
-}
-
-.feedback-card {
-  border-radius: 10px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Montserrat', sans-serif;
-}
-
-/* Styling blockquotes */
-blockquote {
-  position: relative;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #344767;
-  background: #f9f9f9;
-  border-left: 5px solid #507DBC;
-  margin: 1.5rem 10px;
-  padding: 1.5rem;
-}
-
-blockquote:before {
-  content: '\201C'; /* Unicode for left double quote */
-  color: #507DBC;
-  font-size: 4em;
-  position: absolute;
-  left: 10px;
-  top: -10px;
-}
-
-blockquote:after {
-  content: '\201D'; /* Unicode for right double quote */
-  color: #507DBC;
-  font-size: 4em;
-  position: absolute;
-  right: 10px;
-  bottom: -10px;
-}
-
-blockquote-footer {
-  color: #555;
-  font-size: 0.85em;
-}
-
-.cite {
-  font-style: normal;
-}
-
 @keyframes fadeInRotate {
     0% {
         opacity: 0;
@@ -237,66 +89,6 @@ blockquote-footer {
         transform: scale(1) rotate(360deg);
     }
 }
-/* CSS classes for the carousel */
-.carousel {
-  position: relative;
-}
-
-.carousel-inner {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.carousel-item {
-  position: relative;
-  display: none;
-  align-items: center;
-  transition: transform 0.6s ease;
-}
-
-.carousel-item.active {
-  display: block;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-size: 100% 100%;
-}
-
-.carousel-control-prev {
-  left: 10px;
-}
-
-.carousel-control-next {
-  right: 10px;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
 
 
@@ -306,173 +98,27 @@ blockquote-footer {
 {% endblock stylesheets %}
 
 {% block content %}
-
-
-<div class="container position-sticky z-index-sticky top-0">
-  <div class="row">
-    <div class="col-12">
-
-      {% include "includes/navigation-fullscreen.html" %}
-
-    </div>
-  </div>
-</div>
-
 <div class="container">
   <div class="row justify-content-center align-items-center" style="height: 100vh;">
     <div class="col-md-8 text-center">
       <div class="logo-background"></div> <!-- White circle behind the logo -->
       <img src="{{ url_for('static', filename='assets/img/audio-waves-light.svg') }}" alt="Volume Logo" class="logo">
-      <h1 class="fade-in custom-font">Welcome to Volume!</h1>
-      <p class="lead fade-in-delay">Discover your potential with our expert-guided speaking programs.</p>
-      <a href="/login" class="btn btn-primary btn-entrance">Get Started</a>
+      <h1 class="fade-in custom-font">Volume!</h1>
+      <p class="lead fade-in-delay">Your path to confident speaking starts here.</p>
+      <!-- <a href="/login" class="btn btn-primary btn-entrance">Get Started</a> -->
     </div>
   </div>
 </div>
 
-<div class="container card-container">
-  <div class="row">
-    <!-- Card for Lessons -->
-    <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-chalkboard-teacher"></i> <!-- Icon for Lessons -->
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Master Public Speaking</h5>
-          <p class="card-text">Engage with a variety of lessons tailored to elevate your speaking skills, from beginner to advanced levels.</p>
-        </div>
-      </div>
-    </div>
-    <!-- Card for Dashboard -->
-    <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-chart-line"></i> <!-- Icon for Dashboard -->
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Your Progress Dashboard</h5>
-          <p class="card-text">View your progress at a glance. Your lessons completed, current level, and upcoming events are all just a tap away.</p>
-        </div>
-      </div>
-    </div>
-    <!-- Card for Resources -->
-    <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-book-open"></i> <!-- Icon for Resources -->
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Curated Resources</h5>
-          <p class="card-text">Access a curated collection of articles, videos, and expert insights designed to sharpen your public speaking prowess.</p>
-        </div>
-      </div>
-    </div>
-    <!-- Card for Feedback -->
-    <div class="col-lg-3 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-      <div class="card">
-        <div class="card-icon">
-          <i class="fas fa-comments"></i> <!-- Icon for Feedback -->
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Share Your Feedback</h5>
-          <p class="card-text">Your voice matters! Give feedback on your experience and help us tailor Volume to better suit your public speaking journey.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<section class="bg-light py-5 mt-7">
-<div class="container mt-5">
-  <div class="row text-center">
-    <div class="col-12">
-      <h2 class="section-heading ">User Feedback</h2>
-      <p class="lead">Hear from our users and how Volume has impacted their speaking journey.</p>
-    </div>
-  </div>
-  <div class="row mt-4">
-<!-- Feedback Carousel -->
-<div class="container">
-  <div id="feedbackCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-      <!-- Feedback Cards -->
-      <div class="carousel-item active">
-        <div class="row justify-content-center">
-          <!-- First Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"Volume has been transformative for my communication skills, especially in public speaking contexts."</p>
-                  <footer class="blockquote-footer">Michael Roberts, <cite title="Source Title">Professional Speaker</cite></footer>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-          <!-- Second Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"The lessons and resources are top-notch, and the community feedback is invaluable!"</p>
-                  <footer class="blockquote-footer">Samantha Lee, <cite title="Source Title">Conference Presenter</cite></footer>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-          <!-- Third Feedback Card -->
-          <div class="col-md-4">
-            <div class="feedback-card card my-3 mx-auto">
-              <div class="card-body">
-                <blockquote class="blockquote">
-                  <p class="mb-0">"I love how each session is tailored. Seeing my progress over time is incredibly rewarding."</p>
-                  <footer class="blockquote-footer">Alex Johnson, <cite title="Source Title">Emerging Leader</cite></footer>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Additional Feedback Cards -->
-      <!-- You can add more carousel-item blocks with additional feedback cards here -->
-      
-    </div>
-    <!-- Next Button -->
-    <a class="carousel-control-prev" href="#feedbackCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <!-- Previous Button -->
-    <a class="carousel-control-next" href="#feedbackCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
-  </div>
-</div>
-</section>
 
-<!-- Additional JavaScript for Carousel Functionality -->
 <script>
-    function redirectToAnotherPage() {
+      function redirectToAnotherPage() {
       // Change the href attribute to the new page URL
       window.location.href = "/index";
     }
 
     // Call redirectToAnotherPage function after 1 second
-    // setTimeout(redirectToAnotherPage, 3000); // 1000 milliseconds = 1 second
-  // Activate the carousel
-  $('.carousel').carousel();
-
-  // Customize carousel behavior
-  $('#feedbackCarousel').on('slid.bs.carousel', function () {
-    // Optionally, add custom JavaScript to execute after each slide transition
-    console.log('Slide transition completed');
-  });
+    setTimeout(redirectToAnotherPage, 3000); // 1000 milliseconds = 1 second
 </script>
-
-
-
-
-{% include "includes/footer-fullscreen.html" %}
 
 {% endblock content %}
