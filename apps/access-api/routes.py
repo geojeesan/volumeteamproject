@@ -12,14 +12,17 @@ user_sentiments = None
 
 
 @blueprint.route("/access-api/")
-@login_required
 def accessapi():
-    user_id = current_user.id
+    if current_user.is_authenticated:
+        user_id = current_user.id
     
-    # Check if the user has an API key
-    api_key = ApiKeys.query.filter_by(user_id=user_id).first()
+        # Check if the user has an API key
+        api_key = ApiKeys.query.filter_by(user_id=user_id).first()
     
-    return render_template("access-api/api.html", api_key=api_key)
+        return render_template("access-api/api.html", api_key=api_key)
+    
+    else:
+        return render_template("access-api/api.html")
 
 def generate_api_key():
     return secrets.token_hex(16)
