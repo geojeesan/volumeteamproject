@@ -354,26 +354,18 @@
             <h5 class="card-title"></h5>
             <br>
             <div class="challenge-item">
-              <!-- <button class="btn btn-primary" id="beginner-btn">Beginner</button>
-              <button class="btn btn-primary" id="intermediate-btn">Intermediate</button>
-              <button class="btn btn-primary" id="advanced-btn">Advanced</button> -->
-
               <div class="tab-group-1" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#beginner-tab">Beginner</button>
                 <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#intermediate-tab">Intermediate</button>
                 <button type="button" class="btn btn-primary" data-toggle="tab" data-target="#advanced-tab">Advanced</button>
             </div>
-            
-
               <div id="lessons-display" class="row">
-
               </div>
-
             </div>
           </div>
         </div>
 
-      </div>
+      </div> 
       <!-- Volume Spectrum Card -->
       <div class="row justify-content-around mb-4 tab-pane-2" id="progress-tab">
         <div class="col-md-6">
@@ -398,8 +390,9 @@
               </div>
             </div>
           </div>
-        </div> {% include "includes/footer.html" %}
-      </div> {% endblock %} {% block javascripts %}
+        </div> 
+      </div> {% include "includes/footer.html" %}
+      {% endblock %} {% block javascripts %}
       <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
       <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
       {% endblock %}
