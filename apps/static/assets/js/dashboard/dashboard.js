@@ -1,7 +1,8 @@
-function getLevelBadge(level) {
+function getLevelBadge(level, isDarkMode) {
     let badgeClass = '';
     let levelText = '-';
-    
+    let darkModeClass = isDarkMode ? 'badge-dark-mode' : '';
+
     switch (level.toLowerCase()) {
         case 'beginner':
             badgeClass = 'badge-level-beginner';
@@ -17,7 +18,7 @@ function getLevelBadge(level) {
             break;
         case '-':
             badgeClass = 'badge-level-undefined';
-            levelText = '-';
+            levelText = 'Unranked'; // Changed from '-' for consistency
             break;
         default:
             badgeClass = 'badge-level';
@@ -25,8 +26,9 @@ function getLevelBadge(level) {
             break;
     }
     
-    return `<span class="badge-level ${badgeClass}">${levelText}</span>`;
+    return `<span class="badge-level ${badgeClass} ${darkModeClass}">${levelText}</span>`;
 }
+
 
 
 function formatTimestampToLocal(utcTimestamp) {
@@ -63,9 +65,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             row.insertCell().innerHTML = badgeHTML;
 
-            if (isDarkMode && i >= 3) {
-                row.classList.add('dark-text-color');
-            }
+            if (i >= 3) {
+                row.classList.add(isDarkMode ? 'dark-text-color' : 'light-text-color');
+              }
 
             const usernameCell = row.insertCell();
             let usernameHtml = user.username || '-';
@@ -75,14 +77,17 @@ document.addEventListener('DOMContentLoaded', function() {
             usernameCell.innerHTML = usernameHtml;
 
             const scoreCell = row.insertCell();
-            scoreCell.textContent = user.score || '-';
+            scoreCell.textContent = (user.score && user.score !== '-') ? parseFloat(user.score).toFixed(1) : '-';
             if (isDarkMode) {
-                scoreCell.classList.add('score', 'dark-page'); 
-            }
+                scoreCell.classList.add('score-dark-mode');
+              } else {
+                scoreCell.classList.add('score-light-mode');
+              }
+              
 
             const levelCell = row.insertCell();
             levelCell.innerHTML = user.level && user.level !== '-' 
-            ? getLevelBadge(user.level) 
+            ? getLevelBadge(user.level, isDarkMode) 
             : '<span class="badge-level badge-level-undefined">Unranked</span>';
         
             const progressCell = row.insertCell();
@@ -209,21 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('user-streak-text').textContent = personaData.streak;
         document.getElementById('user-rank-text').textContent = personaData.rank;
 
-        // Check if dark mode is active
-        const badgesContainers = document.querySelectorAll('.badges-container');
-        const badgeIcons = document.querySelectorAll('.badge-icon');
-        const badgeTexts = document.querySelectorAll('.badge-text');
-
-        // Toggle dark mode styles based on isDarkMode flag
-        badgesContainers.forEach(container => {
-            container.classList.toggle('dark-mode-background', isDarkMode);
-        });
-        badgeIcons.forEach(icon => {
-            icon.classList.toggle('dark-mode-text', isDarkMode);
-        });
-        badgeTexts.forEach(text => {
-            text.classList.toggle('dark-mode-text', isDarkMode);
-        });
+        
 
     })
     .catch(error => {
