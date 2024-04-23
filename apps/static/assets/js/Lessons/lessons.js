@@ -103,8 +103,8 @@ function updateLastAccessedLessonUI(lesson, isInProgress) {
 					.catch(error => console.error('Error fetching the next scenario:', error));
 			};
 		} else {
-			continueLessonBtn.classList.add('btn-secondary');
-			continueLessonBtn.classList.remove('btn-primary');
+			continueLessonBtn.classList.add('btn-primary');
+			continueLessonBtn.classList.remove('btn-secondary');
 			continueLessonBtn.textContent = 'Start Lesson';
 			continueLessonBtn.onclick = function() {
 				window.location.href = `/practice/${lastAccessedLessonId}`;
@@ -263,8 +263,8 @@ function displayLesson(lesson, lessonsContainer) {
         return;
     }
 
-    // Assuming the first scenario logic remains the same
     const firstScenarioId = lesson.scenarios && lesson.scenarios.length > 0 ? lesson.scenarios[0].id : 1;
+    const isInProgress = lesson.progress > 0 && lesson.progress < 100;
 
     // Create the lesson card element
     const lessonElement = document.createElement('div');
@@ -276,29 +276,56 @@ function displayLesson(lesson, lessonsContainer) {
             <p>${lesson.description}</p>
             <span class="badge badge-${lesson.difficulty}">${lesson.difficulty}</span>
             <p>Progress: ${lesson.progress}%</p>
-            <button class="btn ${lesson.progress === 100 ? 'btn-success' : lesson.in_progress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}" data-lesson-num="${lesson.num}" data-scenario-id="${firstScenarioId}">
-                ${lesson.progress === 100 ? 'Lesson Complete! Try again?' : lesson.in_progress ? 'Continue Lesson' : `Start ${lesson.title}`}
+            <button class="btn ${lesson.progress === 100 ? 'btn-success' : isInProgress ? 'btn-primary' : 'btn-secondary'}" data-lesson-id="${lesson.id}" data-lesson-num="${lesson.num}" data-scenario-id="${firstScenarioId}">
+                ${getLessonButtonLabel(lesson)}
             </button>
         </div>
     `;
 
-	lessonsArray.push([lesson.title, `${lesson.num}-${firstScenarioId}`])
-
-
-    // Append the lesson card to the container
+    lessonsArray.push([lesson.title, `${lesson.num}-${firstScenarioId}`]);
     lessonsContainer.appendChild(lessonElement);
 
-    // Add click event listener to the button
     const button = lessonElement.querySelector('button');
     button.addEventListener('click', () => {
-        if (lesson.progress === 100) {
-            // You can decide what should happen when a completed lesson is clicked.
-            // For example, reload the first scenario or show a confirmation dialog.
+        if (isInProgress) {
+            // Redirect to the next incomplete scenario for lessons in progress
+            fetchNextScenarioAndRedirect(lesson.id);
+        } else if (lesson.progress === 100) {
+            // Redirect to restart the lesson if it is completed
+            window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
         } else {
-            // Redirect to the first scenario of this lesson
+            // Redirect to start the lesson if it has not been started yet
             window.location.href = `/practice/${lesson.num}-${firstScenarioId}`;
         }
     });
+}
+
+function getLessonButtonLabel(lesson) {
+    if (lesson.progress === 100) {
+        return 'Lesson Complete! Try again?';
+    } else if (lesson.progress > 0 && lesson.progress < 100) {
+        return `Continue ${lesson.title}`;
+    } else {
+        return `Start ${lesson.title}`;
+    }
+}
+
+async function fetchNextScenarioAndRedirect(lessonId) {
+    try {
+        const response = await fetch(`/api/lessons/${lessonId}/next_scenario_after_last_completed`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data && data.lesson_num && data.scenario_id) {
+            window.location.href = `/practice/${data.lesson_num}-${data.scenario_id}`;
+        } else {
+            console.error('No more scenarios or error in data: ', data.message);
+            // Handle no more scenarios or data error here
+        }
+    } catch (error) {
+        console.error('Error fetching the next scenario: ', error);
+    }
 }
 
 
@@ -338,16 +365,6 @@ function updateLessonsCompletion() {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
-		})
-		.then(data => {
-			const completionPercentageElement = document.getElementById('lessons-completion-percentage');
-			// Check if completionPercentageElement exists, without checking the value
-			if (completionPercentageElement) {
-				completionPercentageElement.textContent = `Lessons Completed: ${data.completionPercentage}%`;
-			} else {
-				// Log an error if the element is not found
-				console.error('Completion percentage element not found.');
-			}
 		})
 		.catch(error => {
 			console.error('Error fetching lessons completion:', error);

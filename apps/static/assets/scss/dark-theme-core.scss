@@ -62,7 +62,7 @@ body.dark-page {
     }
 
     //General heading color overwrite
-    h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1, {
+    h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1, p, .p{
         @include headingLikeTextColor;
     }
 
@@ -170,6 +170,11 @@ body.dark-page {
     .moving-tab .nav-link.active {
         box-shadow: 0 1px 5px 1px #374468e0;
         background: #283149;
+    }
+
+    .badge-number, .score .rank-normal{
+        background-color: #404B69;
+        color: #d7d7d7;
     }
 
     //General blur settings
