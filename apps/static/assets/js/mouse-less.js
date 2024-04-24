@@ -62,6 +62,9 @@ document.addEventListener('keydown', function(event) {
         event.preventDefault(); // Prevent default behavior (form submission)
         if (selectedIndex !== -1) {
             var selectedOption = items[selectedIndex].getAttribute('details');
+            if(selectedOption == "dashboard"){
+                selectedOption = "index"
+            }
             goTo(selectedOption)
         }
     }else if (event.key === "Escape"){
