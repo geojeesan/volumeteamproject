@@ -7,6 +7,11 @@
 {% block title %}Download App{% endblock %}
 
 {% block stylesheets %}
+<style>
+  body.dark-page img.logo {
+    filter: grayscale(100%) invert(100%) brightness(400%) contrast(50%);
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -40,7 +45,7 @@
 
             <div class="text-center">
                 <div class="mb-3">
-                <img src="{{ config.ASSETS_ROOT }}/img/android_logo.png" alt="Android" class="img-fluid" width="150" height="150">
+                <img src="{{ config.ASSETS_ROOT }}/img/android_logo.png" alt="Android" class="img-fluid logo" width="150" height="150">
                 </div>
                 <p>Our app is available for download on Android. Click the button below to download the APK file.</p>
                 <a href="{{ config.ASSETS_ROOT }}/volume.apk" download class="btn btn-primary">
@@ -50,7 +55,7 @@
 
             
             <div class="text-center">
-                <img src="{{ config.ASSETS_ROOT }}/img/iOS_logo.png" alt="Android" class="img-fluid" width="150" height="150">
+                <img src="{{ config.ASSETS_ROOT }}/img/iOS_logo.png" alt="Android" class="img-fluid logo" width="150" height="150">
                 <p>Unfortunately, the app is available only on android. You can add a shortcut to Volume on iOS. <br>
                     Click the share sheet and tap 'Add to Home Screen'. Then tap 'Add'.</p>
                 <img src="{{ config.ASSETS_ROOT }}/img/iphoneimage1.png" alt="iOS Shortcut" class="img-fluid" width="200" height="200">

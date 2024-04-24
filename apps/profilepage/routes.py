@@ -42,7 +42,8 @@ def searchprofile():
 @blueprint.route('/searchUser', methods=['POST'])
 def searchUser():
     search_term = request.form.get('searchTerm', '')  # Assuming search term is sent via POST
-    print(search_term+" search term")
+    if not search_term.strip():
+        return jsonify([])
     search_results = Users.query.filter(Users.username.ilike(f"%{search_term}%")).all()
 
     # Format search results to send back to the frontend
