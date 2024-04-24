@@ -141,4 +141,8 @@
 {% endblock content %}
 
 <!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    document.getElementById('dynamic-breadcrumb').innerText = "Privacy Policy";
+</script>
+{% endblock javascripts %}
