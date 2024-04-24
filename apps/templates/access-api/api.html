@@ -176,4 +176,7 @@ function handleFile() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
 <script src="{{ url_for('static', filename='assets/js/Lessons/lessons.js') }}"></script>
 <script src="{{ config.ASSETS_ROOT }}/js/plugins/chartjs.min.js"></script>
+<script>
+    document.getElementById('dynamic-breadcrumb').innerText = "API Documentation";
+</script>
 {% endblock %}
