@@ -450,6 +450,19 @@ def analyze_speech():
         os.remove(new_path)  # Clean up after successful transcription
 
         sentiments = get_sentiments(text)
+        
+        if not sentiments or "error" in sentiments:
+            return (
+                jsonify(
+                    {
+                        "error": "Failed to get sentiments from the analysis API. Please try again",
+                        "code": 309,
+                    }
+                ),
+                400,
+            )
+
+        
         diction_val = calculate_diction_score(text)
         
         if not diction_val:
@@ -462,22 +475,12 @@ def analyze_speech():
                 ),
                 400,
             )
-            
+        
 
-        if not sentiments or "error" in sentiments:
-            return (
-                jsonify(
-                    {
-                        "error": "Failed to get sentiments from the analysis API. Please try again",
-                        "code": 309,
-                    }
-                ),
-                400,
-            )
 
         # Assuming your existing functions to calculate score and update progress...
         sentiment_score = calculate_score(scenario_num, lesson, sentiments)
-        
+            
         
         total_score = ((sentiment_score) + (diction_val*10) + (pace_val*10))/3
         

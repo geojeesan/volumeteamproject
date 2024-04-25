@@ -194,12 +194,20 @@ def index():
             UserProgress.update_progress(current_user.id)
         else:
             UserProgress.create_new_progress(current_user.id)
+            
+        user_progress = UserProgress.query.filter_by(user_id=current_user.id).first()
+        if not user_progress:
+            user_progress = UserProgress(user_id=current_user.id)
+            db.session.add(user_progress)
     
     lessons = Lesson.query.all()
     lesson_index = get_daily_index(len(lessons))
     featured_lesson = lessons[lesson_index]
     featured_images = LessonImage.query.filter_by(lesson_id=featured_lesson.id).all()
     featured_image_urls = ["/static/assets/img/" + image.image_path for image in featured_images]
+    
+    
+
     
     # Check if there are any images available, otherwise use the default image
     if featured_image_urls:
@@ -258,42 +266,16 @@ def get_segment(request):
 @blueprint.route('/complete_scenario', methods=['POST'])
 @login_required
 def complete_scenario():
+    
+    print("AAA1234")
+    
     user_id = request.json.get('user_id')
     scenario_id = request.json.get('scenario_id')
     score = request.json.get('score', None)  # Score might be optional
     current_time = datetime.utcnow()
 
-    # Verify that the user_id and scenario_id are valid (not shown here for brevity)
-    user_progress = UserProgress.query.filter_by(user_id=user_id).first()
-    if not user_progress:
-        user_progress = UserProgress(user_id=user_id)
-        db.session.add(user_progress)
 
-    # Update or create the scenario progress entry
-    scenario_progress = UserScenarioProgress.query.filter_by(user_id=user_id, scenario_id=scenario_id).first()
-    if scenario_progress:
-        scenario_progress.completed = True
-        scenario_progress.date = current_time
-        scenario_progress.score = score  # Update the score if provided
-    else:
-        # Create a new scenario progress record if it doesn't exist
-        scenario_progress = UserScenarioProgress(
-            user_id=user_id,
-            scenario_id=scenario_id,
-            completed=True,
-            date=current_time,
-            score=score
-        )
-        db.session.add(scenario_progress)
-
-    # Check and update streak
-    streak_change = user_progress.update_streak()
-    if streak_change == 0:
-        # Streak was reset
-        user_progress.streak_time = current_time
-    else:
-        # Streak was incremented or maintained
-        user_progress.streak_time = current_time
+    
 
     db.session.commit()
 
@@ -302,3 +284,6 @@ def complete_scenario():
         "streak_change": "Reset" if streak_change == 0 else "Incremented",
         "streak_time": user_progress.streak_time.isoformat()
     })
+    
+
+

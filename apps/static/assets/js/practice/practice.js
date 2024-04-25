@@ -395,8 +395,10 @@ function populateScenarioDetails(scenario_name, scenario_details){
 }
 
 function endScenario(){
-  destroyAllCharts(); // Ensure any existing charts are destroyed before creating new ones
 
+  //completeScenario();
+
+  destroyAllCharts(); // Ensure any existing charts are destroyed before creating new ones
   scenarioViewElement.style.display = "none";
   scenarioResultsElement.style.display = "block";
   scenarioScoreElement.innerText = scenario_score.toFixed(1).toString() + "/10";
