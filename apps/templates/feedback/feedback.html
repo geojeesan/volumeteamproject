@@ -48,7 +48,12 @@ label {
             direction: rtl;
             text-align: left;
         }
-
+        .user-select-none {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
         .rating > input {
             display: none;
         }
@@ -251,7 +256,7 @@ label {
       
 
         <h6>a) How would you rate your overall experience with Volume?</h6>
-          <div class="rating">
+          <div class="rating user-select-none">
             <input type="radio" id="star1" name="rating" value="1"><label for="star1"></label>
             <input type="radio" id="star2" name="rating" value="2"><label for="star2"></label>
             <input type="radio" id="star3" name="rating" value="3"><label for="star3"></label>
