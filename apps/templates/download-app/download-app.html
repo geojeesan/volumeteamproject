@@ -11,6 +11,13 @@
   body.dark-page img.logo {
     filter: grayscale(100%) invert(100%) brightness(400%) contrast(50%);
   }
+
+  @media (max-width: 1000px) {
+    .card {
+        margin-left: 0rem !important;
+        margin-right: 0rem !important;
+    }
+  }
 </style>
 {% endblock %}
 
@@ -32,13 +39,13 @@
                 </div>
               </div>
             
-                <div class="container-fluid">
-                    <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
-                        <span class="mask bg-gradient-primary opacity-6"></span>
-                      </div>
-                      <div class="card card-body blur shadow-blur mx-7 mt-n9 overflow-hidden">
-                        <div class="row gx-4">
-                          <div class="col-12">
+              <div class="container-fluid">
+                <div class="page-header min-height-300 border-radius-xl mt-2" style="background-image: url('{{ config.ASSETS_ROOT }}/img/curved-images/curved14.jpg'); background-position-y: 50%;">
+                    <span class="mask bg-gradient-primary opacity-6"></span>
+                </div>
+                <div class="card card-body blur shadow-blur mx-9 mt-n9 overflow-hidden" style="min-width: 320px;">
+                    <div class="row gx-4">
+                        <div class="col-12">
             {% endif %}
 
             <h1 class="fw-bold">Download our App</h1>
@@ -67,8 +74,9 @@
 {% if current_user.is_authenticated %}
         </div>
     </div>
-    <!-- Your Progress Card -->
+    <div class="container-fluid py-4">
     {% include "includes/footer.html" %}
+  </div>
 </div>
 {% else %}
 </div>
