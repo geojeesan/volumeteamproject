@@ -561,6 +561,7 @@ function showPopup2(message) {
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
   popup.style.zIndex = '9999';
+  popup.style.color = '#69748c';
 
   // Position the popup near the link
   var linkRect = document.getElementById('lesson-link').getBoundingClientRect();
@@ -605,6 +606,7 @@ function showPopup3(message) {
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
   popup.style.zIndex = '9999';
+  popup.style.color = '#69748c';
 
   // Position the popup near the link
   var linkRect = document.getElementById('feedback-link').getBoundingClientRect();
@@ -649,6 +651,7 @@ function showPopup4(message) {
   popup.style.zIndex = '1';
   popup.style.borderRadius = '10px';
   popup.style.zIndex = '9999';
+  popup.style.color = '#69748c';
 
   // Position the popup near the link
   var linkRect = document.getElementById('favorites-link').getBoundingClientRect();

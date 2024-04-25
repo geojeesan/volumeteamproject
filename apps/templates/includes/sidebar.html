@@ -2,7 +2,12 @@
   <div class="sidenav-header" style="display: flex; flex-direction: column; align-items: center;">
    <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="/" style="text-align: center;">
-       <img src="{{ config.ASSETS_ROOT }}/img/audio-waves-light.svg" class="navbar-brand-img h-100" alt="main_logo">
+        <style>
+          body.dark-page img.logo {
+            filter: grayscale(100%) invert(100%) brightness(400%);
+          }
+        </style>
+       <img src="{{ config.ASSETS_ROOT }}/img/audio-waves-light.svg" class="navbar-brand-img h-100 logo" alt="main_logo">
 
          <span style="display: block; font-weight: bold; margin-bottom: 1rem;">Volume</span>
        </a>
