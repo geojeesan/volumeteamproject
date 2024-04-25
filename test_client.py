@@ -11,7 +11,18 @@ def client():
         yield client
 
 
-def test_index_route(client):
-    """Test that the index route returns a response without error."""
+def test_login_route(client):
+    """Test that the login route returns a response without error."""
     response = client.get("/login")
     assert response.status_code == 200
+
+def test_index_route(client):
+    """Test that the index route returns a response without error."""
+    response = client.get("/index")
+    assert response.status_code == 200
+
+def test_register_route(client):
+    """Test that the register route returns a response without error."""
+    response = client.get("/register")
+    assert response.status_code == 200
+
