@@ -3,7 +3,16 @@
 {% block title %} Acknowledgements {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    @media (max-width: 750px) {
+      .card {
+          margin-left: 0rem !important;
+          margin-right: 0rem !important;
+      }
+    }
+    </style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -26,7 +35,7 @@
     </div> 
 </div>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-4" style="width:90%">
     {% include "includes/footer.html" %}
 </div>
 
