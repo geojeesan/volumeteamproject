@@ -26,9 +26,9 @@ Volume is a full-stack web application designed to enhance individuals' public s
 - **Dashboard**: Provides a holistic view of the user's journey, tracking progress and accessing key features.
 - **Lessons Page**: Offers tailored lessons of different complexities to improve public speaking skills.
 - **Speech Breakdown (AI)**: Analyzes users' speech patterns and provides scores and feedback on various aspects such as pitch variability, stuttering, pausing, and emotional tone.
-- **Resource Page**: Allows users to access a collection of videos, articles, and expert insights to further enhance their skills.
+- **Resource Page**: Allows users to access and favorite a collection of videos, articles, and expert insights to further enhance their skills.
 - **Profile Page**: Displays user progress, notifications, and enables users to follow other users.
-- **Favorites Page**: Stores favorite learning sessions and resources for easy access.
+- **Favorites Page**: Stores favorite resources for easy access.
 - **Feedback Page**: Provides users with the opportunity to rate their satisfaction with the service and provide feedback.
 
 ## Technologies Used
