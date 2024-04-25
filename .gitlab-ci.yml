@@ -10,8 +10,6 @@ stages:
   - check
   - build
   - test
-  # - package
-  # - release
   - deploy
 
 before_script:
@@ -26,27 +24,16 @@ lint:
     - pip install pylint
     - pylint --fail-under=4.0 apps/
 
-build:
-  stage: build
-  script:
-    echo "No build"
-    # - sudo apt install -y default-jdk
-
 test:
   stage: test
   script:
     - pip install pytest
     - pytest
 
-# package:
-#   stage: package
-#   script:
-#     - echo "No packaging step for Flask app"
-
-# release:
-#   stage: release
-#   script:
-#     - echo "No release step for Flask app"
+build:
+  stage: build
+  script:
+    sudo apt install ffmpeg
 
 deploy-dev:
   stage: deploy
