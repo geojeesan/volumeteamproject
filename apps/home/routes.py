@@ -263,27 +263,13 @@ def get_segment(request):
         return None
 
 
+
+# Keepnig this here in case it's using elsewhere in the codebase
 @blueprint.route('/complete_scenario', methods=['POST'])
 @login_required
 def complete_scenario():
     
-    print("AAA1234")
-    
-    user_id = request.json.get('user_id')
-    scenario_id = request.json.get('scenario_id')
-    score = request.json.get('score', None)  # Score might be optional
-    current_time = datetime.utcnow()
-
-
-    
-
-    db.session.commit()
-
-    return jsonify({
-        "message": "Scenario completion processed.",
-        "streak_change": "Reset" if streak_change == 0 else "Incremented",
-        "streak_time": user_progress.streak_time.isoformat()
-    })
+    return jsonify("None")
     
 
 
