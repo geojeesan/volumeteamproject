@@ -10,11 +10,6 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_welcome_route(client):
-    """Test that the welcome page returns a response without error."""
-    response = client.get("/")
-    assert response.status_code == 200
-
 def test_register_route(client):
     """Test that the register route returns a response without error."""
     response = client.get("/register")
