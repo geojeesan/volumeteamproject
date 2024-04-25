@@ -271,33 +271,60 @@ class UserProgress(db.Model):
 
         return current_level, round(level_progress, 1)
 
-    def check_reset_streak(self, current_time=None):
+    def check_reset_streak(streak_time, current_time=None):
         """Reset streak if more than 24 hours have passed since last activity."""
+        
+        
+        
         if not current_time:
-            current_time = datetime.utcnow()
-        if self.streak_time and (current_time - self.streak_time > timedelta(days=1)):
+            current_time = datetime.utcnow()     
+            
+        if streak_time and (current_time - streak_time > timedelta(minutes=2)): #days=1
+            
             return 0  # Reset streak
         return 1  # Maintain current streak
 
-    def check_increment_streak(self, current_time=None):
+    def check_increment_streak(streak_time, current_time=None):
         """Increment streak if the activity is within 16 to 24 hours of the last activity."""
+        
+        
         if not current_time:
             current_time = datetime.utcnow()
-        if self.streak_time and timedelta(hours=16) <= (current_time - self.streak_time) <= timedelta(hours=24):
+        if streak_time and timedelta(minutes=0) <= (current_time - streak_time) <= timedelta(minutes=24):
+            
             return 1  # Increment streak
         return 0  # Do not increment streak
 
-    def update_streak(self):
-        """Update the streak based on the user's activity."""
+        
+
+        
+    def calculate_streak(user_id):
         current_time = datetime.utcnow()
-        if self.check_reset_streak(current_time) == 0:
-            self.streak_time = current_time  # Reset streak time
-            return 0  # Return reset streak count
-        else:
-            increment = self.check_increment_streak(current_time)
-            if increment:
-                self.streak_time = current_time  # Update streak time
-            return increment
+        
+        streak_time = (
+            db.session.query(UserProgress.streak_time)
+            .filter(UserProgress.user_id == user_id)
+        ).scalar()
+        
+        if not streak_time:
+            streak_time = current_time
+            db.session.query(UserProgress).filter(UserProgress.user_id == user_id).update({"streak_time": streak_time})
+            db.session.commit()
+        
+        streak = (
+            db.session.query(UserProgress.streak)
+            .filter(UserProgress.user_id == user_id)
+        ).scalar()
+        
+                
+        if timedelta(hours=16) <= (current_time - streak_time) <= timedelta(days=1):
+            streak += 1
+            streak_time = current_time
+        elif (current_time - streak_time) > timedelta(days=1):
+            streak = 0
+        
+        return streak, streak_time   
+        
 
     def update_progress(user_id):
         # Get lessons completed and lessons in progress
@@ -306,9 +333,9 @@ class UserProgress(db.Model):
 
         # Calculate level progress and current level
         current_level, level_progress = UserProgress.calculate_level_progress(user_id)
-        
         total_score =  UserProgress.get_total_score(user_id)
-        
+        streak, streak_time = UserProgress.calculate_streak(user_id)
+                
         # Update user data
         user_data = UserProgress.query.filter_by(user_id=user_id).first()
         if user_data:
@@ -317,6 +344,8 @@ class UserProgress(db.Model):
             user_data.current_level = current_level
             user_data.level_progress = level_progress
             user_data.total_score = total_score
+            user_data.streak = streak
+            user_data.streak_time = streak_time
         else:
             # If user data doesn't exist, create new entry
             user_data = UserProgress(
@@ -325,7 +354,9 @@ class UserProgress(db.Model):
                 lessons_in_progress=lessons_in_progress,
                 current_level=current_level,
                 level_progress=level_progress,
-                total_score=total_score
+                total_score=total_score,
+                streak = streak,
+                streak_time = streak_time
             )
             db.session.add(user_data)
 
