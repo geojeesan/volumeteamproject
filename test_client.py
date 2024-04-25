@@ -10,7 +10,7 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_logout_route(client):
+def test_welcome_route(client):
     """Test that the welcome page returns a response without error."""
     response = client.get("/")
     assert response.status_code == 200
@@ -25,8 +25,8 @@ def test_index_route(client):
     response = client.get("/index")
     assert response.status_code == 200
 
-def test_logout_route(client):
-    """Test that the welcome page returns a response without error."""
+def test_contact_route(client):
+    """Test that the contact page returns a response without error."""
     response = client.get("/contact")
     assert response.status_code == 200
 
