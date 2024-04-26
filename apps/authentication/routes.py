@@ -17,6 +17,7 @@ from apps.authentication.forms import LoginForm, CreateAccountForm
 from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass, generate_token
+import requests
 
 # Bind API -> Auth BP
 api = Api(blueprint)
@@ -63,6 +64,10 @@ def login():
     else:
         return render_template("accounts/login.html", form=login_form)
 
+def check_profanity(text):
+    url = 'http://www.purgomalum.com/service/containsprofanity?text=' + text
+    response = requests.get(url)
+    return response.text.strip() == 'true'
 
 @blueprint.route("/register", methods=["GET", "POST"])
 def register():
@@ -71,6 +76,14 @@ def register():
 
         username = request.form["username"]
         email = request.form["email"]
+
+        if check_profanity(username):
+            return render_template(
+                "accounts/register.html",
+                msg="Username contains profanity",
+                success=False,
+                form=create_account_form,
+            )
 
         # Check usename exists
         user = Users.query.filter_by(username=username).first()
