@@ -6,10 +6,13 @@
 
 <style>
 
+body.dark-page .notes-container {
+    background-color: #424b67;
+}
+
 .notes-container {
-    background-color: #fff; 
-    border: 1px solid #eaecef; 
-    border-radius: 4px; 
+    background-color: #fff;
+    border-radius: 10px; 
     padding: 20px; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
   }
@@ -44,4 +47,7 @@
 
 
 {% block javascripts %}
+<script>
+    document.getElementById('dynamic-breadcrumb').innerText = "Personal Notes";
+</script>
 {% endblock %}

@@ -187,6 +187,7 @@
   .ql-toolbar {
     background: #cfb5db;
     color: white;
+    border-radius: 10px;
   }
 
   .ql-snow .ql-toolbar button:hover,
@@ -201,7 +202,7 @@
   }
 
   .ql-snow .ql-stroke {
-    stroke: white;
+    stroke: #2a3147;
   }
 
   .ql-snow .ql-toolbar button:hover .ql-stroke,
@@ -213,6 +214,12 @@
     background: #000000;
     color: white;
   }
+
+  .dark-page .ql-editor {
+    background-color: #2a3147;
+    color: #ffffff;
+  }
+
 
   /* Recent activity timeline */
   .activity-item {
@@ -464,8 +471,17 @@
   .dark-page .card-color {
     background-color: #2C2C2C;
   }
-  .dark-mode .persona-text {
-  color: #FFFFFF; /* White color for dark mode */
+  /*.dark-mode .persona-text {
+  color: #FFFFFF; *//* White color for dark mode */
+  /*}*/
+  .dark-page .dark-note {
+    background-color: #2a3147 !important;
+  }
+  .dark-page .badges-container-dark {
+    background-color: #2a3147;
+  }
+  .dark-page .dark-text {
+    color: #fff;
   }
 
 
@@ -603,34 +619,34 @@
           <h6>Volume™ Persona</h6>
         </div>
         <div class="card-body p-3">
-          <div class="badges-container">
+          <div class="badges-container badges-container-dark">
             <!-- Current Level Badge -->
             <div class="badge-card d-flex align-items-center mb-2">
               <span id="user-level-icon" class="badge-icon">
                 <i class="fas fa-layer-group"></i>
               </span>
-              <strong class="badge-text" style="margin-right: 7px;">Level: </strong>
-              <span id="user-level-text"></span>
+              <strong class="badge-text dark-text" style="margin-right: 7px;">Level: </strong>
+              <span id="user-level-text" class="dark-text"></span>
             </div>
           </div>
           <!-- Streak Badge -->
-          <div class="badges-container">
+          <div class="badges-container badges-container-dark ">
             <div class="badge-card d-flex align-items-center mb-2">
               <span id="user-streak-icon" class="badge-icon">
                 <i class="fas fa-fire"></i>
               </span>
-              <strong class="badge-text" style="margin-right: 7px;">Streak: </strong>
-              <span id="user-streak-text"></span>
+              <strong class="badge-text dark-text" style="margin-right: 7px;">Streak: </strong>
+              <span id="user-streak-text" class="dark-text"></span>
             </div>
           </div>
           <!-- Rank Badge -->
-          <div class="badges-container">
+          <div class="badges-container badges-container-dark ">
             <div class="badge-card d-flex align-items-center mb-2">
               <span id="user-rank-icon" class="badge-icon">
                 <i class="fas fa-medal"></i>
               </span>
-              <strong class="badge-text" style="margin-right: 7px;">Rank: </strong>
-              <span id="user-rank-text"></span>
+              <strong class="badge-text dark-text" style="margin-right: 7px;">Rank: </strong>
+              <span id="user-rank-text" class="dark-text"></span>
             </div>
           </div>
         </div>
@@ -643,7 +659,7 @@
           <h6>Personal Notes</h6>
         </div>
         <div class="card-body p-3">
-          <div id="editor-container" class="form-control" style="height: 107px;"></div>
+            <div id="editor-container" class="form-control dark-note" style="height: 107px; border: none; background-color: #f6f7f8"></div>
           <button class="btn btn-primary btn-sm mt-3" id="save-notes-btn">Save Current Notes</button>
           <button class="btn btn-secondary btn-sm mt-3" onclick="window.location.href='/view-full-notes';">View Full Page</button>
         </div>
