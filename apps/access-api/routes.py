@@ -4,8 +4,9 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required, current_user
 from flask import request, jsonify, redirect
-from apps.models import db, ApiKeys
+from apps.models import db, ApiKeys, Profile
 import secrets
+import base64
 
 current_lesson = None
 user_sentiments = None
@@ -14,12 +15,17 @@ user_sentiments = None
 @blueprint.route("/access-api/")
 def accessapi():
     if current_user.is_authenticated:
+        current_profile = Profile.query.filter_by(user_id=current_user.get_id()).first()
+        if current_profile and current_profile.profile_picture:
+            current_base64_encoded_image = base64.b64encode(current_profile.profile_picture).decode('utf-8')
+        else:
+            current_base64_encoded_image = None
         user_id = current_user.id
     
         # Check if the user has an API key
         api_key = ApiKeys.query.filter_by(user_id=user_id).first()
     
-        return render_template("access-api/api.html", api_key=api_key)
+        return render_template("access-api/api.html", api_key=api_key, current_base64_encoded_image=current_base64_encoded_image)
     
     else:
         return render_template("access-api/api.html")
