@@ -64,9 +64,23 @@ def login():
     else:
         return render_template("accounts/login.html", form=login_form)
 
+
+def check_profanity_locally(text):
+    profane_words = ["fuck", "shit", "damn", "ass", "bitch", "bastard", "hell", "dick", "piss", "crap"]
+    text_lower = text.lower()
+    
+    for word in profane_words:
+        if word in text_lower:
+            return True  
+
+
 def check_profanity(text):
     url = 'http://www.purgomalum.com/service/containsprofanity?text=' + text
     response = requests.get(url)
+    
+    if response.status_code != 200:
+        return check_profanity_locally(text)
+        
     return response.text.strip() == 'true'
 
 @blueprint.route("/register", methods=["GET", "POST"])
