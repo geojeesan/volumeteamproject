@@ -7,7 +7,7 @@ from jinja2 import TemplateNotFound
 from apps.models import Lesson
 from sqlalchemy import desc
 from apps.models import Lesson, UserScenarioProgress, SubLesson, Profile
-from apps.models import UserActionLog  # Make sure the import path matches your project structure
+from apps.models import UserActionLog  
 import base64
 
 
