@@ -2,4 +2,4 @@
 
 from flask import Blueprint
 
-blueprint = Blueprint("download_app_blueprint", __name__)
+blueprint = Blueprint("api_blueprint", __name__)

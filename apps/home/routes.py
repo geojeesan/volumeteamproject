@@ -148,9 +148,11 @@ def leaderboard():
     # Fetch top 10 users or as many as there are in the database
     top_users = top_users_query.limit(10).all()
     
+    
     leaderboard_data = []
     for idx, user in enumerate(top_users):
         user_progress = UserProgress.query.filter_by(user_id=user.user_id).first()
+                
         leaderboard_data.append({
             "rank": idx + 1,
             "username": user.username,

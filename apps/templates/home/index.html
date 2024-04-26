@@ -5,6 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 <style>
   /* Fonts */
   .custom-font {
@@ -696,6 +697,7 @@
         <div class="card h-100">
           <div class="card-header pb-0">
             <h6>Leaderboard</h6>
+
           </div>
           <div class="card-body px-0 pb-2">
             <div class="table-responsive">
@@ -704,9 +706,13 @@
                   <tr>
                     <th class="leaderboard-header">Rank</th>
                     <th class="leaderboard-header">Username</th>
-                    <th class="leaderboard-header">Score</th>
+                    <th class="leaderboard-header">Score<span class="" data-bs-toggle="tooltip" title="Sum of all scenario scores">
+                      <i class="bi bi-info-circle"></i>
+                  </span></th>
                     <th class="leaderboard-header">Level</th>
-                    <th class="leaderboard-header">Progress</th>
+                    <th class="leaderboard-header">Progress<span class="" data-bs-toggle="tooltip" title="Progress to the next level">
+                      <i class="bi bi-info-circle"></i>
+                  </span></th>
                   </tr>
                 </thead>
                 <tbody id="leaderboard-body">

@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             usernameCell.innerHTML = usernameHtml;
 
             const scoreCell = row.insertCell();
-            scoreCell.textContent = (user.score && user.score !== '-') ? parseFloat(user.score).toFixed(1) : '-';            
+            scoreCell.textContent = (user.score && user.score !== '-') ? parseInt(user.score) : '-';            
             if (isDarkMode) {
                 scoreCell.classList.add('score', 'dark-page'); 
             }
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
             const progressCell = row.insertCell();
             progressCell.classList.add('progress-cell');
-            const progressValue = user.level_progress || 0;
+            const progressValue = parseInt(user.level_progress) || 0;
             let progressHtml = `
                 <div class="progress-chart-container">
                     <canvas id="progressChart${i}" class="leaderboard-progress-chart" width="35" height="35"></canvas>
