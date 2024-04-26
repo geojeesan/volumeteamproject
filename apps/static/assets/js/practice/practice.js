@@ -88,7 +88,6 @@ document.getElementById('next-scenario-btn').addEventListener('click', function(
     document.getElementById('scenarios-complete').style.visibility = 'visible'
   }
 
-  console.log("scen num", scenario_num)
 });
 
 document.getElementById('prev-scenario-btn').addEventListener('click', function() {
@@ -234,6 +233,13 @@ function updateRecordingStatus(message, visible) {
 
 
 function sendRecording(blob) {
+  
+  scenario_data_length = Object.keys(scenario_data).length;
+  if(scenario_num + 1 > scenario_data_length){
+    document.getElementById('next-scenario-btn').textContent = "Back to lessons"
+    document.getElementById('scenarios-complete').style.visibility = 'visible'
+  }
+
 
   startLoading()
 
