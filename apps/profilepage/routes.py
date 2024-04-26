@@ -23,6 +23,7 @@ from apps.models import (
 from sqlalchemy import join, func
 from apps.authentication.models import Users
 import datetime
+import requests
 
 @blueprint.route('/editprofile')
 @login_required
@@ -51,6 +52,11 @@ def searchUser():
 
     return jsonify(formatted_results)
 
+def check_profanity(text):
+    url = 'http://www.purgomalum.com/service/containsprofanity?text=' + text
+    response = requests.get(url)
+    return response.text.strip() == 'true'
+
 @blueprint.route('/update_profile', methods=['POST'])
 def update_profile():
     user_id = current_user.get_id()
@@ -58,6 +64,9 @@ def update_profile():
     full_name = request.form.get('full_name')
     location = request.form.get('location')
     bio = request.form.get('bio')
+
+    profanity_found_bio = check_profanity(bio)
+    profanity_found_full_name = check_profanity(full_name)
     
     # Get profile picture file from request
     profile_picture_file = request.files.get('profilepic')
@@ -86,25 +95,42 @@ def update_profile():
     profile = Profile.query.filter_by(user_id=user_id).first()
     if profile:
         # Update existing profile
-        profile.full_name = full_name
+        if not profanity_found_full_name:
+            profile.full_name = full_name
         profile.location = location
-        profile.bio = bio
+        if not profanity_found_bio:
+            profile.bio = bio
         if profile_picture_file:
             profile.profile_picture = profile_picture_data
+        db.session.commit()
+        if profanity_found_bio and profanity_found_full_name:
+            flash('Changes Saved | Profanity detected in full name and bio. Full name and bio not saved')
+        elif profanity_found_full_name:
+            flash('Changes Saved | Profanity detected in full name. Full name not saved')
+        elif profanity_found_bio:
+            flash('Changes Saved | Profanity detected in bio. Bio not saved')
+        else:
+            flash('Changes Saved | You have successfully edited your profile')
+        UserActionLog.log_user_action('Profile Edited')
     else:
-        # Create new profile
-        profile = Profile(
-            user_id=user_id,
-            full_name=full_name,
-            location=location,
-            bio=bio,
-            profile_picture=profile_picture_data if profile_picture_file else None
-        )
-        db.session.add(profile)
-    
-    db.session.commit()
-    flash('Changes Saved | You have successfully edited your profile')
-    UserActionLog.log_user_action('Profile Edited')
+        if profanity_found_full_name:
+            flash('Changes Not Saved | Profile not saved due to profanity in full name')
+        else:
+            # Create new profile
+            profile = Profile(
+                user_id=user_id,
+                full_name=full_name,
+                location=location,
+                bio='' if profanity_found_bio else bio,
+                profile_picture=profile_picture_data if profile_picture_file else None
+            )
+            db.session.add(profile)
+            db.session.commit()
+            if profanity_found_bio:
+                flash('Changes Saved | Profanity detected in bio. Bio not saved')
+            else:
+                flash('Changes Saved | You have successfully created your profile')
+            UserActionLog.log_user_action('Profile Edited')
     return redirect(url_for('profilepage.profilepage', username=user.username))
 
 
