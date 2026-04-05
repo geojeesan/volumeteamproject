@@ -32,11 +32,6 @@ Volume is a full-stack web application designed to enhance individuals' public s
 - **Python Libraries**: Including librosa, numpy, and speech_recognition for speech analysis, as well as SamLowe's roberta-base-go_emotions for sentiment analysis.
 - **HTML/CSS/JavaScript**: Used for frontend development to create a responsive and interactive user interface.
 
-## Website URL
-
-**Production**: [team68dub.bham.team](https://team68dub.bham.team) <br>
-**Development**: [team68dub.dev.bham.team](https://team68dub.dev.bham.team)
-
 ## Setup Locally
 
 1. Clone the repository: <br>
