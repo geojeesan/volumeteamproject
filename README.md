@@ -3,22 +3,16 @@
   <h1 style="font-size: 40px; color: #3b4662; margin-top: 0;">Volume</h1>
 </div>
 
-Volume is a full-stack web application designed to enhance individuals' public speaking skills through the assistance of AI. It offers personalized lessons, real-time feedback, and resources tailored to users' skill levels. This project is built on Flask.
+Volume is a full-stack web application designed to enhance individuals' public speaking skills through the assistance of AI. It offers personalized lessons, real-time feedback, and resources tailored to users' skill levels. This project is built on Flask. This project was part of a team project module.
 
-## This repository belongs to team 68
+## Team Members
 
 - Ameer Firas Alhashemi (afa192@student.bham.ac.uk)
-
 - Geo Noel Jeesan (gnj224@student.bham.ac.uk)
-
 - Jovin Joseph (jxj243@student.bham.ac.uk)
-
 - Hassan AlJuboori (hga101@student.bham.ac.uk)
-
 - Maha F.M Adwan (mfa147@student.bham.ac.uk)
-
 - Sajia Balkees Sayed (sbs255@student.bham.ac.uk)
-
 - Adnan Alfatouhi Aljundi (axa1888@student.bham.ac.uk)
 
 ## Features
@@ -46,7 +40,7 @@ Volume is a full-stack web application designed to enhance individuals' public s
 ## Setup Locally
 
 1. Clone the repository: <br>
-`git clone git@git.cs.bham.ac.uk:team-projects-2023-24/team68dub.git Volume` <br>
+`git clone github.com/geojeesan/volumeteamproject.git Volume` <br>
 `cd Volume` <br>
 2. Install dependencies: <br>
 `pip install -r requirements.txt` <br>
